@@ -1,0 +1,30 @@
+.stk {
+  position: absolute;
+  display: block;
+  /* Высота считается от маски: contain сохраняет пропорции исходного элемента,
+     поэтому достаточно задать одну ширину. */
+  aspect-ratio: 1;
+  pointer-events: none;
+  background-color: var(--stk-color);
+  -webkit-mask-image: var(--stk-src);
+          mask-image: var(--stk-src);
+  -webkit-mask-size: contain;
+          mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  z-index: 6;
+}
+
+/* Скотч и полутон — не силуэты, а фактура: их показываем картинкой,
+   а не крашеной маской, иначе теряются блики на ленте. */
+.stk--photo {
+  background: none;
+  -webkit-mask-image: none;
+          mask-image: none;
+  background-image: var(--stk-src);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
