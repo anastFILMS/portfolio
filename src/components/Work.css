@@ -11,7 +11,7 @@
 }
 .work__title-wrap { position: relative; }
 .work__title {
-  font-size: var(--fs-h2);
+  font-size: clamp(2.6rem, 7vw, 6.5rem);
   color: var(--chalk);
 }
 /* SVG каракули имеет viewBox 200×100, поэтому без явной высоты он растягивался

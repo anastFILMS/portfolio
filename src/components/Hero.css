@@ -65,8 +65,8 @@
 }
 .hero__word--last {
   bottom: 15%;
-  right: -3vw;
-  width: min(50vw, 720px);
+  right: 6vw;
+  width: min(48vw, 690px);
   rotate: 2.2deg;
   z-index: 5;
   animation-delay: 0.12s;

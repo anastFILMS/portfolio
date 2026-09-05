@@ -11,7 +11,7 @@
   margin-bottom: clamp(2rem, 5vh, 3.5rem);
 }
 .cts__title {
-  font-size: var(--fs-h1);
+  font-size: clamp(3rem, 9vw, 8rem);
   color: var(--chalk);
 }
 /* «мне» дописано баллончиком рядом с крупным «Напиши» — как в рефе 0422. */
@@ -67,6 +67,19 @@
   border-top: 1px solid rgba(233, 225, 210, 0.15);
   background: var(--ink-deep);
 }
+.cts__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.75rem;
+  padding-block: 1.4rem;
+  border-bottom: 1px solid rgba(233, 225, 210, 0.14);
+}
+.cts__nav-link {
+  color: rgba(233, 225, 210, 0.7);
+  transition: color 0.15s var(--ease-cut);
+}
+.cts__nav-link:hover { color: var(--orange); }
+
 .cts__footer-inner {
   display: flex;
   flex-wrap: wrap;

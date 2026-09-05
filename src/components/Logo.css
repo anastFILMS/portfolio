@@ -21,8 +21,9 @@
 /* Оранжевая копия распылённым шрифтом со смещением. */
 .logo__ghost {
   position: absolute;
-  left: 2px;
-  top: 2px;
+  /* В em, а не в px: на мелком кегле пиксельный сдвиг разъезжался. */
+  left: 0.045em;
+  top: 0.045em;
   font-family: var(--font-spray);
   color: var(--orange);
   z-index: 1;

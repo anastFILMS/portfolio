@@ -75,8 +75,38 @@ body.is-locked { overflow: hidden; }
   position: relative;
   padding-block: var(--section-y);
 }
-.section--paper { background: var(--paper); color: var(--ink); }
-.section--ink   { background: var(--ink);   color: var(--chalk); }
+/* Тон секций подбит под титульник: он тёмный, и светлые вставки из него
+   выпадали. Ритм держится не сменой «бумага/тьма», а фактурой фона и
+   оранжевыми полосами на стыках. */
+.section--ink   { background: var(--ink-deep); color: var(--chalk); }
+.section--paper { background: var(--ink);      color: var(--chalk); }
+
+/* Фактура фона на всех секциях — фон нигде не должен быть однотонным. */
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/textures/paper.png');
+  background-size: 300px;
+  mix-blend-mode: overlay;
+  opacity: 0.38;
+}
+/* Поднимаем над фактурой только контентную обёртку. Правило вида
+   `.section > *` перебивало position: absolute у рваных краёв — они
+   выпадали в поток и уезжали на сотню пикселей вниз от стыка. */
+.section > .shell { position: relative; z-index: 1; }
+
+/* Заголовок секции — граффити-шрифтом, как имя на титульнике. */
+.u-head {
+  font-family: var(--font-graf);
+  font-weight: 400;
+  line-height: 0.9;
+  color: var(--paper);
+  text-transform: none;
+  letter-spacing: 0;
+}
 
 /* ============================ ФОКУС / ДОСТУПНОСТЬ ============================ */
 :focus-visible {

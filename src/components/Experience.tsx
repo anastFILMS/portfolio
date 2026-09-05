@@ -18,13 +18,14 @@ export function Experience() {
 
   return (
     <section className="exp section section--paper" id="experience">
-      {/* Сверху в бумагу надрывается тёмная секция WORK. */}
-      <TornEdge side="top" color="var(--ink)" seed={13} height={62} />
+      {/* Оранжевый разрыв на стыке: обе секции тёмные, и заливка цветом
+          соседа стала невидимой. */}
+      <TornEdge side="top" color="var(--orange)" seed={13} height={62} />
 
       <div className="shell">
         <header className="exp__head">
           <Reveal mode="mask">
-            <h2 className="exp__title u-display">
+            <h2 className="exp__title u-head">
               Где я <span className="exp__title-accent">снимала</span>
             </h2>
           </Reveal>

@@ -5,8 +5,8 @@
   margin-bottom: clamp(2rem, 5vh, 3.5rem);
 }
 .exp__title {
-  font-size: var(--fs-h2);
-  color: var(--ink);
+  font-size: clamp(2.6rem, 7vw, 6.5rem);
+  color: var(--ink-deep);
 }
 /* Ключевое слово залито оранжевым «маркером» с неровными краями. */
 .exp__title-accent {
@@ -26,7 +26,7 @@
   transform: rotate(-1deg);
   clip-path: polygon(0.5% 5%, 99.5% 0%, 100% 95%, 0% 100%);
 }
-.exp__sub { margin-top: 0.75rem; color: rgba(30, 34, 61, 0.6); }
+.exp__sub { margin-top: 0.75rem; color: rgba(233, 225, 210, 0.6); }
 .exp__arrow {
   position: absolute;
   top: -0.5rem;
@@ -36,7 +36,7 @@
 }
 
 /* ---------------- список ---------------- */
-.exp__list { border-top: 2px solid var(--ink); }
+.exp__list { border-top: 2px solid var(--orange); }
 
 .exp__item {
   display: grid;
@@ -44,8 +44,8 @@
   align-items: baseline;
   gap: 0.5rem 1.5rem;
   padding-block: clamp(0.85rem, 2vh, 1.35rem);
-  border-bottom: 1px solid rgba(30, 34, 61, 0.22);
-  color: var(--ink);
+  border-bottom: 1px solid rgba(233, 225, 210, 0.18);
+  color: var(--paper);
   transition: background 0.16s var(--ease-cut), padding-left 0.16s var(--ease-cut);
 }
 /* Строка «уезжает» вправо и подсвечивается — как отметка на полях. */
@@ -57,12 +57,12 @@
 .exp__num { color: var(--orange); font-size: 0.68rem; }
 .exp__body { display: flex; flex-direction: column; gap: 0.2rem; }
 .exp__name { font-size: clamp(1.15rem, 2.4vw, 2rem); line-height: 1; }
-.exp__scale { font-size: 0.58rem; color: rgba(30, 34, 61, 0.5); letter-spacing: 0.12em; }
-.exp__role { font-size: 0.62rem; color: rgba(30, 34, 61, 0.72); text-align: right; }
+.exp__scale { font-size: 0.58rem; color: rgba(233, 225, 210, 0.45); letter-spacing: 0.12em; }
+.exp__role { font-size: 0.62rem; color: rgba(233, 225, 210, 0.65); text-align: right; }
 .exp__year {
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--ink);
+  color: var(--paper);
   min-width: 3.5rem;
   text-align: right;
 }
@@ -75,15 +75,15 @@
   gap: 0.85rem;
   padding: 0.85rem 1.75rem;
   font-size: clamp(0.9rem, 1.4vw, 1.15rem);
-  color: var(--ink);
-  border: 2px solid var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--orange);
   background: transparent;
   transition: transform 0.16s var(--ease-cut), background 0.16s var(--ease-cut), color 0.16s var(--ease-cut);
   clip-path: polygon(0 0, 100% 0, 100% 70%, 97% 100%, 0 100%);
 }
 .exp__btn:hover {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--orange);
+  color: var(--ink-deep);
   transform: translate(-2px, -3px) rotate(-0.7deg);
 }
 .exp__btn-mark { font-size: 1.4em; line-height: 0; color: var(--orange); }

@@ -16,12 +16,12 @@ export function Skills() {
 
   return (
     <section className="skills section section--paper" id="skills">
-      {/* Сверху в бумагу надрывается тёмный блок «Обо мне». */}
-      <TornEdge side="top" color="var(--ink)" seed={41} height={60} />
+      {/* Оранжевый разрыв на стыке — см. комментарий в Experience. */}
+      <TornEdge side="top" color="var(--orange)" seed={41} height={60} />
 
       <div className="shell">
         <Reveal mode="mask">
-          <h2 className="skills__title u-display">Чем работаю</h2>
+          <h2 className="skills__title u-head">Чем работаю</h2>
         </Reveal>
 
         {/* ---------- программы ---------- */}
@@ -61,7 +61,7 @@ export function Skills() {
           верхний край тоже рваный — переход между блоками не должен быть
           прямой линией. */}
       <div className="skills__band">
-        <TornEdge side="top" color="var(--paper)" seed={89} height={44} />
+        <TornEdge side="top" color="var(--orange)" seed={89} height={44} />
         <Marquee
           className="skills__marquee"
           items={['Съёмка', 'Монтаж', 'Цвет', 'Звук', 'Графика']}

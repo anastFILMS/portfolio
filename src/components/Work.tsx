@@ -58,7 +58,7 @@ export function Work() {
               срезала всё, что выходит за базовую линию текста. */}
           <div className="work__title-wrap">
             <Reveal mode="mask">
-              <h2 className="work__title u-display">Work</h2>
+              <h2 className="work__title u-head">Work</h2>
             </Reveal>
             <Scribble kind="underline" className="work__title-line" delay={0.35} stretch />
           </div>

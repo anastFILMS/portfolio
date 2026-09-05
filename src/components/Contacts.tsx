@@ -19,7 +19,7 @@ export function Contacts() {
       <div className="shell">
         <header className="cts__head">
           <Reveal mode="mask">
-            <h2 className="cts__title u-display">Напиши</h2>
+            <h2 className="cts__title u-head">Напиши</h2>
           </Reveal>
           <SprayTag className="cts__tag" seed={29} size={90}>
             мне
@@ -50,6 +50,15 @@ export function Contacts() {
       </div>
 
       <footer className="cts__footer">
+        {/* Навигация вернулась сюда: с титульника её убрали, и со страницы
+            она пропала целиком. */}
+        <nav className="shell cts__nav" aria-label="Разделы сайта">
+          {site.nav.map((item) => (
+            <a className="cts__nav-link u-label" href={`#${item.id}`} key={item.id}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
         <div className="shell cts__footer-inner">
           <Logo size={26} />
           <p className="u-label">

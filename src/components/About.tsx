@@ -25,8 +25,8 @@ export function About() {
 
   return (
     <section className="about section section--ink" id="about">
-      {/* Сверху надрывается бумажный блок с опытом. */}
-      <TornEdge side="top" color="var(--paper)" seed={64} height={58} />
+      {/* Оранжевый разрыв на стыке — см. комментарий в Experience. */}
+      <TornEdge side="top" color="var(--orange)" seed={64} height={58} />
 
       <div className="shell about__inner">
         {/* ---------- коллаж ---------- */}
@@ -58,7 +58,7 @@ export function About() {
         {/* ---------- текст ---------- */}
         <div className="about__text">
           <Reveal mode="mask">
-            <h2 className="about__title u-display">Обо мне</h2>
+            <h2 className="about__title u-head">Обо мне</h2>
           </Reveal>
 
           <Reveal mode="jerk" delay={0.1}>
