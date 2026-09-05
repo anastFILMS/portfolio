@@ -1,6 +1,5 @@
 import { useLenis } from './hooks/useLenis';
 import { Grain } from './components/grunge/Grain';
-import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
 import { Experience } from './components/Experience';
@@ -23,7 +22,8 @@ export default function App() {
       <a className="skip-link" href="#work">К работам</a>
 
       <Grain />
-      <Header />
+      {/* Шапка с логотипом и навигацией убрана с титульника по правкам —
+          вернётся отдельным блоком ниже по странице. */}
 
       <main>
         <Hero />
