@@ -24,7 +24,8 @@
   /* --- типографика ---
      Роли назначены по READ ME 2. Коммерческих Splatunk/Restime в папке нет,
      поэтому взяты бесплатные аналоги с кириллицей — подробности в fonts.css. */
-  --font-graf:    'Guano Apes', 'Sedgwick Ave Display', cursive;    /* граффити-заголовок (файл от заказчицы) */
+  --font-title:   'Splatink', 'Guano Apes', cursive;                 /* имя на титульнике (латиница) */
+  --font-graf:    'Guano Apes', 'Sedgwick Ave Display', cursive;    /* граффити-надписи по-русски */
   --font-display: 'Dela Gothic One', 'Oswald', Impact, sans-serif;  /* тяжёлые заголовки */
   --font-spray:   'Rubik Spray Paint', 'Caveat', cursive;           /* распылённые надписи */
   --font-marker:  'Rubik Marker Hatch', 'Caveat', cursive;          /* тонкий маркер */

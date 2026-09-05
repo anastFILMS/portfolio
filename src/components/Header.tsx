@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { site } from '../content/site';
 import { Logo } from './Logo';
-import { tornClipPath } from '../lib/rough';
 import './Header.css';
 
 /**
@@ -39,45 +38,19 @@ export function Header() {
 
         {/* Пункты меню — наклеенные бумажки: у каждой свой угол и своя
             форма рваного края, поэтому ряд не читается ровной панелью. */}
-        <nav className="hdr__nav" aria-label="Основная навигация">
-          {site.nav.map((item, i) => (
-            <a
-              className="hdr__link u-label"
-              href={`#${item.id}`}
-              key={item.id}
-              style={{
-                '--tilt': `${[-2.4, 1.8, -1.2, 2.6, -1.9][i % 5]}deg`,
-                clipPath: tornClipPath(101 + i * 7, 12, 13),
-              } as React.CSSProperties}
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="hdr__side">
-          <a
-            className="hdr__quick u-label"
-            href={site.contacts.telegram.href}
-            target="_blank"
-            rel="noreferrer noopener"
-            style={{ clipPath: tornClipPath(311, 14, 12) }}
-          >
-            <span className="hdr__quick-dot" aria-hidden="true" />
-            Telegram
-          </a>
-
-          <button
-            className="hdr__burger"
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-expanded={menuOpen}
-            aria-controls="hdr-menu"
-          >
-            <span className="sr-only">{menuOpen ? 'Закрыть меню' : 'Открыть меню'}</span>
-            <span className="hdr__burger-line" aria-hidden="true" />
-            <span className="hdr__burger-line" aria-hidden="true" />
-          </button>
-        </div>
+        {/* Навигация и быстрый контакт с первого экрана убраны по правкам —
+            вернутся отдельным блоком ниже по странице. Бургер оставлен:
+            без него на телефоне вообще нет способа перейти в раздел. */}
+        <button
+          className="hdr__burger"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-expanded={menuOpen}
+          aria-controls="hdr-menu"
+        >
+          <span className="sr-only">{menuOpen ? 'Закрыть меню' : 'Открыть меню'}</span>
+          <span className="hdr__burger-line" aria-hidden="true" />
+          <span className="hdr__burger-line" aria-hidden="true" />
+        </button>
       </div>
 
       {/* Мобильное меню: выезжает панелью, пункты крупные, как в зине. */}

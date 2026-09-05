@@ -17,6 +17,7 @@
 .hdr__bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1.25rem;
   max-width: var(--maxw);
   margin-inline: auto;
@@ -70,7 +71,7 @@
 
 /* ---------- бургер ---------- */
 .hdr__burger {
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 6px;
@@ -124,8 +125,6 @@
 }
 
 @media (max-width: 900px) {
-  .hdr__nav { display: none; }
-  .hdr__burger { display: flex; }
   .hdr__side { margin-left: auto; }
 }
 /* Быстрый контакт в шапке брифом оговорён отдельно, поэтому на телефоне он

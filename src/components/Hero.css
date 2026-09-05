@@ -5,13 +5,9 @@
   flex-direction: column;
   overflow: hidden;
   background: var(--ink-deep);
-  padding-top: clamp(4.5rem, 10vh, 6.5rem);
 }
 
-/* ======================= ФОН =======================
-   Фактура, а не градиент: снимок краски из папки «фон» (IMG_0433).
-   Он обесцвечен на этапе сборки, цвет кладётся здесь — так фон остаётся
-   в палитре, даже если позже поменять акцент. */
+/* ======================= ФОН ======================= */
 .hero__bg { position: absolute; inset: 0; pointer-events: none; }
 
 .hero__spray {
@@ -22,7 +18,6 @@
   background-position: center;
   opacity: 0.9;
 }
-/* Оранжевый слой поверх фактуры: без него фон остаётся серым. */
 .hero__spray::after {
   content: '';
   position: absolute;
@@ -33,7 +28,6 @@
     linear-gradient(rgba(11, 12, 22, 0.42), rgba(11, 12, 22, 0.86));
   mix-blend-mode: hard-light;
 }
-
 .hero__grain {
   position: absolute;
   inset: 0;
@@ -42,116 +36,91 @@
   mix-blend-mode: overlay;
   opacity: 0.5;
 }
-/* Растровка строками — как на фото в рефе 2826. */
 .hero__scan {
   position: absolute;
   inset: 0;
   opacity: 0.3;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.55) 0 1px,
-    transparent 1px 3px
-  );
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0 1px, transparent 1px 3px);
 }
 
-/* ======================= СЛУЖЕБНЫЕ ПОДПИСИ ======================= */
-.hero__meta {
-  position: relative;
-  z-index: 6;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-inline: var(--gutter);
-  font-size: 0.58rem;
-  line-height: 1.5;
-  color: rgba(233, 225, 210, 0.62);
-}
-.hero__meta-right { text-align: right; }
-.hero__rec { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--orange); }
-.hero__rec i {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: currentColor;
-  animation: rec-blink 1.4s steps(1) infinite;
-}
-
-/* ======================= ЯДРО: НАДПИСИ НА БУМАГЕ =======================
-   Квадрат шоурила убран: позже на его месте будет полноэкранное видео
-   с прозрачностью, и композиция должна держаться без него уже сейчас. */
+/* ======================= ЯДРО: ИМЯ + КАМЕРА =======================
+   В рефе слова не стоят в ряд, а наложены на объект внахлёст. Поэтому
+   раскладка не сеточная, а слоями: слова прибиты к своим краям и уходят
+   за них, камера сидит по центру поверх обоих и вылетает на зрителя. */
 .hero__core {
   position: relative;
   z-index: 4;
   flex: 1;
-  display: grid;
-  place-items: center;
   min-height: 0;
-  /* Отступов по бокам нет: надписи должны упираться в края экрана. */
-  padding-inline: 0;
 }
 
-.hero__title {
-  position: relative;
-  margin: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+.hero__title { display: contents; margin: 0; }
 
-/* Клочки идут внахлёст и каждый под своим углом. */
-.hero__scrap--name { z-index: 2; }
-.hero__scrap--role {
-  z-index: 3;
-  /* Сдвиг вправо и наверх: второй клочок наклеен поверх первого и
-     вылезает за правый край экрана. */
-  margin-top: -0.04em;
-  margin-left: 34%;
-}
-
-.hero__name,
-.hero__role {
-  display: block;
-  font-family: var(--font-graf);
-  white-space: nowrap;
-  line-height: 0.92;
-  color: var(--ink-deep);
-}
-
-/* Имя во всю ширину экрана — «надписи выходят за рамки». */
 .hero__name {
-  /* Строка нарочно шире экрана: по рефу надписи вылезают за края. */
-  font-size: min(16.5vw, 22vh, 12.5rem);
-  letter-spacing: -0.005em;
+  position: absolute;
+  font-family: var(--font-title);
+  font-size: min(11.5vw, 20vh, 10rem);
+  line-height: 0.86;
+  color: var(--paper);
+  white-space: nowrap;
+  /* Подложек нет — надпись лежит прямо на фоне (правка заказчицы). */
+  filter: drop-shadow(6px 8px 0 rgba(0, 0, 0, 0.6));
+  animation: name-in 0.55s var(--ease-cut) backwards;
+  z-index: 2;
 }
-.hero__role {
-  font-size: min(8vw, 11vh, 5.5rem);
-  color: var(--ink-deep);
+/* Слова прижаты к своим краям и вылезают за них. */
+.hero__name--first {
+  top: 3%;
+  left: 0.5vw;
+  transform: rotate(-2.4deg);
+}
+.hero__name--last {
+  /* Ниже и правее: слова расходятся по диагонали, между ними — камера. */
+  bottom: 13%;
+  right: 0.5vw;
+  /* Чуть мельче первого: иначе слово не помещается между камерой и краем
+     и теряет первую букву. */
+  font-size: min(9.8vw, 17vh, 8.4rem);
+  color: var(--orange);
+  transform: rotate(2deg);
+  animation-delay: 0.1s;
+}
+@keyframes name-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
 }
 
-/* ======================= НИЖНЯЯ ПОЛОСА ======================= */
-.hero__bottom {
+/* ---------- камера ---------- */
+.hero__cam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(36vw, 52vh, 480px);
+  /* Доворот и лёгкое приближение: объектив идёт на зрителя. */
+  transform: translate(-50%, -50%) rotate(-4deg) scale(1.04);
+  z-index: 3;
+  filter: drop-shadow(0 26px 60px rgba(0, 0, 0, 0.75));
+}
+/* Пока камеры нет, заглушка полупрозрачная: настоящий PNG будет вырезан
+   по контуру, и слова должны читаться вокруг него уже на макете. */
+.hero__cam .slot__ph { opacity: 0.55; }
+
+/* ======================= НИЖНИЙ ЛЕВЫЙ УГОЛ ======================= */
+.hero__corner {
   position: relative;
   z-index: 6;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: end;
-  gap: 1rem clamp(1rem, 3vw, 3rem);
-  padding: 0 var(--gutter) clamp(1rem, 3vh, 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 0 var(--gutter) clamp(1.25rem, 3.5vh, 2.5rem);
 }
 .hero__lead {
-  font-size: 0.64rem;
+  font-size: 0.66rem;
   line-height: 1.7;
-  color: rgba(233, 225, 210, 0.8);
   letter-spacing: 0.08em;
+  color: rgba(233, 225, 210, 0.85);
 }
-.hero__ratio {
-  font-size: 0.64rem;
-  line-height: 1.5;
-  text-align: right;
-  color: var(--orange);
-}
-
-.hero__cta { display: flex; gap: 0.75rem; }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 
 .btn {
   display: inline-flex;
@@ -186,28 +155,20 @@
 
 /* ======================= АДАПТИВ ======================= */
 @media (max-width: 900px) {
-  
-  .hero__bottom {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    text-align: center;
-    gap: 0.85rem;
-  }
-  .hero__lead, .hero__ratio { text-align: center; font-size: 0.58rem; }
-  .hero__meta span:first-child,
-  .hero__meta-right { display: none; }
-  .hero__meta { justify-content: center; }
+  /* На телефоне слова не должны наезжать друг на друга: разводим их
+     к верху и низу, камера остаётся между ними. */
+  .hero__name { font-size: min(17vw, 11vh, 4.6rem); }
+  .hero__name--first { top: 8%;  left: 2vw; }
+  .hero__name--last  { bottom: 8%; right: 2vw; }
+  .hero__cam { width: min(66vw, 32vh, 320px); }
+  .hero__corner { align-items: center; text-align: center; }
 
-  /* Крупные теги на телефоне перекрывают имя — оставляем помеченные,
-     их позиции задаются заново: десктопные ложатся на строку REC. */
   .hero__deco .stk { display: none; }
   .hero__deco .stk--mob { display: block; }
-  .hero__deco .hero__crown { top: 61% !important; left: 2% !important; width: 58px; }
-  .hero__deco .hero__star  { top: 59% !important; left: auto !important; right: 2%; width: 78px; }
+  .hero__deco .hero__star { bottom: auto !important; top: 4%; left: 4% !important; width: 64px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__rec i { animation: none; }
-  .hero__word, .hero__graf { animation: none; }
+  .hero__name { animation: none; }
   .btn:hover { transform: none; }
 }

@@ -307,3 +307,15 @@
   font-display: block;
   src: url('/fonts/guano-apes-rus.woff2') format('woff2');
 }
+
+/* --- Splatink: шрифт титульника ---
+ * Прислан файлом. Только латиница (26 букв), кириллицы нет — поэтому им
+ * набраны ANASTASIA и BRICHKO, а русские надписи идут другими шрифтами.
+ */
+@font-face {
+  font-family: 'Splatink';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/splatink.woff2') format('woff2');
+}
