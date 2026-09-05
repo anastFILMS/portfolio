@@ -1,126 +1,113 @@
+import { useEffect, useState } from 'react';
 import { site } from '../content/site';
-import { about } from '../content/about';
-import { tornClipPath } from '../lib/rough';
 import { MediaSlot } from './grunge/MediaSlot';
 import { Marquee } from './grunge/Marquee';
-import { Scribble } from './grunge/Scribble';
-import { SprayTag } from './grunge/SprayTag';
 import { Sticker } from './grunge/Sticker';
-import { RansomText } from './grunge/RansomText';
 import './Hero.css';
 
 /**
- * Первый экран — плотный коллаж по мотивам главного рефа (0437).
+ * Первый экран.
  *
- * Логика та же, что у зина: ничего не стоит ровно и по сетке, элементы
- * налезают друг на друга, между ними — вырезанные из паков граффити,
- * спрей-символы и скотч. Имя набрано вырезками из «разных журналов»,
- * роль дописана маркером поверх чёрной плашки.
+ * Структура снята с рефов из «ОСНОВНОЙ РЕФ»: имя крупно ПО ЦЕНТРУ (2832, 0421),
+ * под ним во всю высоту — кадр с человеком, поверх кадра лежит имя и граффити
+ * (2827, где вордстайл идёт поверх фотографии). Служебные подписи моношрифтом
+ * разнесены по углам, как в 2825.
  *
- * Композиция разведена на два слоя: содержимое (имя, кнопки, медиа) и
- * декор. Декор абсолютный, не ловит курсор и скрыт от скринридеров,
- * поэтому плотность картинки не мешает ни навигации, ни чтению.
+ * Фон не однотонный: тёмная бумага с волокном, пятна распыла и полутоновая
+ * растровка — этого отдельно просили в правках.
  */
 export function Hero() {
+  const [shift, setShift] = useState(0);
+
+  // «Человек ступает на экран, на него параллаксом наезжают граффити» (реф 2825):
+  // при скролле слой граффити идёт навстречу зрителю быстрее кадра.
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        setShift(Math.min(1, window.scrollY / window.innerHeight));
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
   return (
     <section className="hero" id="top">
       <div className="hero__bg" aria-hidden="true">
         <div className="hero__spray" />
-        <div className="hero__paper" />
+        <div className="hero__grain" />
+        <div className="hero__scan" />
       </div>
 
-      <div className="hero__hud" aria-hidden="true">
-        <span className="hero__hud-rec u-mono"><i />REC</span>
-        <span className="u-mono">4K · 25 FPS</span>
+      {/* Верхняя служебная строка — приём из 2825. */}
+      <div className="hero__meta hero__meta--top u-mono" aria-hidden="true">
+        <span>Videographer<br />&amp; Editor</span>
+        <span className="hero__rec"><i />REC · 4K · 25 FPS</span>
+        <span className="hero__meta-right">{site.city}<br />MMXXVI</span>
       </div>
 
-      <div className="hero__stage shell">
-        {/* Левая колонка идёт своим потоком: раньше высокий кадр справа
-            растягивал строки общей сетки и между блоками зияли дыры. */}
-        <div className="hero__col">
-        {/* Имя вырезками — центр композиции, как «VERNON» в 0437. */}
-        <h1 className="hero__name">
-          <RansomText seed={12}>{site.name}</RansomText>
-        </h1>
-
-        {/* Чёрная плашка с маркерной надписью поверх — приём из 0437. */}
-        <div className="hero__bar">
-          <SprayTag className="hero__bar-tag" seed={11} size={110} drips>
-            videographer
-          </SprayTag>
-          <span className="hero__bar-editor u-display">&amp; editor</span>
+      <div className="hero__core">
+        {/* Кадр стоит ПОД именем: человек «выходит» из-за букв, как в 2827. */}
+        <div className="hero__photo">
+          <MediaSlot label="Кадр / showreel" hint="Вертикаль 3:4 · ч/б" ratio="3 / 4" autoPlay />
         </div>
 
-        <p className="hero__role u-mono">{site.city} · съёмка и монтаж 50/50</p>
+        <h1 className="hero__title">
+          <span className="sr-only">{site.name} — {site.tagline}</span>
+          <span className="hero__word" aria-hidden="true">Anastasia</span>
+          <span className="hero__row" aria-hidden="true">
+            <span className="hero__word hero__word--b">B.</span>
+            {/* Граффити-слово внахлёст поверх имени — формула из 2807. */}
+            <span className="hero__graf">видеограф</span>
+          </span>
+        </h1>
+      </div>
 
+      <div className="hero__bottom">
+        <p className="hero__lead u-mono">
+          Снимаю и динамично монтирую.<br />
+          Крупные мероприятия и медиапроекты.
+        </p>
         <div className="hero__cta">
-          <a className="btn btn--solid" href="#work">
-            Смотреть работы
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2.5" /></svg>
-          </a>
+          <a className="btn btn--solid" href="#work">Смотреть работы</a>
           <a className="btn btn--ghost" href="#contacts">Написать</a>
         </div>
-
-        {/* Клочок бумаги с рукописной припиской — в 0437 такие блоки
-            держат весь текст композиции. */}
-        <div className="hero__note" style={{ clipPath: tornClipPath(41, 16, 9) }}>
-          <p className="hero__note-hand u-hand">{about.note}</p>
-          <ul className="hero__keys u-mono">
-            {site.keywords.map((k) => <li key={k}>{k}</li>)}
-          </ul>
-        </div>
-
-        </div>
-
-        {/* Кадры стопкой — второй наезжает на первый. */}
-        <div className="hero__media">
-        <div className="hero__cell hero__cell--main">
-          <MediaSlot label="Общий showreel" hint="15–40 сек · лучшие кадры" ratio="4 / 5" autoPlay />
-        </div>
-
-        {/* Второй кадр внахлёст — даёт слоистость, а не одиночную картинку. */}
-        <div className="hero__cell hero__cell--small">
-          <MediaSlot label="Кадр из проекта" hint="Стоп-кадр 3:2" ratio="3 / 2" />
-        </div>
-        </div>
-
-        {/* ================= ДЕКОР ================= */}
-        <div className="hero__deco" aria-hidden="true">
-          {/* Граффити поверх кадров — «по бокам, на глазах» (рефы 0416, 0419, 0423). */}
-          <Sticker src="tags/tag-1" w={240} rot={-9}  color="var(--orange)" style={{ top: '17%', right: '2%' }} />
-          <Sticker src="tags/tag-5" w={150} rot={7}   color="var(--paper)" opacity={0.85} style={{ top: '58%', right: '26%' }} />
-          <Sticker src="tags/tag-3" w={120} rot={-14} color="var(--orange)" opacity={0.9} style={{ bottom: '20%', left: '31%' }} />
-
-          {/* Спрей-символы: звезда из 0435, корона из 0432, штрих-код из 0416. */}
-          <Sticker src="marks/star"     w={92}  rot={-16} color="var(--orange)" mobile className="hero__star"  style={{ top: '5%', left: '40%' }} />
-          <Sticker src="marks/crown"    w={76}  rot={9}   color="var(--paper)" mobile className="hero__crown" style={{ top: '2%', left: '11%' }} />
-          <Sticker src="marks/barcode"  w={88}  rot={90}  color="var(--paper)" opacity={0.45} style={{ top: '30%', left: '-3%' }} />
-          <Sticker src="marks/asterisk" w={54}  rot={0}   color="var(--orange)" mobile style={{ top: '35%', left: '92%' }} />
-          <Sticker src="marks/slashes"  w={64}  rot={18}  color="var(--paper)" opacity={0.6} style={{ bottom: '31%', left: '2%' }} />
-          <Sticker src="marks/excl"     w={42}  rot={-7}  color="var(--orange)" style={{ bottom: '14%', left: '24%' }} />
-          <Sticker src="marks/qr"       w={54}  rot={-5}  color="var(--paper)" opacity={0.4} style={{ top: '20%', left: '46%' }} />
-          <Sticker src="tags/tag-7"     w={110} rot={11}  color="var(--paper)" opacity={0.5} style={{ top: '62%', left: '41%' }} />
-
-          {/* Скотч держит кадры — прямо как просили в описании папки текстур. */}
-          <Sticker src="tape/tape-1" className="stk--photo" w={190} rot={-8} style={{ top: '20%', right: '27%' }} opacity={0.9} />
-          <Sticker src="tape/tape-4" className="stk--photo" w={140} rot={6}  style={{ bottom: '30%', right: '5%' }} opacity={0.85} />
-          <Sticker src="tape/tape-9" className="stk--photo" w={70} rot={-15} style={{ bottom: '34%', left: '62%' }} opacity={0.85} />
-
-          {/* Маркерные росчерки, перечёркивающие композицию (0437). */}
-          <Scribble kind="zigzag" className="hero__zig" color="var(--orange)" width={300} delay={0.5} />
-          <Scribble kind="arrow"  className="hero__arr" color="var(--paper)" width={150} delay={0.7} />
-        </div>
+        <p className="hero__ratio u-mono">Съёмка<br />/ монтаж<br />50 / 50</p>
       </div>
 
-      <a className="hero__scroll u-mono" href="#work" aria-label="К работам">
-        <span>Листай</span>
-        <span className="hero__scroll-bar" aria-hidden="true" />
-      </a>
+      {/* Слой граффити: наезжает на зрителя при скролле. */}
+      <div
+        className="hero__deco"
+        aria-hidden="true"
+        style={{ transform: `translate3d(0, ${shift * -60}px, 0) scale(${1 + shift * 0.22})`, opacity: 1 - shift * 0.5 }}
+      >
+        <Sticker src="tags/big-1" w={330} rot={-8} color="var(--orange)" style={{ top: '14%', left: '-3%' }} />
+        <Sticker src="tags/big-4" w={280} rot={6}  color="var(--paper)" opacity={0.9} style={{ bottom: '16%', right: '-2%' }} />
+        <Sticker src="tags/big-6" w={190} rot={-14} color="var(--orange)" opacity={0.85} style={{ top: '58%', left: '6%' }} />
+
+        <Sticker src="marks/star-spray" w={120} rot={-12} color="var(--orange)" mobile className="hero__star"  style={{ top: '8%', right: '16%' }} />
+        <Sticker src="marks/crown"      w={86}  rot={7}   color="var(--paper)" mobile className="hero__crown" style={{ top: '4%', left: '31%' }} />
+        <Sticker src="marks/asterisk"   w={58}  rot={0}   color="var(--orange)" style={{ bottom: '30%', left: '27%' }} />
+        <Sticker src="marks/circle-x"   w={54}  rot={12}  color="var(--paper)" opacity={0.6} style={{ top: '30%', right: '9%' }} />
+        <Sticker src="marks/barcode"    w={96}  rot={0}   color="var(--paper)" opacity={0.5} style={{ bottom: '9%', left: '43%' }} />
+
+        {/* Клочки рваной бумаги — фактура, а не силуэт. */}
+        <Sticker src="torn/torn-3" className="stk--photo" w={230} rot={-6} opacity={0.5} style={{ top: '24%', right: '22%' }} />
+        <Sticker src="torn/torn-6" className="stk--photo" w={170} rot={9}  opacity={0.42} style={{ bottom: '22%', left: '14%' }} />
+        <Sticker src="tape/tape-5" className="stk--photo" w={170} rot={-9} opacity={0.85} style={{ top: '19%', left: '38%' }} />
+      </div>
 
       <Marquee
         className="hero__marquee"
         items={['Интервью', 'Fashion', 'Репортаж', 'Мероприятия', 'Вертикаль', 'Многокамерка', 'Motion']}
-        duration={30}
+        duration={28}
       />
     </section>
   );

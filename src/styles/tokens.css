@@ -6,9 +6,9 @@
    ========================================================================== */
 :root {
   /* --- база --- */
-  --ink:          #1E223D; /* Midnight Blue — основной тёмный */
-  --ink-deep:     #141728; /* глубже, для «провалов» и модалок */
-  --ink-soft:     #2A2F55; /* подложки карточек на тёмном */
+  --ink:          #14162A; /* почти чёрный: в рефах фон тёмный, а цвет держит акцент */
+  --ink-deep:     #0B0C16; /* глубже, для «провалов» и модалок */
+  --ink-soft:     #1E223D; /* Midnight Blue из палитры — подложки */
   --orange:       #F54F1B; /* Exotic Orange — главный акцент */
   --orange-deep:  #C93A0E; /* тени/дрипы краски */
   --paper:        #E9E1D2; /* бумага — светлые секции */
@@ -21,11 +21,16 @@
   --fg:           var(--chalk);
   --accent:       var(--orange);
 
-  /* --- типографика --- */
-  --font-display: 'Oswald', 'Arial Narrow', Impact, sans-serif;
-  --font-hand:    'Caveat', 'Comic Sans MS', cursive;
-  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
-  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* --- типографика ---
+     Роли назначены по READ ME 2. Коммерческих Splatunk/Restime в папке нет,
+     поэтому взяты бесплатные аналоги с кириллицей — подробности в fonts.css. */
+  --font-display: 'Dela Gothic One', 'Oswald', Impact, sans-serif;  /* заголовки */
+  --font-spray:   'Rubik Spray Paint', 'Caveat', cursive;           /* граффити-надписи */
+  --font-drip:    'Rubik Wet Paint', 'Caveat', cursive;             /* краска с потёками */
+  --font-cond:    'Oswald', 'Arial Narrow', sans-serif;             /* узкий гротеск */
+  --font-hand:    'Caveat', 'Comic Sans MS', cursive;               /* от руки */
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;       /* тех. подписи */
+  --font-body:    'Montserrat', -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   /* размеры: crush-заголовки как в рефах 0418 / 0422 / 0435 */
   --fs-mega:  clamp(3.5rem, 15vw, 15rem);

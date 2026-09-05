@@ -1,69 +1,47 @@
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.55em;
+  gap: 0.4em;
   font-size: var(--logo-size, 34px);
   line-height: 1;
-  color: currentColor;
 }
 
-.logo__lens {
-  width: 1.05em;
-  height: 1.05em;
-  flex: none;
-}
+.logo__word { position: relative; display: inline-block; }
 
-.logo__word { display: inline-flex; gap: 2px; }
-
-/* Плашка под буквой — скошенная, с наклоном. */
-.logo__tile {
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  padding: 0.1em 0.16em 0.14em;
-  background: currentColor;
-  transform: rotate(var(--tilt, 0deg));
-  /* Неровные углы: плашка вырезана ножницами, а не поставлена по сетке. */
-  clip-path: polygon(4% 6%, 96% 0%, 100% 94%, 2% 100%);
-}
-
-.logo__char,
+.logo__main,
 .logo__ghost {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.86em;
+  font-size: 0.82em;
   line-height: 0.9;
   text-transform: uppercase;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
 }
+.logo__main { position: relative; color: currentColor; z-index: 2; }
 
-/* Буква вырезается из плашки насквозь. */
-.logo__char {
-  color: var(--ink);
-  mix-blend-mode: screen;
-  position: relative;
-  z-index: 2;
-}
-
-/* Оранжевая копия со сдвигом — «непопадание в печать». */
+/* Оранжевая копия распылённым шрифтом со смещением. */
 .logo__ghost {
   position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
+  left: 2px;
+  top: 2px;
+  font-family: var(--font-spray);
   color: var(--orange);
-  transform: translate(2px, 2px);
   z-index: 1;
 }
 
+.logo__rule {
+  width: 2px;
+  height: 0.72em;
+  background: var(--orange);
+  transform: skewX(-14deg);
+}
+
 .logo__suffix {
-  font-size: 0.3em;
-  letter-spacing: 0.34em;
+  font-size: 0.29em;
+  letter-spacing: 0.32em;
   opacity: 0.72;
-  align-self: flex-end;
-  padding-bottom: 0.25em;
 }
 
 @media (max-width: 640px) {
+  .logo__rule,
   .logo__suffix { display: none; }
 }
