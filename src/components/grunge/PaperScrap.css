@@ -1,0 +1,25 @@
+.scrap {
+  position: relative;
+  display: inline-block;
+  transform: rotate(var(--scrap-rot, -2deg));
+  /* Тень на обёртке, а не на самой бумажке: clip-path срезал бы box-shadow. */
+  filter: drop-shadow(7px 9px 0 rgba(0, 0, 0, 0.5));
+}
+
+/* Сама бумажка: чуть шире и выше содержимого, чтобы надпись сидела на ней
+   с запасом, а не упиралась в рваный край. */
+.scrap__sheet {
+  position: absolute;
+  inset: -0.16em -0.5em -0.2em;
+  z-index: 0;
+  /* Бумажное волокно поверх заливки — иначе клочок читается плашкой. */
+  background-image: url('/textures/paper-mul.png');
+  background-size: 240px;
+  background-blend-mode: multiply;
+}
+
+.scrap--paper  .scrap__sheet { background-color: var(--paper); }
+.scrap--ink    .scrap__sheet { background-color: var(--ink-deep); }
+.scrap--orange .scrap__sheet { background-color: var(--orange); }
+
+.scrap__body { position: relative; z-index: 1; display: block; }

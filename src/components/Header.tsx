@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { site } from '../content/site';
 import { Logo } from './Logo';
+import { tornClipPath } from '../lib/rough';
 import './Header.css';
 
 /**
@@ -36,9 +37,19 @@ export function Header() {
           <Logo size={30} />
         </a>
 
+        {/* Пункты меню — наклеенные бумажки: у каждой свой угол и своя
+            форма рваного края, поэтому ряд не читается ровной панелью. */}
         <nav className="hdr__nav" aria-label="Основная навигация">
-          {site.nav.map((item) => (
-            <a className="hdr__link u-label" href={`#${item.id}`} key={item.id}>
+          {site.nav.map((item, i) => (
+            <a
+              className="hdr__link u-label"
+              href={`#${item.id}`}
+              key={item.id}
+              style={{
+                '--tilt': `${[-2.4, 1.8, -1.2, 2.6, -1.9][i % 5]}deg`,
+                clipPath: tornClipPath(101 + i * 7, 12, 13),
+              } as React.CSSProperties}
+            >
               {item.label}
             </a>
           ))}
@@ -50,6 +61,7 @@ export function Header() {
             href={site.contacts.telegram.href}
             target="_blank"
             rel="noreferrer noopener"
+            style={{ clipPath: tornClipPath(311, 14, 12) }}
           >
             <span className="hdr__quick-dot" aria-hidden="true" />
             Telegram

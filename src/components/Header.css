@@ -29,30 +29,25 @@
 
 .hdr__nav {
   display: flex;
-  gap: clamp(0.9rem, 2vw, 2rem);
+  gap: clamp(0.4rem, 1vw, 0.9rem);
   margin-inline: auto;
 }
 .hdr__link {
   position: relative;
-  padding-block: 0.35rem;
-  opacity: 0.78;
-  transition: opacity 0.18s var(--ease-cut);
+  padding: 0.42rem 0.85rem 0.5rem;
+  color: var(--ink-deep);
+  background-color: var(--paper);
+  background-image: url('/textures/paper-mul.png');
+  background-blend-mode: multiply;
+  background-size: 160px;
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.16s var(--ease-cut), background-color 0.16s var(--ease-cut);
 }
-.hdr__link:hover { opacity: 1; }
-/* Подчёркивание «прочерком маркера»: вырастает от левого края рывком. */
-.hdr__link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 3px;
-  width: 100%;
-  background: var(--orange);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.22s var(--ease-cut);
+/* Наведение — бумажка «подпрыгивает» и перекрашивается в акцент. */
+.hdr__link:hover {
+  background-color: var(--orange);
+  transform: rotate(0deg) translateY(-3px);
 }
-.hdr__link:hover::after { transform: scaleX(1); }
 
 .hdr__side { display: flex; align-items: center; gap: 0.75rem; flex: none; }
 
@@ -60,12 +55,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.95rem;
-  border: 2px solid var(--orange);
-  color: var(--orange);
-  transition: background 0.18s var(--ease-cut), color 0.18s var(--ease-cut);
+  padding: 0.55rem 1rem 0.62rem;
+  background: var(--orange);
+  color: var(--ink-deep);
+  transform: rotate(2.2deg);
+  transition: transform 0.18s var(--ease-cut), background 0.18s var(--ease-cut);
 }
-.hdr__quick:hover { background: var(--orange); color: var(--ink); }
+.hdr__quick:hover { background: var(--paper); transform: rotate(0deg) translateY(-3px); }
 .hdr__quick-dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: currentColor;

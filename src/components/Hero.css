@@ -28,9 +28,9 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(62% 52% at 24% 24%, rgba(245, 79, 27, 0.6), transparent 70%),
-    radial-gradient(56% 56% at 80% 80%, rgba(245, 79, 27, 0.32), transparent 72%),
-    linear-gradient(rgba(11, 12, 22, 0.5), rgba(11, 12, 22, 0.8));
+    radial-gradient(58% 48% at 20% 20%, rgba(245, 79, 27, 0.72), transparent 68%),
+    radial-gradient(52% 52% at 84% 84%, rgba(245, 79, 27, 0.38), transparent 70%),
+    linear-gradient(rgba(11, 12, 22, 0.42), rgba(11, 12, 22, 0.86));
   mix-blend-mode: hard-light;
 }
 
@@ -75,81 +75,57 @@
   animation: rec-blink 1.4s steps(1) infinite;
 }
 
-/* ======================= ЯДРО: КАДР + ИМЯ ======================= */
+/* ======================= ЯДРО: НАДПИСИ НА БУМАГЕ =======================
+   Квадрат шоурила убран: позже на его месте будет полноэкранное видео
+   с прозрачностью, и композиция должна держаться без него уже сейчас. */
 .hero__core {
   position: relative;
   z-index: 4;
   flex: 1;
   display: grid;
   place-items: center;
-  padding-inline: var(--gutter);
   min-height: 0;
+  /* Отступов по бокам нет: надписи должны упираться в края экрана. */
+  padding-inline: 0;
 }
 
-.hero__photo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: clamp(220px, 26vw, 380px);
-  transform: translate(-50%, -50%) rotate(-1.2deg);
-  z-index: 1;
-  filter: grayscale(1) contrast(1.28);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
-}
-/* Полутоновая точка поверх кадра — «плёнка/скан». */
-.hero__photo::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  opacity: 0.35;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.9) 0 34%, transparent 36%);
-  background-size: 3px 3px;
-}
-
-/* ---------- имя ---------- */
 .hero__title {
   position: relative;
-  z-index: 3;
   margin: 0;
-  text-align: center;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.hero__word {
+/* Клочки идут внахлёст и каждый под своим углом. */
+.hero__scrap--name { z-index: 2; }
+.hero__scrap--role {
+  z-index: 3;
+  /* Сдвиг вправо и наверх: второй клочок наклеен поверх первого и
+     вылезает за правый край экрана. */
+  margin-top: -0.04em;
+  margin-left: 34%;
+}
+
+.hero__name,
+.hero__role {
   display: block;
   font-family: var(--font-graf);
-  /* Одна строка: имя не должно переноситься. Кегль ограничен и шириной,
-     и высотой экрана, чтобы длинная строка влезала в любой пропорции. */
   white-space: nowrap;
-  font-size: min(11.5vw, 15.5vh, 9rem);
-  line-height: 0.9;
-  letter-spacing: -0.01em;
-  color: var(--paper);
-  filter: drop-shadow(7px 8px 0 rgba(0, 0, 0, 0.6));
-  animation: name-in 0.5s var(--ease-cut) backwards;
-}
-@keyframes name-in {
-  from { opacity: 0; transform: translateY(14px) scaleY(1.08); }
-  to   { opacity: 1; }
+  line-height: 0.92;
+  color: var(--ink-deep);
 }
 
-/* Слово внахлёст поверх имени — формула из 2807. Маркерный шрифт вместо
-   распылённого: распылённый забивал имя своей массой. */
-.hero__graf {
-  display: block;
-  margin-top: -0.3em;
-  font-family: var(--font-marker);
-  font-size: min(6vw, 8vh, 4.2rem);
-  line-height: 0.9;
-  color: var(--orange);
-  transform: rotate(-3deg);
-  animation: graf-in 0.42s var(--ease-snap) 0.28s backwards;
+/* Имя во всю ширину экрана — «надписи выходят за рамки». */
+.hero__name {
+  /* Строка нарочно шире экрана: по рефу надписи вылезают за края. */
+  font-size: min(16.5vw, 22vh, 12.5rem);
+  letter-spacing: -0.005em;
 }
-@keyframes graf-in {
-  from { opacity: 0; transform: rotate(-9deg) translateY(0.2em) scale(0.9); }
-  to   { opacity: 1; }
+.hero__role {
+  font-size: min(8vw, 11vh, 5.5rem);
+  color: var(--ink-deep);
 }
 
 /* ======================= НИЖНЯЯ ПОЛОСА ======================= */
@@ -210,7 +186,7 @@
 
 /* ======================= АДАПТИВ ======================= */
 @media (max-width: 900px) {
-  .hero__photo { width: min(210px, 52vw); }
+  
   .hero__bottom {
     grid-template-columns: 1fr;
     justify-items: center;
