@@ -1,0 +1,106 @@
+.exp { position: relative; overflow: hidden; }
+
+.exp__head {
+  position: relative;
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+.exp__title {
+  font-size: var(--fs-h2);
+  color: var(--ink);
+}
+/* Ключевое слово залито оранжевым «маркером» с неровными краями. */
+.exp__title-accent {
+  position: relative;
+  display: inline-block;
+  padding-inline: 0.12em;
+  color: var(--paper);
+}
+/* Плашка выходит за буквы со всех сторон: при вписывании «в размер» рваный
+   clip-path срезал верхушки и нижние выносные элементы. */
+.exp__title-accent::before {
+  content: '';
+  position: absolute;
+  inset: -0.12em -0.06em -0.1em;
+  background: var(--orange);
+  z-index: -1;
+  transform: rotate(-1deg);
+  clip-path: polygon(0.5% 5%, 99.5% 0%, 100% 95%, 0% 100%);
+}
+.exp__sub { margin-top: 0.75rem; color: rgba(30, 34, 61, 0.6); }
+.exp__arrow {
+  position: absolute;
+  top: -0.5rem;
+  right: 4%;
+  transform: rotate(14deg) scaleX(-1);
+  display: none;
+}
+
+/* ---------------- список ---------------- */
+.exp__list { border-top: 2px solid var(--ink); }
+
+.exp__item {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+  padding-block: clamp(0.85rem, 2vh, 1.35rem);
+  border-bottom: 1px solid rgba(30, 34, 61, 0.22);
+  color: var(--ink);
+  transition: background 0.16s var(--ease-cut), padding-left 0.16s var(--ease-cut);
+}
+/* Строка «уезжает» вправо и подсвечивается — как отметка на полях. */
+.exp__item:hover {
+  background: rgba(245, 79, 27, 0.09);
+  padding-left: 0.75rem;
+}
+
+.exp__num { color: var(--orange); font-size: 0.68rem; }
+.exp__body { display: flex; flex-direction: column; gap: 0.2rem; }
+.exp__name { font-size: clamp(1.15rem, 2.4vw, 2rem); line-height: 1; }
+.exp__scale { font-size: 0.58rem; color: rgba(30, 34, 61, 0.5); letter-spacing: 0.12em; }
+.exp__role { font-size: 0.62rem; color: rgba(30, 34, 61, 0.72); text-align: right; }
+.exp__year {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink);
+  min-width: 3.5rem;
+  text-align: right;
+}
+
+/* ---------------- кнопка «Показать больше» ---------------- */
+.exp__more { display: flex; justify-content: center; margin-top: clamp(1.75rem, 4vh, 2.75rem); }
+.exp__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1.75rem;
+  font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  background: transparent;
+  transition: transform 0.16s var(--ease-cut), background 0.16s var(--ease-cut), color 0.16s var(--ease-cut);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 97% 100%, 0 100%);
+}
+.exp__btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translate(-2px, -3px) rotate(-0.7deg);
+}
+.exp__btn-mark { font-size: 1.4em; line-height: 0; color: var(--orange); }
+
+@media (min-width: 1100px) {
+  .exp__arrow { display: block; }
+}
+@media (max-width: 700px) {
+  .exp__item {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    row-gap: 0.35rem;
+  }
+  .exp__role,
+  .exp__year { grid-column: 2; text-align: left; }
+  .exp__role { order: 3; }
+  .exp__year { order: 2; color: var(--orange); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .exp__btn:hover { transform: none; }
+}

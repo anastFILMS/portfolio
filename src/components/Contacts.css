@@ -1,0 +1,91 @@
+.cts {
+  position: relative;
+  overflow: hidden;
+}
+/* См. комментарий в Skills.css: специфичность нужна, чтобы перебить
+   padding-block из .section. */
+.section.cts { padding-bottom: 0; }
+
+.cts__head {
+  position: relative;
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+.cts__title {
+  font-size: var(--fs-h1);
+  color: var(--chalk);
+}
+/* «мне» дописано баллончиком рядом с крупным «Напиши» — как в рефе 0422. */
+.cts__tag {
+  position: absolute;
+  top: 0.15em;
+  left: clamp(6.5rem, 26vw, 22rem);
+  width: clamp(140px, 22vw, 260px);
+  color: var(--orange);
+  transform: rotate(-6deg);
+}
+.cts__sub { margin-top: 1rem; color: rgba(233, 225, 210, 0.55); }
+
+/* ---------------- список контактов ---------------- */
+.cts__list { border-top: 2px solid rgba(233, 225, 210, 0.25); }
+.cts__item { border-bottom: 2px solid rgba(233, 225, 210, 0.25); }
+
+.cts__link {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding-block: clamp(1rem, 2.6vh, 1.75rem);
+  transition: padding-left 0.2s var(--ease-cut), background 0.2s var(--ease-cut);
+}
+/* Строка «затягивается» оранжевым слева направо при наведении. */
+.cts__link:hover {
+  padding-left: 1.25rem;
+  background: linear-gradient(90deg, rgba(245, 79, 27, 0.2), transparent 70%);
+}
+
+.cts__label { color: var(--orange); font-size: 0.6rem; }
+.cts__handle {
+  font-size: clamp(1.35rem, 4vw, 3rem);
+  color: var(--chalk);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+.cts__link:hover .cts__handle { color: var(--orange); }
+
+.cts__arrow {
+  width: clamp(1.25rem, 2.4vw, 2rem);
+  height: clamp(1.25rem, 2.4vw, 2rem);
+  color: rgba(233, 225, 210, 0.4);
+  transition: transform 0.2s var(--ease-snap), color 0.2s var(--ease-cut);
+}
+.cts__link:hover .cts__arrow { transform: translate(4px, -4px); color: var(--orange); }
+
+/* ---------------- подвал ---------------- */
+.cts__footer {
+  margin-top: clamp(3rem, 8vh, 5rem);
+  border-top: 1px solid rgba(233, 225, 210, 0.15);
+  background: var(--ink-deep);
+}
+.cts__footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.5rem;
+  color: rgba(233, 225, 210, 0.45);
+}
+.cts__year { margin-left: auto; }
+
+@media (max-width: 700px) {
+  .cts__link {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 0.35rem;
+  }
+  .cts__label { grid-column: 1 / -1; }
+  .cts__tag { left: auto; right: 0; top: -0.6em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cts__link:hover .cts__arrow { transform: none; }
+}

@@ -1,0 +1,266 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: clamp(5rem, 12vh, 8rem);
+  overflow: hidden;
+  background: var(--ink);
+}
+
+/* ---------------- фон ---------------- */
+.hero__bg { position: absolute; inset: 0; pointer-events: none; }
+
+/* Мягкое пятно распыла — «баллончик прошёлся по стене» (реф 0433, 0443). */
+.hero__spray {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(44% 36% at 20% 26%, rgba(245, 79, 27, 0.52), transparent 64%),
+    radial-gradient(36% 42% at 80% 68%, rgba(59, 78, 224, 0.42), transparent 68%),
+    radial-gradient(28% 28% at 60% 10%, rgba(245, 79, 27, 0.26), transparent 72%),
+    radial-gradient(52% 44% at 46% 92%, rgba(20, 23, 40, 0.9), transparent 70%);
+  filter: blur(36px);
+}
+
+/* Служебная сетка кадра — едва заметная, даёт «съёмочный» подтекст. */
+.hero__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(to right, rgba(233, 225, 210, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(233, 225, 210, 0.055) 1px, transparent 1px);
+  background-size: 90px 90px;
+  mask-image: radial-gradient(circle at 50% 45%, black 30%, transparent 78%);
+}
+
+/* ---------------- HUD камеры ---------------- */
+.hero__hud {
+  position: absolute;
+  inset: clamp(4.75rem, 11vh, 7rem) var(--gutter) auto;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(233, 225, 210, 0.55);
+  z-index: 2;
+}
+.hero__hud-rec { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--orange); }
+.hero__hud-rec i {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: currentColor;
+  animation: rec-blink 1.4s steps(1) infinite;
+}
+
+/* ---------------- раскладка ---------------- */
+/* flex-shrink: 0 обязателен: .hero — колоночный флекс с min-height 100svh,
+   и на узких экранах, где контент выше вьюпорта, он сжимал этот блок —
+   слот шоурила схлопывался в нулевую высоту. */
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  width: 100%;
+  padding-block: clamp(1.5rem, 4vh, 3rem);
+}
+
+/* ---------------- имя ---------------- */
+.hero__name { margin: 0; }
+/* Буквы анимируются по отдельности, но слово остаётся неразрывным:
+   flex-wrap рвал имя посреди слова («АНАСТАСИ / Я»). */
+.hero__letters {
+  display: flex;
+  flex-wrap: nowrap;
+  max-width: 100%;
+}
+.hero__letter {
+  display: inline-block;
+  /* Кегль считается от ширины экрана и длины имени, чтобы строка гарантированно
+     влезала одной строкой при любом количестве букв. */
+  font-size: min(var(--fs-h1), calc((100vw - var(--gutter) * 2) / var(--len) * 1.62));
+  line-height: 0.78;
+  letter-spacing: -0.035em;
+  color: var(--chalk);
+  /* Резкий выезд снизу с перелётом, по букве, с разбегом через --d. */
+  animation: letter-in 0.55s var(--ease-snap) backwards;
+  animation-delay: var(--d);
+}
+@keyframes letter-in {
+  from { opacity: 0; transform: translateY(0.5em) rotate(-4deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Спрей-тег поверх имени, с небольшим наездом. */
+.hero__tag {
+  width: clamp(220px, 34vw, 460px);
+  margin-top: -0.42em;
+  margin-left: clamp(0px, 6vw, 90px);
+  color: var(--orange);
+  animation: tag-in 0.5s var(--ease-cut) 0.4s backwards;
+}
+@keyframes tag-in {
+  from { opacity: 0; transform: translate(-18px, 10px) rotate(-5deg) scale(0.94); }
+  to   { opacity: 1; transform: rotate(-2.5deg); }
+}
+
+.hero__role {
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
+  font-size: clamp(0.72rem, 1.15vw, 0.95rem);
+  color: rgba(233, 225, 210, 0.82);
+  letter-spacing: 0.22em;
+}
+
+/* ---------------- кнопки ---------------- */
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: clamp(1.25rem, 3vh, 2.25rem);
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.9rem 1.6rem;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.35vw, 1.15rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 2px solid var(--orange);
+  transition: transform 0.16s var(--ease-cut), background 0.16s var(--ease-cut), color 0.16s var(--ease-cut);
+  /* Слегка срезанный угол — «вырезано ножницами». */
+  clip-path: polygon(0 0, 100% 0, 100% 72%, 96% 100%, 0 100%);
+}
+.btn svg { width: 1.1em; height: 1.1em; }
+.btn--solid { background: var(--orange); color: var(--ink); }
+.btn--ghost { color: var(--chalk); }
+/* Наведение — короткий рывок, а не плавное всплытие. */
+.btn:hover  { transform: translate(-2px, -3px) rotate(-0.6deg); }
+.btn:active { transform: translate(1px, 1px); }
+.btn--solid:hover { background: var(--chalk); border-color: var(--chalk); }
+.btn--ghost:hover { background: var(--orange); color: var(--ink); }
+
+/* Каракуля-обводка появляется только на наведении второй кнопки. */
+.btn__scribble {
+  position: absolute;
+  inset: -34% -12%;
+  width: 124%;
+  height: 168%;
+  opacity: 0;
+  transition: opacity 0.14s var(--ease-cut);
+}
+.btn--ghost:hover .btn__scribble { opacity: 1; }
+
+/* Полоса бумаги: рваные края сверху и снизу рисует TornEdge, поэтому у самой
+   полосы должны быть отступы наружу — иначе зубцы наедут на текст. */
+.hero__strip {
+  position: relative;
+  display: inline-block;
+  margin-top: clamp(1.75rem, 4vh, 2.75rem);
+  padding: 0.55rem clamp(0.9rem, 2vw, 1.6rem);
+  background: var(--paper);
+  transform: rotate(-1.1deg);
+  box-shadow: 6px 8px 0 rgba(20, 23, 40, 0.45);
+}
+
+.hero__keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  color: rgba(30, 34, 61, 0.78);
+  font-size: 0.64rem;
+}
+.hero__keys li { position: relative; padding-left: 1rem; }
+.hero__keys li::before {
+  content: '✳';
+  position: absolute; left: 0;
+  color: var(--orange);
+}
+
+/* ---------------- панель шоурила ---------------- */
+.hero__media {
+  position: relative;
+  transform: rotate(1.6deg);
+  box-shadow: 14px 18px 0 rgba(20, 23, 40, 0.55), 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+.hero__media-tape { z-index: 7; }
+.hero__media-note {
+  position: absolute;
+  right: -0.5rem;
+  bottom: -2.1rem;
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  color: var(--orange);
+  transform: rotate(-4deg);
+}
+
+/* ---------------- подвал экрана ---------------- */
+.hero__scroll {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  align-self: center;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(233, 225, 210, 0.6);
+}
+.hero__scroll-bar {
+  display: block;
+  width: 62px;
+  height: 2px;
+  background: rgba(233, 225, 210, 0.25);
+  overflow: hidden;
+}
+/* Оранжевый бегунок проезжает по полоске — «идёт запись». */
+.hero__scroll-bar::after {
+  content: '';
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: var(--orange);
+  animation: scroll-run 1.9s var(--ease-cut) infinite;
+}
+@keyframes scroll-run {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+.hero__marquee { position: relative; z-index: 2; }
+
+/* ---------------- адаптив ---------------- */
+@media (max-width: 900px) {
+  .hero {
+    /* Контент выше экрана — центрирование заменяем на обычный поток,
+       иначе верх первого экрана уезжает под шапку. */
+    justify-content: flex-start;
+    padding-bottom: 1.5rem;
+  }
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+  .hero__media {
+    width: min(340px, 78vw);
+    margin-inline: auto;
+    transform: rotate(-1.4deg);
+  }
+  .hero__tag { margin-left: 0; width: min(300px, 70vw); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__letter,
+  .hero__tag { animation: none; }
+  .hero__hud-rec i,
+  .hero__scroll-bar::after { animation: none; }
+  .btn:hover { transform: none; }
+}

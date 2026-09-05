@@ -1,0 +1,12 @@
+.torn {
+  position: absolute;
+  left: -1px;
+  width: calc(100% + 2px);
+  display: block;
+  pointer-events: none;
+  z-index: 3;
+}
+/* Разрыв живёт внутри секции, вплотную к её краю: любой вынос наружу
+   срезается overflow: hidden на самой секции. */
+.torn--top    { top: 0; }
+.torn--bottom { bottom: 0; }

@@ -1,0 +1,91 @@
+/**
+ * Процедурная гранж-графика.
+ *
+ * Все рваные края, каракули и спрей-теги рисуются кодом, а не картинками:
+ * форма считается от seed, поэтому она стабильна между рендерами и сборками,
+ * но каждый элемент на странице получается своей, «нарисованной от руки».
+ */
+
+/** Детерминированный PRNG (mulberry32) — один seed даёт одну и ту же форму. */
+export function seeded(seed: number) {
+  let t = seed >>> 0;
+  return () => {
+    t = (t + 0x6d2b79f5) >>> 0;
+    let x = Math.imul(t ^ (t >>> 15), 1 | t);
+    x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Край разорванной бумаги. Возвращает `d` для path в viewBox 0 0 1000 H.
+ *
+ * @param side  'top' — рвань сверху (фигура заливает низ), 'bottom' — наоборот
+ * @param seed  форма края
+ * @param teeth сколько «зубцов» разрыва
+ */
+export function tornEdgePath(
+  side: 'top' | 'bottom',
+  seed: number,
+  teeth = 34,
+  height = 60,
+): string {
+  const rnd = seeded(seed);
+  const W = 1000;
+  const step = W / teeth;
+  const pts: [number, number][] = [];
+
+  for (let i = 0; i <= teeth; i++) {
+    const x = i * step + (i === 0 || i === teeth ? 0 : (rnd() - 0.5) * step * 0.7);
+    // Волокна бумаги: крупная волна + мелкие рывки поверх неё.
+    const wave = Math.sin((i / teeth) * Math.PI * 2.4 + seed) * height * 0.16;
+    const jag = (rnd() - 0.5) * height * 0.72;
+    const spike = rnd() > 0.86 ? (rnd() - 0.5) * height * 0.9 : 0;
+    const y = height * 0.5 + wave + jag + spike;
+    pts.push([x, Math.max(2, Math.min(height - 2, y))]);
+  }
+
+  const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join('');
+
+  return side === 'top'
+    ? `${line}L${W},${height}L0,${height}Z`   // заливаем всё, что ниже разрыва
+    : `${line}L${W},0L0,0Z`;                  // заливаем всё, что выше
+}
+
+/** Пятно/капля краски — для дрипов под спрей-тегом. */
+export function dripPath(seed: number, count = 5): string {
+  const rnd = seeded(seed);
+  let d = '';
+  for (let i = 0; i < count; i++) {
+    const x = 60 + rnd() * 880;
+    const len = 18 + rnd() * 90;
+    const w = 3 + rnd() * 7;
+    // «Слеза»: узкий след и утолщение на конце.
+    d += `M${x},0 q${-w / 2},${len * 0.55} 0,${len} q${w / 2},${-len * 0.45} ${w},${-len} Z`;
+  }
+  return d;
+}
+
+/** Набор рукописных каракулей (маркер). Пути нарисованы в viewBox 0 0 200 100. */
+export const SCRIBBLES = {
+  /** Небрежная обводка овалом — как в рефе 0424 вокруг мелких подписей. */
+  circle:
+    'M164,44c-3-19-40-31-70-30C61,15,26,28,22,48c-4,19,29,36,66,37c34,1,72-11,76-29c3-16-24-30-58-33',
+  /** Подчёркивание в два прохода. */
+  underline:
+    'M8,62c44-9,96-13,150-11 M14,74c50-10,104-13,158-9',
+  /** Стрелка от руки. */
+  arrow:
+    'M10,70c40-30,86-46,150-48 M132,10c12,3,22,7,30,12 M148,42c8-10,12-20,14-30',
+  /** Зигзаг-«пульс» (реф 0437). */
+  zigzag:
+    'M4,60l26-34l22,48l26-56l24,60l26-42l22,34l26-30',
+  /** Крест-«×» двумя мазками. */
+  cross:
+    'M24,20c38,22,80,44,124,62 M150,18c-40,24-82,46-124,66',
+  /** Звезда, нарисованная одной линией (реф 0435). */
+  star:
+    'M100,8l22,58l60,2l-48,38l18,58l-52-36l-52,36l18-58l-48-38l60-2Z',
+} as const;
+
+export type ScribbleKind = keyof typeof SCRIBBLES;
