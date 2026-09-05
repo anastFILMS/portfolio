@@ -1,0 +1,159 @@
+.work { position: relative; overflow: hidden; }
+
+/* ---------------- шапка раздела ---------------- */
+.work__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+.work__title-wrap { position: relative; }
+.work__title {
+  font-size: var(--fs-h2);
+  color: var(--chalk);
+}
+/* SVG каракули имеет viewBox 200×100, поэтому без явной высоты он растягивался
+   на весь заголовок и линия проходила поверх букв. Держим низкую полосу
+   и сажаем её под базовую линию. */
+.work__title-line {
+  position: absolute;
+  left: -2%;
+  bottom: -0.85rem;
+  width: 104%;
+  /* Высоты должно хватать, чтобы два штриха каракули не слились в один. */
+  height: 2.1rem;
+  color: var(--orange);
+}
+.work__sub { color: rgba(233, 225, 210, 0.55); }
+
+/* ---------------- фильтр ---------------- */
+.work__filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.75rem, 5vh, 3rem);
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(233, 225, 210, 0.14);
+}
+.chip {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(233, 225, 210, 0.28);
+  color: rgba(233, 225, 210, 0.7);
+  transition: transform 0.14s var(--ease-cut), background 0.14s var(--ease-cut),
+              color 0.14s var(--ease-cut), border-color 0.14s var(--ease-cut);
+}
+.chip:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px) rotate(-0.8deg); }
+.chip.is-active { background: var(--orange); border-color: var(--orange); color: var(--ink); }
+
+/* ---------------- сетка ---------------- */
+.work__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2.25rem);
+  align-items: start;
+}
+.work__col {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  will-change: transform;
+}
+/* Средняя колонка изначально опущена — сетка сразу читается неровной. */
+.work__col:nth-child(2) { margin-top: clamp(2rem, 7vw, 6rem); }
+.work__col:nth-child(3) { margin-top: clamp(0.5rem, 2vw, 2rem); }
+
+/* ---------------- карточка ---------------- */
+.card { position: relative; }
+.card__hit {
+  display: block;
+  width: 100%;
+  text-align: left;
+  transition: transform 0.22s var(--ease-snap);
+}
+/* Наведение: карточка чуть подскакивает и разворачивается — «живая бумага». */
+.card:hover .card__hit { transform: translate(-4px, -8px) rotate(-0.7deg); }
+
+.card__media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--ink-deep);
+  box-shadow: 8px 10px 0 rgba(20, 23, 40, 0.6);
+  transition: box-shadow 0.22s var(--ease-snap);
+}
+.card:hover .card__media { box-shadow: 14px 18px 0 var(--orange); }
+
+.card__idx {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  z-index: 5;
+  font-size: 0.6rem;
+  color: rgba(233, 225, 210, 0.55);
+  mix-blend-mode: difference;
+}
+
+.card__play {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  z-index: 5;
+  transform: translate(-50%, 12px);
+  padding: 0.4rem 0.9rem;
+  background: var(--orange);
+  color: var(--ink);
+  font-size: 0.58rem;
+  opacity: 0;
+  transition: opacity 0.16s var(--ease-cut), transform 0.16s var(--ease-cut);
+}
+.card:hover .card__play,
+.card:focus-within .card__play { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------------- подпись карточки ---------------- */
+.card__meta {
+  display: block;
+  padding-top: 0.85rem;
+}
+.card__title {
+  display: block;
+  font-size: clamp(1.1rem, 1.9vw, 1.65rem);
+  color: var(--chalk);
+  transition: color 0.16s var(--ease-cut);
+}
+.card:hover .card__title { color: var(--orange); }
+
+.card__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  margin-top: 0.35rem;
+  font-size: 0.6rem;
+  color: rgba(233, 225, 210, 0.5);
+}
+.card__year { color: var(--orange); }
+/* Разделитель между годом и форматом — как в примере брифа. */
+.card__format::before { content: '/ '; opacity: 0.5; }
+
+.work__empty {
+  padding: 3rem 0;
+  text-align: center;
+  color: rgba(233, 225, 210, 0.45);
+}
+
+/* ---------------- адаптив ---------------- */
+@media (max-width: 900px) {
+  .work__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .work__col { transform: none !important; }
+  .work__col:nth-child(2) { margin-top: clamp(1.5rem, 6vw, 3rem); }
+  .work__col:nth-child(3) { margin-top: 0; }
+}
+@media (max-width: 560px) {
+  .work__grid { grid-template-columns: minmax(0, 1fr); }
+  .work__col:nth-child(n) { margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card:hover .card__hit { transform: none; }
+  .work__col { transform: none !important; }
+}

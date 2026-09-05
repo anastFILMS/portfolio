@@ -1,0 +1,55 @@
+# Сборка сайта и публикация на GitHub Pages.
+#
+# Разовая настройка в репозитории: Settings → Pages → Source: GitHub Actions.
+# После этого каждый push в main сам пересобирает и выкладывает сайт на
+# https://anastfilms.github.io/portfolio/
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Позволяет запустить публикацию вручную из вкладки Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Публикуем по одной за раз; лишние сборки в очереди отменяем, но текущую
+# выкладку не прерываем на середине.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Сборка
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

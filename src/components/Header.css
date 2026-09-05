@@ -1,0 +1,150 @@
+.hdr {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-header);
+  color: var(--paper);
+  transition: background 0.3s var(--ease-cut), border-color 0.3s var(--ease-cut);
+  border-bottom: 2px solid transparent;
+}
+.hdr.is-scrolled {
+  background: rgba(20, 23, 40, 0.86);
+  backdrop-filter: blur(10px) saturate(1.2);
+  border-bottom-color: var(--orange);
+}
+
+.hdr__bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding: 0.85rem var(--gutter);
+  transition: padding 0.3s var(--ease-cut);
+}
+.hdr.is-scrolled .hdr__bar { padding-block: 0.55rem; }
+
+.hdr__logo { flex: none; }
+
+.hdr__nav {
+  display: flex;
+  gap: clamp(0.9rem, 2vw, 2rem);
+  margin-inline: auto;
+}
+.hdr__link {
+  position: relative;
+  padding-block: 0.35rem;
+  opacity: 0.78;
+  transition: opacity 0.18s var(--ease-cut);
+}
+.hdr__link:hover { opacity: 1; }
+/* Подчёркивание «прочерком маркера»: вырастает от левого края рывком. */
+.hdr__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s var(--ease-cut);
+}
+.hdr__link:hover::after { transform: scaleX(1); }
+
+.hdr__side { display: flex; align-items: center; gap: 0.75rem; flex: none; }
+
+.hdr__quick {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.95rem;
+  border: 2px solid var(--orange);
+  color: var(--orange);
+  transition: background 0.18s var(--ease-cut), color 0.18s var(--ease-cut);
+}
+.hdr__quick:hover { background: var(--orange); color: var(--ink); }
+.hdr__quick-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor;
+  animation: rec-blink 1.6s steps(1) infinite;
+}
+
+/* ---------- бургер ---------- */
+.hdr__burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  width: 42px;
+  height: 38px;
+  border: 2px solid currentColor;
+}
+.hdr__burger-line {
+  display: block;
+  height: 2px;
+  background: currentColor;
+  margin-inline: auto;
+  width: 20px;
+  transition: transform 0.22s var(--ease-cut), width 0.22s var(--ease-cut);
+}
+.hdr__burger-line:last-child { width: 13px; }
+.hdr.is-open .hdr__burger-line:first-child { transform: translateY(4px) rotate(45deg); width: 20px; }
+.hdr.is-open .hdr__burger-line:last-child  { transform: translateY(-4px) rotate(-45deg); width: 20px; }
+
+/* ---------- мобильное меню ---------- */
+.hdr__menu {
+  background: var(--ink-deep);
+  border-top: 2px solid var(--orange);
+  padding: 1.5rem var(--gutter) 2rem;
+}
+.hdr__menu-link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding-block: 0.55rem;
+  font-size: clamp(2rem, 9vw, 3.25rem);
+  border-bottom: 1px solid rgba(233, 225, 210, 0.14);
+  /* Пункты влетают по очереди — короткая лесенка, без «мягкости». */
+  animation: menu-in 0.32s var(--ease-snap) backwards;
+  animation-delay: calc(var(--i) * 0.045s);
+}
+.hdr__menu-link:hover { color: var(--orange); }
+.hdr__menu-num { font-size: 0.7rem; color: var(--orange); }
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translateX(-24px) skewX(6deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+.hdr__menu-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  color: var(--orange);
+}
+
+@media (max-width: 900px) {
+  .hdr__nav { display: none; }
+  .hdr__burger { display: flex; }
+  .hdr__side { margin-left: auto; }
+}
+/* Быстрый контакт в шапке брифом оговорён отдельно, поэтому на телефоне он
+   не прячется, а ужимается до компактной кнопки. Уходит только на самых
+   узких экранах, где остаётся в бургер-меню. */
+@media (max-width: 560px) {
+  .hdr__quick { padding: 0.45rem 0.65rem; font-size: 0.58rem; }
+}
+@media (max-width: 380px) {
+  .hdr__quick { display: none; }
+}
+@media (min-width: 901px) {
+  .hdr__menu { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hdr__quick-dot { animation: none; }
+  .hdr__menu-link { animation: none; }
+}
