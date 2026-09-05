@@ -16,8 +16,10 @@ import os, random
 FONT = "/root/.claude/uploads/460ea7c9-eaa0-51cd-9b30-c874aca3ef85/cddc3976-Splatink.ttf"
 OUT = "public/media/titles"
 SIZE = 460          # кегль отрисовки; на экране слово всё равно масштабируется
-WORDS = {"anastasia": ("Anastasia", (233, 225, 210)),
-         "brichko":   ("Brichko",   (245, 79, 27))}
+# Оба слова тёмные: они лежат на светлой и оранжевой бумаге, и кремовые
+# буквы на такой подложке пропадали.
+WORDS = {"anastasia": ("Anastasia", (11, 12, 22)),
+         "brichko":   ("Brichko",   (11, 12, 22))}
 
 
 def add_drips(img, color, rnd, count=9):

@@ -47,23 +47,39 @@
    Слои лежат абсолютно: в рефе слова не стоят в ряд, их перекрывает объект.
    Каждый слой двигается с своей амплитудой — отсюда глубина. */
 
-.hero__word {
+/* Клочок бумаги со словом. Тень на обёртке: clip-path подложки срезал бы её. */
+.hero__slip {
   position: absolute;
-  height: auto;
   pointer-events: none;
-  filter: drop-shadow(7px 9px 0 rgba(0, 0, 0, 0.62));
+  filter: drop-shadow(8px 10px 0 rgba(0, 0, 0, 0.6));
   will-change: transform;
   animation: word-in 0.6s var(--ease-cut) backwards;
   z-index: 3;
 }
+.hero__word { position: relative; display: block; width: 100%; height: auto; z-index: 1; }
+
+/* Подложка чуть больше слова, чтобы буквы сидели с запасом, но подтёки
+   свисали с края — как на присланном образце. */
+.hero__paper {
+  position: absolute;
+  inset: 2% -3% 16%;
+  z-index: 0;
+  background-color: var(--paper);
+  background-image: url('/textures/paper-mul.png');
+  background-blend-mode: multiply;
+  background-size: 260px;
+}
+.hero__paper--orange { background-color: var(--orange); }
+
+.hero__tape { z-index: 2; }
 /* Слова уходят за края экрана — как «UARDA» в рефе. */
-.hero__word--first {
+.hero__slip--first {
   top: 6%;
   left: 5vw;
   width: min(56vw, 830px);
   rotate: -2.4deg;
 }
-.hero__word--last {
+.hero__slip--last {
   bottom: 15%;
   right: 6vw;
   width: min(48vw, 690px);
@@ -177,7 +193,7 @@
 /* ======================= АДАПТИВ ======================= */
 @media (max-width: 900px) {
   /* На телефоне слова разводим к верху и низу, камера — между ними. */
-  .hero__word--first { top: 7%; left: -2vw; width: 82vw; }
+  .hero__slip--first { top: 7%; left: -2vw; width: 82vw; }
   .hero__word--last  { bottom: auto; top: 26%; right: -4vw; width: 62vw; }
   .hero__cam {
     top: 42%;

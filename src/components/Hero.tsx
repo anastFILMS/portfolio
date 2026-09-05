@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { asset } from '../lib/asset';
 import { Marquee } from './grunge/Marquee';
 import { Sticker } from './grunge/Sticker';
+import { tornClipPath } from '../lib/rough';
 import './Hero.css';
 
 /**
@@ -71,13 +72,14 @@ export function Hero() {
       <h1 className="sr-only">Anastasia Brichko — видеограф и монтажёр, Москва</h1>
 
       {/* Слова и камера — три слоя с разной амплитудой параллакса. */}
-      <img
-        className="hero__word hero__word--first"
-        src={asset('media/titles/anastasia.png')}
-        alt=""
-        aria-hidden="true"
-        style={wordStyle(9)}
-      />
+      {/* Слова наклеены на рваные клочки бумаги (реф со вторым скриншотом).
+          Клочок рисуется подложкой, слово лежит поверх и выходит за её край. */}
+      <div className="hero__slip hero__slip--first" style={wordStyle(9)} aria-hidden="true">
+        <span className="hero__paper" style={{ clipPath: tornClipPath(21, 24, 8) }} />
+        <img className="hero__word" src={asset('media/titles/anastasia.png')} alt="" />
+        <Sticker src="tape/tape-1" className="stk--photo hero__tape" w={200} rot={-7} opacity={0.9}
+                 style={{ top: '-14%', left: '14%' }} />
+      </div>
 
       <img
         className="hero__cam"
@@ -87,13 +89,12 @@ export function Hero() {
         style={camStyle}
       />
 
-      <img
-        className="hero__word hero__word--last"
-        src={asset('media/titles/brichko.png')}
-        alt=""
-        aria-hidden="true"
-        style={wordStyle(15)}
-      />
+      <div className="hero__slip hero__slip--last" style={wordStyle(15)} aria-hidden="true">
+        <span className="hero__paper hero__paper--orange" style={{ clipPath: tornClipPath(58, 24, 10) }} />
+        <img className="hero__word" src={asset('media/titles/brichko.png')} alt="" />
+        <Sticker src="tape/tape-5" className="stk--photo hero__tape" w={160} rot={9} opacity={0.85}
+                 style={{ bottom: '-12%', right: '10%' }} />
+      </div>
 
       {/* Нижний левый угол — там, где в рефе стоит фотография. */}
       <div className="hero__corner">
@@ -115,7 +116,10 @@ export function Hero() {
       </p>
 
       <div className="hero__deco" aria-hidden="true" style={{ opacity: 1 - scroll * 0.6 }}>
-        <Sticker src="tags/big-4" w={420} rot={8}  color="var(--orange)" style={{ top: '4%', right: '-8%' }} />
+        {/* Два граффити в местах, отмеченных на присланном скриншоте:
+            крупное слева от камеры и второе в правом верхнем углу. */}
+        <Sticker src="tags/big-1" w={430} rot={-11} color="var(--orange)" opacity={0.95} style={{ top: '28%', left: '-7%' }} />
+        <Sticker src="tags/big-4" w={430} rot={8}   color="var(--paper)" opacity={0.85} style={{ top: '3%', right: '-6%' }} />
         <Sticker src="tags/big-6" w={230} rot={-13} color="var(--paper)" opacity={0.5} style={{ bottom: '6%', left: '38%' }} />
         <Sticker src="marks/star-spray" w={120} rot={-12} color="var(--orange)" mobile className="hero__star" style={{ top: '52%', left: '3%' }} />
         <Sticker src="marks/asterisk"   w={58}  rot={0}   color="var(--orange)" style={{ top: '16%', left: '46%' }} />

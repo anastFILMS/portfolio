@@ -1,62 +1,65 @@
 import { DIRECTION_LABELS, type Project } from '../content/projects';
 import { MediaSlot } from './grunge/MediaSlot';
+import { Sticker } from './grunge/Sticker';
+import { rippedClipPath } from '../lib/rough';
 
 type Props = {
   project: Project;
   onOpen: (project: Project) => void;
-  /** Порядковый номер в сетке — печатается как индекс архива. */
   index: number;
 };
 
 /**
- * Карточка проекта в сетке WORK.
+ * Строка проекта в разделе WORK.
  *
- * По брифу внутри только название, год и формат — ни описаний, ни списка
- * задач, ни роли. Всё остальное место отдано картинке.
+ * Раскладка по рефу: материал и информация идут в шахматном порядке —
+ * чётные строки картинкой слева, нечётные справа. Сетка карточек не
+ * подходила: заказчица просила именно чередование.
  *
- * `data-hover-media` ловит MediaSlot: наведение на любую точку карточки
- * запускает loop-превью, а не только наведение на сам кадр.
+ * Кадр вырезан рваным краем по всему периметру — на рефе картинки
+ * выглядят выдранными из бумаги.
  */
 export function WorkCard({ project, onOpen, index }: Props) {
-  const format = project.directions.join(' / ');
+  const format = project.directions.map((d) => DIRECTION_LABELS[d]).join(' · ');
+  const flipped = index % 2 === 1;
 
   return (
-    <article className="card" data-hover-media>
+    <article className={`row ${flipped ? 'row--flip' : ''}`} data-hover-media>
       <button
-        className="card__hit"
+        className="row__media"
         onClick={() => onOpen(project)}
         aria-label={`Открыть проект: ${project.title}, ${project.year}, ${format}`}
+        style={{ clipPath: rippedClipPath(index * 37 + 5) }}
       >
-        <span className="card__media">
-          <MediaSlot
-            video={project.loop}
-            poster={project.poster}
-            // Название уже стоит подписью под карточкой — в заглушке пишем,
-            // какой файл сюда встанет, а не дублируем заголовок.
-            label="Loop-превью"
-            hint={project.hint}
-            ratio={project.ratio}
-            playOnHover
-          />
-          {/* Индекс архива в углу — язык съёмочной картотеки. */}
-          <span className="card__idx u-label" aria-hidden="true">
-            {String(index + 1).padStart(2, '0')}
-          </span>
-          {/* Подсказка появляется только при наведении. */}
-          <span className="card__play u-label" aria-hidden="true">Смотреть</span>
-        </span>
-
-        <span className="card__meta">
-          <span className="card__title u-display">{project.title}</span>
-          <span className="card__row u-label">
-            <span className="card__year">{project.year}</span>
-            <span className="card__format">{format}</span>
-          </span>
-        </span>
+        <MediaSlot
+          video={project.loop}
+          poster={project.poster}
+          label="Loop-превью"
+          hint={project.hint}
+          ratio="16 / 9"
+          playOnHover
+        />
+        <span className="row__play u-label" aria-hidden="true">Смотреть</span>
       </button>
 
-      {/* Читаемые названия направлений — для поиска и скринридеров. */}
-      <span className="sr-only">{project.directions.map((d) => DIRECTION_LABELS[d]).join(', ')}</span>
+      <div className="row__info">
+        <span className="row__num u-tech" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+        <h3 className="row__title u-head">{project.title}</h3>
+        <p className="row__meta u-label">
+          <span className="row__year">{project.year}</span>
+          <span>{project.directions.join(' / ')}</span>
+        </p>
+        <p className="row__format u-label">{format}</p>
+
+        {/* Мелкое граффити у текста — как подписи на рефе. */}
+        <Sticker
+          src={flipped ? 'marks/asterisk' : 'marks/star'}
+          w={44}
+          rot={flipped ? 9 : -8}
+          color="var(--orange)"
+          className="row__mark"
+        />
+      </div>
     </article>
   );
 }

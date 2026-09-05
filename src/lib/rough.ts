@@ -79,6 +79,26 @@ export function tornClipPath(seed: number, teeth = 22, depth = 7): string {
   return `polygon(${[...top, ...bottom].join(', ')})`;
 }
 
+/**
+ * Рваный край по всему периметру — для карточек WORK.
+ *
+ * В отличие от `tornClipPath`, рвутся все четыре стороны, а зубцы крупнее
+ * и острее: на рефе картинки выглядят выдранными из бумаги, а не аккуратно
+ * обрезанными. Возвращает готовое значение `polygon(...)`.
+ */
+export function rippedClipPath(seed: number, teeth = 14, depth = 4): string {
+  const rnd = seeded(seed);
+  const pts: string[] = [];
+  const jag = () => rnd() * depth;
+
+  for (let i = 0; i <= teeth; i++) pts.push(`${((i / teeth) * 100).toFixed(1)}% ${jag().toFixed(1)}%`);
+  for (let i = 1; i <= teeth; i++) pts.push(`${(100 - jag()).toFixed(1)}% ${((i / teeth) * 100).toFixed(1)}%`);
+  for (let i = teeth - 1; i >= 0; i--) pts.push(`${((i / teeth) * 100).toFixed(1)}% ${(100 - jag()).toFixed(1)}%`);
+  for (let i = teeth - 1; i >= 1; i--) pts.push(`${jag().toFixed(1)}% ${((i / teeth) * 100).toFixed(1)}%`);
+
+  return `polygon(${pts.join(', ')})`;
+}
+
 /** Пятно/капля краски — для дрипов под спрей-тегом. */
 export function dripPath(seed: number, count = 5): string {
   const rnd = seeded(seed);

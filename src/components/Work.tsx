@@ -19,10 +19,6 @@ import './Work.css';
  * там он только мешает смотреть работы.
  */
 
-/** Множители скорости по колонкам. 0 — колонка стоит, 1 — уезжает на полный ход. */
-const SPEEDS = [0.75, -0.35, 0.45];
-const COLUMNS = SPEEDS.length;
-
 export function Work() {
   const [filter, setFilter] = useState<Direction | 'ALL'>('ALL');
   const [open, setOpen] = useState<Project | null>(null);
@@ -33,14 +29,6 @@ export function Work() {
     () => (filter === 'ALL' ? projects : projects.filter((p) => p.directions.includes(filter))),
     [filter],
   );
-
-  // Раскладываем карточки по колонкам по кругу, сохраняя исходный номер
-  // для подписи-индекса.
-  const columns = useMemo(() => {
-    const cols: { project: Project; index: number }[][] = Array.from({ length: COLUMNS }, () => []);
-    visible.forEach((project, i) => cols[i % COLUMNS].push({ project, index: i }));
-    return cols;
-  }, [visible]);
 
   /** Все направления, реально встречающиеся в проектах. */
   const directions = useMemo(() => {
@@ -83,22 +71,21 @@ export function Work() {
           </div>
         </Reveal>
 
-        <div className="work__grid" ref={ref}>
-          {columns.map((col, ci) => (
+        {/* Шахматный порядок «материал — информация — материал»: строки
+            чередуются сторонами, а не выстраиваются сеткой. Параллакс
+            сдвигает соседние строки навстречу друг другу. */}
+        <div className="work__rows" ref={ref}>
+          {visible.map((project, i) => (
             <div
-              className="work__col"
-              key={ci}
+              className="work__row"
+              key={project.id}
               style={
                 parallax
-                  ? // progress − 0.5 центрирует смещение: в середине экрана
-                    // колонка стоит на месте, а расходится на входе и выходе.
-                    ({ transform: `translate3d(0, ${(progress - 0.5) * SPEEDS[ci] * -260}px, 0)` } as React.CSSProperties)
+                  ? ({ transform: `translate3d(0, ${(progress - 0.5) * (i % 2 ? 60 : -60)}px, 0)` } as React.CSSProperties)
                   : undefined
               }
             >
-              {col.map(({ project, index }) => (
-                <WorkCard key={project.id} project={project} index={index} onOpen={setOpen} />
-              ))}
+              <WorkCard project={project} index={i} onOpen={setOpen} />
             </div>
           ))}
         </div>
