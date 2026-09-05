@@ -78,7 +78,7 @@ export function Hero() {
         <span className="hero__paper" style={{ clipPath: tornClipPath(21, 24, 8) }} />
         <img className="hero__word" src={asset('media/titles/anastasia.png')} alt="" />
         <Sticker src="tape/tape-1" className="stk--photo hero__tape" w={150} rot={-16} opacity={0.9}
-                 style={{ top: '-16%', left: '-4%' }} />
+                 style={{ top: '-26%', left: '-10%' }} />
       </div>
 
       <img

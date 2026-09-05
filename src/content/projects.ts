@@ -65,7 +65,7 @@ export const projects: Project[] = [
     directions: ['FASHION', 'EVENT'],
     ratio: '4 / 5',
     hint: 'Loop 4 сек · показ, бэкстейдж',
-    note: 'Показ и бэкстейдж: свет, движение, ритм под музыку.',
+    note: 'Показ, бэкстейдж, гримёрка. Снимала на две камеры и монтировала сама: ритм собран под музыку, склейки короткие, движение внутри кадра не останавливается.',
   },
   {
     id: 'big-interview',
@@ -74,7 +74,7 @@ export const projects: Project[] = [
     directions: ['INTERVIEW', 'MULTICAM'],
     ratio: '16 / 9',
     hint: 'Loop 4 сек · две камеры, свет',
-    note: 'Две камеры, студийный свет, монтаж без провисаний.',
+    note: 'Студия, две камеры, поставленный свет. Монтаж без провисаний — паузы вычищены, реплики стыкуются встык.',
   },
   {
     id: 'city-forum',
@@ -83,7 +83,7 @@ export const projects: Project[] = [
     directions: ['EVENT', 'REPORTAGE'],
     ratio: '3 / 4',
     hint: 'Loop 5 сек · зал, сцена, зрители',
-    note: 'Зал, сцена, зрители — репортаж в режиме одного дубля.',
+    note: 'Главная сцена, зал, реакция зрителей. Репортаж в режиме одного дубля: переснять нельзя, всё держится на выборе точки и тайминге.',
   },
   {
     id: 'music-showcase',
@@ -92,7 +92,7 @@ export const projects: Project[] = [
     directions: ['EVENT', 'MULTICAM'],
     ratio: '16 / 9',
     hint: 'Loop 5 сек · свет, сцена, толпа',
-    note: 'Концертный свет и толпа, монтаж под трек.',
+    note: 'Концертный свет, дым, толпа. Нарезка собрана под трек — доли совпадают со склейками.',
   },
   {
     id: 'brand-reels',
@@ -101,7 +101,7 @@ export const projects: Project[] = [
     directions: ['VERTICAL', 'FASHION'],
     ratio: '9 / 16',
     hint: 'Loop 4 сек · вертикаль 1080×1920',
-    note: 'Вертикаль под соцсети: короткие склейки, крупные планы.',
+    note: 'Вертикаль под соцсети. Крупные планы, быстрые переходы, первые три секунды удерживают внимание.',
   },
   {
     id: 'sport-report',
@@ -110,7 +110,7 @@ export const projects: Project[] = [
     directions: ['REPORTAGE', 'EVENT'],
     ratio: '4 / 5',
     hint: 'Loop 4 сек · динамика, движение',
-    note: 'Динамика и движение, съёмка с рук.',
+    note: 'Съёмка с рук, движение за объектом. Динамика важнее стабилизации.',
   },
   {
     id: 'title-pack',
@@ -119,7 +119,7 @@ export const projects: Project[] = [
     directions: ['MOTION'],
     ratio: '1 / 1',
     hint: 'Loop 5 сек · After Effects',
-    note: 'Титры и графика в After Effects.',
+    note: 'Титры, плашки, подписи в After Effects. Графика подчинена ритму монтажа, а не живёт отдельно.',
   },
   {
     id: 'backstage-doc',
@@ -128,6 +128,6 @@ export const projects: Project[] = [
     directions: ['REPORTAGE', 'INTERVIEW'],
     ratio: '16 / 9',
     hint: 'Loop 5 сек · съёмочный процесс',
-    note: 'Съёмочный процесс изнутри, живой звук.',
+    note: 'Съёмочный процесс изнутри: живой звук, естественный свет, без постановки.',
   },
 ];
