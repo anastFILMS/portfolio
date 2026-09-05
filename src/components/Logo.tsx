@@ -27,7 +27,7 @@ export function Logo({ size = 34, className = '' }: Props) {
         <span className="logo__main">{site.brand}</span>
       </span>
       <span className="logo__rule" aria-hidden="true" />
-      <span className="logo__suffix u-mono" aria-hidden="true">{site.brandSuffix}</span>
+      <span className="logo__suffix u-label" aria-hidden="true">{site.brandSuffix}</span>
     </span>
   );
 }

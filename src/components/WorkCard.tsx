@@ -39,16 +39,16 @@ export function WorkCard({ project, onOpen, index }: Props) {
             playOnHover
           />
           {/* Индекс архива в углу — язык съёмочной картотеки. */}
-          <span className="card__idx u-mono" aria-hidden="true">
+          <span className="card__idx u-label" aria-hidden="true">
             {String(index + 1).padStart(2, '0')}
           </span>
           {/* Подсказка появляется только при наведении. */}
-          <span className="card__play u-mono" aria-hidden="true">Смотреть</span>
+          <span className="card__play u-label" aria-hidden="true">Смотреть</span>
         </span>
 
         <span className="card__meta">
           <span className="card__title u-display">{project.title}</span>
-          <span className="card__row u-mono">
+          <span className="card__row u-label">
             <span className="card__year">{project.year}</span>
             <span className="card__format">{format}</span>
           </span>

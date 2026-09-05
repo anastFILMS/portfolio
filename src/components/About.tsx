@@ -75,7 +75,7 @@ export function About() {
             <dl className="about__facts">
               {about.facts.map((f) => (
                 <div className="about__fact" key={f.k}>
-                  <dt className="u-mono">{f.k}</dt>
+                  <dt className="u-label">{f.k}</dt>
                   <dd className="u-display">{f.v}</dd>
                 </div>
               ))}

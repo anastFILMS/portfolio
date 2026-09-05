@@ -38,7 +38,7 @@ export function Header() {
 
         <nav className="hdr__nav" aria-label="Основная навигация">
           {site.nav.map((item) => (
-            <a className="hdr__link u-mono" href={`#${item.id}`} key={item.id}>
+            <a className="hdr__link u-label" href={`#${item.id}`} key={item.id}>
               {item.label}
             </a>
           ))}
@@ -46,7 +46,7 @@ export function Header() {
 
         <div className="hdr__side">
           <a
-            className="hdr__quick u-mono"
+            className="hdr__quick u-label"
             href={site.contacts.telegram.href}
             target="_blank"
             rel="noreferrer noopener"
@@ -79,12 +79,12 @@ export function Header() {
               onClick={() => setMenuOpen(false)}
               style={{ '--i': i } as React.CSSProperties}
             >
-              <span className="hdr__menu-num u-mono">{String(i + 1).padStart(2, '0')}</span>
+              <span className="hdr__menu-num u-label">{String(i + 1).padStart(2, '0')}</span>
               {item.label}
             </a>
           ))}
         </nav>
-        <div className="hdr__menu-contacts u-mono">
+        <div className="hdr__menu-contacts u-label">
           {Object.values(site.contacts).map((c) => (
             <a href={c.href} key={c.label} target="_blank" rel="noreferrer noopener">
               {c.label}

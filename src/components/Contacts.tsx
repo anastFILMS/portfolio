@@ -25,7 +25,7 @@ export function Contacts() {
             мне
           </SprayTag>
           <Reveal mode="jerk" delay={0.15}>
-            <p className="cts__sub u-mono">Съёмка · монтаж · {site.city} и выезды</p>
+            <p className="cts__sub u-label">Съёмка · монтаж · {site.city} и выезды</p>
           </Reveal>
         </header>
 
@@ -38,7 +38,7 @@ export function Contacts() {
                 target={c.href.startsWith('http') ? '_blank' : undefined}
                 rel={c.href.startsWith('http') ? 'noreferrer noopener' : undefined}
               >
-                <span className="cts__label u-mono">{c.label}</span>
+                <span className="cts__label u-label">{c.label}</span>
                 <span className="cts__handle u-display">{c.handle}</span>
                 <svg className="cts__arrow" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M6 18L18 6M8 6h10v10" fill="none" stroke="currentColor" strokeWidth="2.5" />
@@ -52,10 +52,10 @@ export function Contacts() {
       <footer className="cts__footer">
         <div className="shell cts__footer-inner">
           <Logo size={26} />
-          <p className="u-mono">
+          <p className="u-label">
             {site.role} · {site.city}
           </p>
-          <p className="u-mono cts__year">© {new Date().getFullYear()}</p>
+          <p className="u-label cts__year">© {new Date().getFullYear()}</p>
         </div>
       </footer>
     </section>

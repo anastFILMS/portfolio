@@ -109,14 +109,14 @@ function SlotPlaceholder({ label, hint }: { label: string; hint?: string }) {
       <span className="slot__sprockets slot__sprockets--l" aria-hidden="true" />
       <span className="slot__sprockets slot__sprockets--r" aria-hidden="true" />
 
-      <div className="slot__rec u-mono">
+      <div className="slot__rec u-tech">
         <span className="slot__dot" />REC
       </div>
-      <div className="slot__tc u-mono">00:00:00:00</div>
+      <div className="slot__tc u-tech">00:00:00:00</div>
 
       <div className="slot__ph-body">
         <p className="slot__ph-label u-display">{label}</p>
-        {hint && <p className="slot__ph-hint u-mono">{hint}</p>}
+        {hint && <p className="slot__ph-hint u-label">{hint}</p>}
       </div>
     </div>
   );

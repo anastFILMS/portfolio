@@ -29,7 +29,7 @@ export function Experience() {
             </h2>
           </Reveal>
           <Reveal mode="jerk" delay={0.12}>
-            <p className="exp__sub u-mono">Крупные мероприятия и медиапроекты</p>
+            <p className="exp__sub u-label">Крупные мероприятия и медиапроекты</p>
           </Reveal>
           <Scribble kind="arrow" className="exp__arrow" color="var(--orange)" width={150} delay={0.3} />
         </header>
@@ -45,13 +45,13 @@ export function Experience() {
               key={`${e.title}-${e.year}`}
               className="exp__item"
             >
-              <span className="exp__num u-mono">{String(i + 1).padStart(2, '0')}</span>
+              <span className="exp__num u-label">{String(i + 1).padStart(2, '0')}</span>
               <span className="exp__body">
                 <span className="exp__name u-display">{e.title}</span>
-                {e.scale && <span className="exp__scale u-mono">{e.scale}</span>}
+                {e.scale && <span className="exp__scale u-label">{e.scale}</span>}
               </span>
-              <span className="exp__role u-mono">{e.role}</span>
-              <span className="exp__year u-mono">{e.year}</span>
+              <span className="exp__role u-label">{e.role}</span>
+              <span className="exp__year u-label">{e.year}</span>
             </Reveal>
           ))}
         </ol>

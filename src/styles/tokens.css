@@ -24,12 +24,14 @@
   /* --- типографика ---
      Роли назначены по READ ME 2. Коммерческих Splatunk/Restime в папке нет,
      поэтому взяты бесплатные аналоги с кириллицей — подробности в fonts.css. */
-  --font-display: 'Dela Gothic One', 'Oswald', Impact, sans-serif;  /* заголовки */
-  --font-spray:   'Rubik Spray Paint', 'Caveat', cursive;           /* граффити-надписи */
+  --font-graf:    'Sedgwick Ave Display', 'Rubik Spray Paint', cursive; /* граффити-заголовок */
+  --font-display: 'Dela Gothic One', 'Oswald', Impact, sans-serif;  /* тяжёлые заголовки */
+  --font-spray:   'Rubik Spray Paint', 'Caveat', cursive;           /* распылённые надписи */
+  --font-marker:  'Rubik Marker Hatch', 'Caveat', cursive;          /* тонкий маркер */
   --font-drip:    'Rubik Wet Paint', 'Caveat', cursive;             /* краска с потёками */
   --font-cond:    'Oswald', 'Arial Narrow', sans-serif;             /* узкий гротеск */
   --font-hand:    'Caveat', 'Comic Sans MS', cursive;               /* от руки */
-  --font-mono:    'JetBrains Mono', 'Courier New', monospace;       /* тех. подписи */
+  --font-tech:    'JetBrains Mono', 'Courier New', monospace;       /* таймкод, REC */
   --font-body:    'Montserrat', -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   /* размеры: crush-заголовки как в рефах 0418 / 0422 / 0435 */

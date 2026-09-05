@@ -63,7 +63,7 @@ export function Work() {
             <Scribble kind="underline" className="work__title-line" delay={0.35} stretch />
           </div>
           <Reveal mode="jerk" delay={0.15}>
-            <p className="work__sub u-mono">
+            <p className="work__sub u-label">
               {visible.length} {plural(visible.length, 'проект', 'проекта', 'проектов')} · наведи, чтобы
               посмотреть превью
             </p>
@@ -104,7 +104,7 @@ export function Work() {
         </div>
 
         {visible.length === 0 && (
-          <p className="work__empty u-mono">В этом направлении пока нет опубликованных работ.</p>
+          <p className="work__empty u-label">В этом направлении пока нет опубликованных работ.</p>
         )}
       </div>
 
@@ -123,7 +123,7 @@ function FilterChip({
   children: React.ReactNode;
 }) {
   return (
-    <button className={`chip u-mono ${active ? 'is-active' : ''}`} onClick={onClick} aria-pressed={active}>
+    <button className={`chip u-label ${active ? 'is-active' : ''}`} onClick={onClick} aria-pressed={active}>
       {children}
     </button>
   );

@@ -47,9 +47,9 @@ export function Hero() {
       </div>
 
       {/* Верхняя служебная строка — приём из 2825. */}
-      <div className="hero__meta hero__meta--top u-mono" aria-hidden="true">
+      <div className="hero__meta hero__meta--top u-label" aria-hidden="true">
         <span>Videographer<br />&amp; Editor</span>
-        <span className="hero__rec"><i />REC · 4K · 25 FPS</span>
+        <span className="hero__rec u-tech"><i />REC · 4K · 25 FPS</span>
         <span className="hero__meta-right">{site.city}<br />MMXXVI</span>
       </div>
 
@@ -61,17 +61,16 @@ export function Hero() {
 
         <h1 className="hero__title">
           <span className="sr-only">{site.name} — {site.tagline}</span>
-          <span className="hero__word" aria-hidden="true">Anastasia</span>
-          <span className="hero__row" aria-hidden="true">
-            <span className="hero__word hero__word--b">B.</span>
-            {/* Граффити-слово внахлёст поверх имени — формула из 2807. */}
-            <span className="hero__graf">видеограф</span>
-          </span>
+          {/* Имя целиком в одну строку — заказчица просила не разбивать. */}
+          <span className="hero__word" aria-hidden="true">Anastasia B.</span>
+          {/* Слово внахлёст поверх имени — формула из 2807. Маркерный шрифт
+              вместо распылённого: распылённый забивал имя своей массой. */}
+          <span className="hero__graf" aria-hidden="true">видеограф</span>
         </h1>
       </div>
 
       <div className="hero__bottom">
-        <p className="hero__lead u-mono">
+        <p className="hero__lead u-label">
           Снимаю и динамично монтирую.<br />
           Крупные мероприятия и медиапроекты.
         </p>
@@ -79,7 +78,7 @@ export function Hero() {
           <a className="btn btn--solid" href="#work">Смотреть работы</a>
           <a className="btn btn--ghost" href="#contacts">Написать</a>
         </div>
-        <p className="hero__ratio u-mono">Съёмка<br />/ монтаж<br />50 / 50</p>
+        <p className="hero__ratio u-label">Съёмка<br />/ монтаж<br />50 / 50</p>
       </div>
 
       {/* Слой граффити: наезжает на зрителя при скролле. */}

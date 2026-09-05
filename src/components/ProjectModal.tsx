@@ -58,7 +58,7 @@ export function ProjectModal({ project, onClose }: Props) {
             transition={{ duration: 0.34, ease: [0.16, 1.2, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
           >
-            <button ref={closeRef} className="pm__close u-mono" onClick={onClose}>
+            <button ref={closeRef} className="pm__close u-label" onClick={onClose}>
               Закрыть
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" strokeWidth="2.5" />
@@ -78,7 +78,7 @@ export function ProjectModal({ project, onClose }: Props) {
 
             <div className="pm__meta">
               <h3 className="pm__title u-display">{project.title}</h3>
-              <p className="pm__row u-mono">
+              <p className="pm__row u-label">
                 <span className="pm__year">{project.year}</span>
                 <span>{project.directions.join(' / ')}</span>
               </p>

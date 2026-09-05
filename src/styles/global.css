@@ -40,8 +40,19 @@ body.is-locked { overflow: hidden; }
   font-weight: 700;
   line-height: 0.95;
 }
-.u-mono {
-  font-family: var(--font-mono);
+/* Мелкие подписи — навигация, «съёмка / монтаж», лиды — набраны Montserrat:
+   моношрифт остался только на технических показаниях камеры (.u-tech). */
+.u-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* Показания камеры: REC, таймкод, 4K·25FPS. Здесь моноширинный уместен. */
+.u-tech {
+  font-family: var(--font-tech);
   font-size: var(--fs-label);
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -75,7 +86,7 @@ body.is-locked { overflow: hidden; }
 .skip-link {
   position: absolute; left: -9999px; top: 0; z-index: 10000;
   background: var(--orange); color: var(--ink);
-  padding: 0.75rem 1.25rem; font-family: var(--font-mono);
+  padding: 0.75rem 1.25rem; font-family: var(--font-body);
 }
 .skip-link:focus { left: 0; }
 .sr-only {

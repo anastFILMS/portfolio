@@ -9,35 +9,47 @@
 }
 
 /* ======================= ФОН =======================
-   Фон обязан быть текстурным, а не однотонным (правки заказчицы):
-   три слоя — пятна распыла, бумажное волокно, полутоновая растровка. */
+   Фактура, а не градиент: снимок краски из папки «фон» (IMG_0433).
+   Он обесцвечен на этапе сборки, цвет кладётся здесь — так фон остаётся
+   в палитре, даже если позже поменять акцент. */
 .hero__bg { position: absolute; inset: 0; pointer-events: none; }
 
 .hero__spray {
   position: absolute;
-  inset: -25%;
-  background:
-    radial-gradient(38% 30% at 22% 18%, rgba(245, 79, 27, 0.55), transparent 62%),
-    radial-gradient(32% 36% at 80% 74%, rgba(245, 79, 27, 0.28), transparent 66%),
-    radial-gradient(40% 34% at 52% 46%, rgba(30, 34, 61, 0.9), transparent 70%);
-  filter: blur(46px);
+  inset: 0;
+  background-image: url('/textures/bg/spray.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
 }
+/* Оранжевый слой поверх фактуры: без него фон остаётся серым. */
+.hero__spray::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(62% 52% at 24% 24%, rgba(245, 79, 27, 0.6), transparent 70%),
+    radial-gradient(56% 56% at 80% 80%, rgba(245, 79, 27, 0.32), transparent 72%),
+    linear-gradient(rgba(11, 12, 22, 0.5), rgba(11, 12, 22, 0.8));
+  mix-blend-mode: hard-light;
+}
+
 .hero__grain {
   position: absolute;
   inset: 0;
   background-image: url('/textures/paper.png');
   background-size: 300px;
   mix-blend-mode: overlay;
-  opacity: 0.62;
+  opacity: 0.5;
 }
 /* Растровка строками — как на фото в рефе 2826. */
 .hero__scan {
   position: absolute;
   inset: 0;
-  opacity: 0.28;
+  opacity: 0.3;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.5) 0 1px,
+    rgba(0, 0, 0, 0.55) 0 1px,
     transparent 1px 3px
   );
 }
@@ -53,7 +65,7 @@
   padding-inline: var(--gutter);
   font-size: 0.58rem;
   line-height: 1.5;
-  color: rgba(233, 225, 210, 0.55);
+  color: rgba(233, 225, 210, 0.62);
 }
 .hero__meta-right { text-align: right; }
 .hero__rec { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--orange); }
@@ -74,8 +86,6 @@
   min-height: 0;
 }
 
-/* Кадр по центру, под именем. Ч/б с высоким контрастом — в рефах цвет
-   держит только акцент, фотография всегда обесцвечена. */
 .hero__photo {
   position: absolute;
   top: 50%;
@@ -109,25 +119,15 @@
 
 .hero__word {
   display: block;
-  font-family: var(--font-display);
-  /* Кегль подобран так, чтобы «ANASTASIA» (9 знаков широкого гротеска)
-     влезала в строку целиком: при 13vw буквы уезжали за оба края. */
-  font-size: clamp(2.4rem, 10vw, 9.4rem);
-  line-height: 0.84;
-  letter-spacing: -0.045em;
-  text-transform: uppercase;
+  font-family: var(--font-graf);
+  /* Одна строка: имя не должно переноситься. Кегль ограничен и шириной,
+     и высотой экрана, чтобы длинная строка влезала в любой пропорции. */
+  white-space: nowrap;
+  font-size: min(11.5vw, 15.5vh, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
   color: var(--paper);
-  /* Фактура внутри букв: текстура бумаги вырезается по форме глифов,
-     поэтому буквы выглядят напечатанными, а не залитыми. */
-  background-color: var(--paper);
-  background-image: url('/textures/paper-mul.png');
-  background-size: 260px;
-  background-blend-mode: multiply;
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-  /* Тень отдельным слоем — сквозь background-clip она не проходит. */
-  filter: drop-shadow(6px 7px 0 rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(7px 8px 0 rgba(0, 0, 0, 0.6));
   animation: name-in 0.5s var(--ease-cut) backwards;
 }
 @keyframes name-in {
@@ -135,22 +135,16 @@
   to   { opacity: 1; }
 }
 
-.hero__row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.5rem, 2vw, 2rem);
-  margin-top: -0.06em;
-}
-.hero__word--b { font-size: clamp(2rem, 7vw, 6rem); }
-
-/* Граффити-слово внахлёст — распылённый шрифт поверх имени. */
+/* Слово внахлёст поверх имени — формула из 2807. Маркерный шрифт вместо
+   распылённого: распылённый забивал имя своей массой. */
 .hero__graf {
-  font-family: var(--font-spray);
-  font-size: clamp(1.6rem, 5.4vw, 4.6rem);
+  display: block;
+  margin-top: -0.3em;
+  font-family: var(--font-marker);
+  font-size: min(6vw, 8vh, 4.2rem);
   line-height: 0.9;
   color: var(--orange);
-  transform: rotate(-3deg) translateY(-0.06em);
+  transform: rotate(-3deg);
   animation: graf-in 0.42s var(--ease-snap) 0.28s backwards;
 }
 @keyframes graf-in {
@@ -169,13 +163,13 @@
   padding: 0 var(--gutter) clamp(1rem, 3vh, 2rem);
 }
 .hero__lead {
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   line-height: 1.7;
-  color: rgba(233, 225, 210, 0.72);
-  letter-spacing: 0.1em;
+  color: rgba(233, 225, 210, 0.8);
+  letter-spacing: 0.08em;
 }
 .hero__ratio {
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   line-height: 1.5;
   text-align: right;
   color: var(--orange);
@@ -187,9 +181,9 @@
   display: inline-flex;
   align-items: center;
   padding: 0.85rem 1.6rem;
-  font-family: var(--font-cond);
-  font-weight: 700;
-  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   border: 2px solid var(--orange);
@@ -223,18 +217,15 @@
     text-align: center;
     gap: 0.85rem;
   }
-  .hero__lead, .hero__ratio { text-align: center; font-size: 0.56rem; }
+  .hero__lead, .hero__ratio { text-align: center; font-size: 0.58rem; }
   .hero__meta span:first-child,
   .hero__meta-right { display: none; }
   .hero__meta { justify-content: center; }
 
-  /* Крупные теги на телефоне перекрывают имя — оставляем помеченные.
-     Их позиции считаются от десктопной раскладки, поэтому задаём заново:
-     иначе корона и звезда ложатся на строку REC. */
+  /* Крупные теги на телефоне перекрывают имя — оставляем помеченные,
+     их позиции задаются заново: десктопные ложатся на строку REC. */
   .hero__deco .stk { display: none; }
   .hero__deco .stk--mob { display: block; }
-  /* Свободная полоса между кадром и нижним блоком — единственное место,
-     где декор ни на что не наезжает. */
   .hero__deco .hero__crown { top: 61% !important; left: 2% !important; width: 58px; }
   .hero__deco .hero__star  { top: 59% !important; left: auto !important; right: 2%; width: 78px; }
 }

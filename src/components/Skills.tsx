@@ -32,7 +32,7 @@ export function Skills() {
               <span className="prog__mark u-display" aria-hidden="true">{p.mark}</span>
               <span className="prog__body">
                 <span className="prog__name">{p.name}</span>
-                <span className="prog__role u-mono">{p.role}</span>
+                <span className="prog__role u-label">{p.role}</span>
               </span>
             </Reveal>
           ))}
@@ -43,7 +43,7 @@ export function Skills() {
           {groups.map((g, gi) => (
             <div className="craft" key={g.label}>
               <Reveal mode="jerk" delay={gi * 0.1}>
-                <h3 className="craft__label u-mono">{g.label}</h3>
+                <h3 className="craft__label u-label">{g.label}</h3>
               </Reveal>
               <ul className="craft__list">
                 {g.items.map((item, i) => (
