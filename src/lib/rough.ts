@@ -80,22 +80,41 @@ export function tornClipPath(seed: number, teeth = 22, depth = 7): string {
 }
 
 /**
- * Рваный край по всему периметру — для карточек WORK.
+ * Взрывной рваный край для кадров WORK.
  *
- * В отличие от `tornClipPath`, рвутся все четыре стороны, а зубцы крупнее
- * и острее: на рефе картинки выглядят выдранными из бумаги, а не аккуратно
- * обрезанными. Возвращает готовое значение `polygon(...)`.
+ * На рефе картинка уходит за край страницы: сторона, которой она вылезает,
+ * остаётся прямой (её режет край экрана), а три остальные — крупные острые
+ * зубцы, будто лист выдрали. Прежний вариант рвал все стороны мелкой
+ * рябью и рядом с рефом читался аккуратной рамкой.
+ *
+ * @param bleed сторона, уходящая за край: она не рвётся
+ * @param depth глубина зубцов в процентах
  */
-export function rippedClipPath(seed: number, teeth = 14, depth = 4): string {
+export function spikeClipPath(
+  seed: number,
+  bleed: 'left' | 'right',
+  teeth = 9,
+  depth = 9,
+): string {
   const rnd = seeded(seed);
+  // Зубец через один уходит глубоко внутрь — отсюда «взрыв», а не рябь.
+  const jag = (i: number) => (i % 2 ? rnd() * depth * 0.35 : depth * (0.55 + rnd() * 0.45));
   const pts: string[] = [];
-  const jag = () => rnd() * depth;
+  const at = (x: number, y: number) => pts.push(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
 
-  for (let i = 0; i <= teeth; i++) pts.push(`${((i / teeth) * 100).toFixed(1)}% ${jag().toFixed(1)}%`);
-  for (let i = 1; i <= teeth; i++) pts.push(`${(100 - jag()).toFixed(1)}% ${((i / teeth) * 100).toFixed(1)}%`);
-  for (let i = teeth - 1; i >= 0; i--) pts.push(`${((i / teeth) * 100).toFixed(1)}% ${(100 - jag()).toFixed(1)}%`);
-  for (let i = teeth - 1; i >= 1; i--) pts.push(`${jag().toFixed(1)}% ${((i / teeth) * 100).toFixed(1)}%`);
+  // Контур обходится строго по кругу. Раньше рваная сторона вставлялась
+  // сразу после верхней кромки, из-за чего для правого выноса путь
+  // пересекал сам себя и середина кадра выедалась.
+  for (let i = 0; i <= teeth; i++) at((i / teeth) * 100, jag(i));            // верх, слева направо
+  if (bleed === 'left') {
+    for (let i = 1; i < teeth; i++) at(100 - jag(i), (i / teeth) * 100);     // правая рваная, вниз
+    for (let i = teeth; i >= 0; i--) at((i / teeth) * 100, 100 - jag(i));    // низ, справа налево
+  } else {
+    for (let i = teeth; i >= 0; i--) at((i / teeth) * 100, 100 - jag(i));    // низ, справа налево
+    for (let i = teeth - 1; i >= 1; i--) at(jag(i), (i / teeth) * 100);      // левая рваная, вверх
+  }
 
+  // Сторона выноса остаётся прямой — её режет край экрана.
   return `polygon(${pts.join(', ')})`;
 }
 

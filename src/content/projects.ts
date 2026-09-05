@@ -39,6 +39,11 @@ export type Project = {
   reel?: string;
   /** Что снять/смонтировать под этот слот — видно только в заглушке. */
   hint?: string;
+  /**
+   * Одна строка рядом с кадром в разделе WORK.
+   * Именно одна: бриф запрещает длинные описания и список задач.
+   */
+  note?: string;
 };
 
 /** Подписи направлений для фильтра и карточек. */
@@ -60,6 +65,7 @@ export const projects: Project[] = [
     directions: ['FASHION', 'EVENT'],
     ratio: '4 / 5',
     hint: 'Loop 4 сек · показ, бэкстейдж',
+    note: 'Показ и бэкстейдж: свет, движение, ритм под музыку.',
   },
   {
     id: 'big-interview',
@@ -68,6 +74,7 @@ export const projects: Project[] = [
     directions: ['INTERVIEW', 'MULTICAM'],
     ratio: '16 / 9',
     hint: 'Loop 4 сек · две камеры, свет',
+    note: 'Две камеры, студийный свет, монтаж без провисаний.',
   },
   {
     id: 'city-forum',
@@ -76,6 +83,7 @@ export const projects: Project[] = [
     directions: ['EVENT', 'REPORTAGE'],
     ratio: '3 / 4',
     hint: 'Loop 5 сек · зал, сцена, зрители',
+    note: 'Зал, сцена, зрители — репортаж в режиме одного дубля.',
   },
   {
     id: 'music-showcase',
@@ -84,6 +92,7 @@ export const projects: Project[] = [
     directions: ['EVENT', 'MULTICAM'],
     ratio: '16 / 9',
     hint: 'Loop 5 сек · свет, сцена, толпа',
+    note: 'Концертный свет и толпа, монтаж под трек.',
   },
   {
     id: 'brand-reels',
@@ -92,6 +101,7 @@ export const projects: Project[] = [
     directions: ['VERTICAL', 'FASHION'],
     ratio: '9 / 16',
     hint: 'Loop 4 сек · вертикаль 1080×1920',
+    note: 'Вертикаль под соцсети: короткие склейки, крупные планы.',
   },
   {
     id: 'sport-report',
@@ -100,6 +110,7 @@ export const projects: Project[] = [
     directions: ['REPORTAGE', 'EVENT'],
     ratio: '4 / 5',
     hint: 'Loop 4 сек · динамика, движение',
+    note: 'Динамика и движение, съёмка с рук.',
   },
   {
     id: 'title-pack',
@@ -108,6 +119,7 @@ export const projects: Project[] = [
     directions: ['MOTION'],
     ratio: '1 / 1',
     hint: 'Loop 5 сек · After Effects',
+    note: 'Титры и графика в After Effects.',
   },
   {
     id: 'backstage-doc',
@@ -116,5 +128,6 @@ export const projects: Project[] = [
     directions: ['REPORTAGE', 'INTERVIEW'],
     ratio: '16 / 9',
     hint: 'Loop 5 сек · съёмочный процесс',
+    note: 'Съёмочный процесс изнутри, живой звук.',
   },
 ];
