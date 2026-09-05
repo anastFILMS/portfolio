@@ -89,6 +89,9 @@
   animation: letter-in 0.55s var(--ease-snap) backwards;
   animation-delay: var(--d);
 }
+/* Пробел в имени: узкий, чтобы «ANASTASIA B.» не разъезжалось. */
+.hero__letter--space { width: 0.28em; }
+
 @keyframes letter-in {
   from { opacity: 0; transform: translateY(0.5em) rotate(-4deg); }
   to   { opacity: 1; transform: none; }
@@ -157,16 +160,17 @@
 }
 .btn--ghost:hover .btn__scribble { opacity: 1; }
 
-/* Полоса бумаги: рваные края сверху и снизу рисует TornEdge, поэтому у самой
-   полосы должны быть отступы наружу — иначе зубцы наедут на текст. */
+/* Полоса бумаги. Края вырезаны clip-path, поэтому вертикальных отступов
+   нужно с запасом — иначе рванина срежет верхушки букв. */
 .hero__strip {
   position: relative;
   display: inline-block;
   margin-top: clamp(1.75rem, 4vh, 2.75rem);
-  padding: 0.55rem clamp(0.9rem, 2vw, 1.6rem);
+  padding: 1rem clamp(0.9rem, 2vw, 1.6rem);
   background: var(--paper);
   transform: rotate(-1.1deg);
-  box-shadow: 6px 8px 0 rgba(20, 23, 40, 0.45);
+  /* clip-path срезает и box-shadow, поэтому тень рисуем фильтром. */
+  filter: drop-shadow(6px 8px 0 rgba(20, 23, 40, 0.45));
 }
 
 .hero__keys {

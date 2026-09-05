@@ -4,7 +4,7 @@ import { Marquee } from './grunge/Marquee';
 import { Scribble } from './grunge/Scribble';
 import { SprayTag } from './grunge/SprayTag';
 import { Tape } from './grunge/Tape';
-import { TornEdge } from './grunge/TornEdge';
+import { tornClipPath } from '../lib/rough';
 import { Reveal } from './grunge/Reveal';
 import './Hero.css';
 
@@ -46,8 +46,14 @@ export function Hero() {
               style={{ '--len': letters.length } as React.CSSProperties}
             >
               {letters.map((ch, i) => (
-                <span className="hero__letter" key={i} style={{ '--d': `${i * 0.035}s` } as React.CSSProperties}>
-                  {ch}
+                <span
+                  // Пробел во flex-раскладке схлопывается в ноль, поэтому
+                  // отдаём ему собственную ширину отдельным классом.
+                  className={`hero__letter ${ch === ' ' ? 'hero__letter--space' : ''}`}
+                  key={i}
+                  style={{ '--d': `${i * 0.035}s` } as React.CSSProperties}
+                >
+                  {ch === ' ' ? '\u00A0' : ch}
                 </span>
               ))}
             </span>
@@ -75,19 +81,18 @@ export function Hero() {
             </div>
           </Reveal>
 
-          {/* Три ключевых слова лежат на оторванной полосе бумаги — тот же
-              приём, что держит стыки секций, только в миниатюре. Это первое
+          {/* Три ключевых слова лежат на оторванной полосе бумаги — первое
               место на странице, где появляется бумага, и оно сразу задаёт
-              коллажную логику всего сайта (рефы 0421, 0424, 0428). */}
+              коллажную логику всего сайта (рефы 0421, 0424, 0428).
+              Здесь рвётся сам элемент, поэтому края вырезаются clip-path,
+              а не накладываются сверху, как на стыках секций. */}
           <Reveal mode="jerk" delay={0.55}>
-            <div className="hero__strip">
-              <TornEdge side="top" color="var(--paper)" seed={5} height={14} />
+            <div className="hero__strip" style={{ clipPath: tornClipPath(5) }}>
               <ul className="hero__keys u-mono">
                 {site.keywords.map((k) => (
                   <li key={k}>{k}</li>
                 ))}
               </ul>
-              <TornEdge side="bottom" color="var(--paper)" seed={23} height={14} />
             </div>
           </Reveal>
         </div>

@@ -52,6 +52,33 @@ export function tornEdgePath(
     : `${line}L${W},0L0,0Z`;                  // заливаем всё, что выше
 }
 
+/**
+ * Рваные края для CSS `clip-path`: не накладывает форму поверх элемента,
+ * а вырезает её из самого элемента.
+ *
+ * Нужно там, где рвётся сам объект (полоска бумаги, наклейка), а не стык
+ * двух секций: наложить сверху заливку того же цвета — значит не увидеть
+ * ничего. Возвращает готовое значение `polygon(...)`.
+ *
+ * @param seed  форма краёв
+ * @param teeth сколько точек на каждой стороне
+ * @param depth глубина рванины в процентах высоты
+ */
+export function tornClipPath(seed: number, teeth = 22, depth = 7): string {
+  const rnd = seeded(seed);
+  const top: string[] = [];
+  const bottom: string[] = [];
+
+  for (let i = 0; i <= teeth; i++) {
+    const x = (i / teeth) * 100;
+    top.push(`${x.toFixed(1)}% ${(rnd() * depth).toFixed(1)}%`);
+    // Нижний край собираем сразу в обратном порядке — polygon обходит контур.
+    bottom.unshift(`${x.toFixed(1)}% ${(100 - rnd() * depth).toFixed(1)}%`);
+  }
+
+  return `polygon(${[...top, ...bottom].join(', ')})`;
+}
+
 /** Пятно/капля краски — для дрипов под спрей-тегом. */
 export function dripPath(seed: number, count = 5): string {
   const rnd = seeded(seed);

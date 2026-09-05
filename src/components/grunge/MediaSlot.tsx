@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { asset } from '../../lib/asset';
 import './MediaSlot.css';
 
 type Props = {
@@ -41,8 +42,12 @@ export function MediaSlot({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [posterFailed, setPosterFailed] = useState(false);
 
-  const hasVideo = Boolean(video);
-  const hasPoster = Boolean(poster) && !posterFailed;
+  // Пути из контента приводим к базе сборки — см. lib/asset.ts.
+  const videoSrc = asset(video);
+  const posterSrc = asset(poster);
+
+  const hasVideo = Boolean(videoSrc);
+  const hasPoster = Boolean(posterSrc) && !posterFailed;
   const isEmpty = !hasVideo && !hasPoster;
 
   // Наведение обрабатывает родитель (карточка), чтобы зона реакции совпадала
@@ -74,8 +79,8 @@ export function MediaSlot({
         <video
           ref={videoRef}
           className="slot__video"
-          src={video}
-          poster={poster}
+          src={videoSrc}
+          poster={posterSrc}
           muted
           loop
           playsInline
@@ -86,7 +91,7 @@ export function MediaSlot({
       )}
 
       {!hasVideo && hasPoster && (
-        <img className="slot__img" src={poster} alt={label} loading="lazy" onError={() => setPosterFailed(true)} />
+        <img className="slot__img" src={posterSrc} alt={label} loading="lazy" onError={() => setPosterFailed(true)} />
       )}
 
       {isEmpty && <SlotPlaceholder label={label} hint={hint} />}

@@ -35,13 +35,17 @@ public/media/
   year: 2026,
   directions: ['FASHION', 'EVENT'],
   ratio: '4 / 5',
-  loop:   '/media/projects/fashion-week-loop.mp4',
-  poster: '/media/projects/fashion-week-poster.jpg',
-  reel:   '/media/projects/fashion-week-reel.mp4',
+  loop:   'media/projects/fashion-week-loop.mp4',
+  poster: 'media/projects/fashion-week-poster.jpg',
+  reel:   'media/projects/fashion-week-reel.mp4',
 }
 ```
 
 Заглушка исчезнет сама.
+
+> Путь пишется от папки `public/` — без домена и без `/portfolio/` в начале.
+> Префикс адреса сайта подставляется сам (`src/lib/asset.ts`), поэтому одни
+> и те же пути работают и локально, и на GitHub Pages.
 
 ## Фото для «Обо мне»
 
