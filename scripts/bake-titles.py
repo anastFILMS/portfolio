@@ -20,6 +20,56 @@ WORDS = {"anastasia": ("Anastasia", (233, 225, 210)),
          "brichko":   ("Brichko",   (245, 79, 27))}
 
 
+def add_drips(img, color, rnd, count=9):
+    """
+    Потёки краски от нижнего края букв.
+
+    Точки старта ищем по самому нижнему непрозрачному пикселю в колонке —
+    так потёк всегда начинается от реальной кромки глифа, а не от рамки
+    картинки. Ширина берётся от кегля, длина случайная, на конце капля.
+    """
+    w, h = img.size
+    alpha = img.split()[3]
+    px = alpha.load()
+
+    # Нижняя кромка краски в каждой колонке.
+    bottoms = {}
+    for x in range(0, w, 3):
+        for y in range(h - 1, -1, -1):
+            if px[x, y] > 140:
+                bottoms[x] = y
+                break
+    if not bottoms:
+        return img
+
+    # Запас снизу под сами потёки.
+    pad = int(h * 0.55)
+    out = Image.new("RGBA", (w, h + pad), (0, 0, 0, 0))
+    out.paste(img, (0, 0))
+    d = ImageDraw.Draw(out)
+
+    cols = sorted(bottoms)
+    picked = rnd.sample(cols, min(count, len(cols)))
+    for x in picked:
+        y0 = bottoms[x]
+        length = int(h * rnd.uniform(0.12, 0.5))
+        # Потёк толстый у буквы и сужается книзу — рисуем цепочкой кругов
+        # с убывающим радиусом, иначе он читается булавкой, а не краской.
+        top_w = h * rnd.uniform(0.045, 0.075)
+        tip_w = top_w * rnd.uniform(0.3, 0.45)
+        steps = max(8, length // 3)
+        for i in range(steps + 1):
+            t = i / steps
+            r = (top_w * (1 - t) + tip_w * t) / 2
+            cy = y0 - top_w * 0.4 + length * t
+            d.ellipse([x - r, cy - r, x + r, cy + r], fill=color + (255,))
+        # Капля на конце: краска стекает и собирается в шарик.
+        r = tip_w * rnd.uniform(0.85, 1.35)
+        cy = y0 + length
+        d.ellipse([x - r, cy - r, x + r, cy + r], fill=color + (255,))
+    return out
+
+
 def bake(text, color, path, seed):
     font = ImageFont.truetype(FONT, SIZE)
     pad = SIZE // 3
@@ -27,6 +77,7 @@ def bake(text, color, path, seed):
     d = ImageDraw.Draw(tmp)
     d.text((pad, pad), text, font=font, fill=color + (255,))
     tmp = tmp.crop(tmp.split()[3].getbbox())
+    tmp = add_drips(tmp, color, random.Random(seed * 3 + 1))
 
     # Неровный край: шум чуть подъедает альфу, буквы перестают быть стерильными.
     rnd = random.Random(seed)

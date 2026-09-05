@@ -59,8 +59,8 @@
 /* Слова уходят за края экрана — как «UARDA» в рефе. */
 .hero__word--first {
   top: 6%;
-  left: -3vw;
-  width: min(62vw, 900px);
+  left: 5vw;
+  width: min(56vw, 830px);
   rotate: -2.4deg;
 }
 .hero__word--last {
@@ -80,10 +80,10 @@
 .hero__cam {
   position: absolute;
   top: 46%;
-  left: 50%;
-  width: min(62vw, 78vh, 880px);
-  margin-left: min(-31vw, -440px);
-  margin-top: min(-24vh, -300px);
+  left: 57%;
+  width: min(50vw, 64vh, 700px);
+  margin-left: min(-25vw, -350px);
+  margin-top: min(-20vh, -250px);
   z-index: 4;
   pointer-events: none;
   filter: drop-shadow(0 34px 70px rgba(0, 0, 0, 0.8));
@@ -128,7 +128,14 @@
 }
 
 /* ---------- кнопки: крупнее, чем были ---------- */
-.hero__cta { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 0.35rem; }
+/* Кнопки в два ряда — как в мобильной вёрстке. */
+.hero__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-top: 0.35rem;
+}
 
 .btn {
   display: inline-flex;
@@ -171,9 +178,11 @@
 @media (max-width: 900px) {
   /* На телефоне слова разводим к верху и низу, камера — между ними. */
   .hero__word--first { top: 7%; left: -2vw; width: 82vw; }
-  .hero__word--last  { bottom: auto; top: 24%; right: -2vw; width: 66vw; }
+  .hero__word--last  { bottom: auto; top: 26%; right: -4vw; width: 62vw; }
   .hero__cam {
     top: 42%;
+    /* Сдвиг вправо нужен только на десктопе, где слева стоит имя. */
+    left: 50%;
     width: min(96vw, 40vh, 430px);
     margin-left: min(-48vw, -215px);
     margin-top: min(-17vh, -180px);
