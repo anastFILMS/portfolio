@@ -1,67 +1,110 @@
 /* ==========================================================================
    ТОКЕНЫ ДИЗАЙН-СИСТЕМЫ
-   Палитра из мудборда (файл «цвета/IMG_0448»):
-   Midnight Blue #1E223D + Exotic Orange #F54F1B
-   Тема только цветная — светлой/тёмной темы по брифу нет.
+
+   Палитра сведена с `implementation/design-tokens.css` из пакета ТЗ.
+   База осталась прежней (#1E223D + #F54F1B), но фоны теперь чёрно-угольные:
+   по последней правке сплошная синяя ткань на всех секциях отменена,
+   оранжевый работает акцентом, а не заливкой.
+   Тема только цветная — светлой/тёмной по брифу нет.
    ========================================================================== */
 :root {
-  /* --- база --- */
-  --ink:          #14162A; /* почти чёрный: в рефах фон тёмный, а цвет держит акцент */
-  --ink-deep:     #0B0C16; /* глубже, для «провалов» и модалок */
-  --ink-soft:     #1A1D33; /* подложки; на #1E223D оранжевый давал 4.45:1 при норме 4.5 */
-  --orange:       #F54F1B; /* Exotic Orange — главный акцент */
-  --orange-deep:  #C93A0E; /* тени/дрипы краски */
-  --paper:        #E9E1D2; /* бумага — светлые секции */
+  /* --- поверхности --- */
+  --brand-navy:   #1E223D; /* фирменный синий: база палитры */
+  --ink:          #101013; /* чёрный — WORK, глубокие области */
+  --ink-deep:     #0B0C10; /* провалы и подложка модалки */
+  --coal:         #191A20; /* угольный — нейтральные поверхности */
+  --navy-soft:    #171C2A; /* приглушённый синий — связка чёрного и синего */
+  --slate:        #303444; /* только мягкие участки градиента */
+
+  /* --- краска и бумага --- */
+  --orange:       #F54F1B; /* главный акцент: кнопки, отдельные детали */
+  --orange-deep:  #C93A0E; /* тени и дрипы краски */
+  --paint-soft:   #D76A43; /* там, где чистый оранжевый слишком резок */
+  --paper:        #E6E0D7; /* подложки, кромки, светлый текст */
   --paper-warm:   #DDD2BE; /* бумага в тени / край разрыва */
-  --paper-dim:    #C9BCA4; /* мелкий текст на бумаге */
-  --chalk:        #F5F1E8; /* белый на тёмном */
+  --paper-dim:    #B4A991; /* мелкий текст на бумаге */
+  --chalk:        #EFEAE3; /* основной текст на тёмном */
+  --chalk-dim:    #BAB9BE; /* роль, категории, второстепенные подписи */
 
   /* --- семантика --- */
   --bg:           var(--ink);
   --fg:           var(--chalk);
   --accent:       var(--orange);
+  --on-orange:    #101013;
+
+  /* --- фоны секций ---
+     Каждая секция своего тона: одинаковая фактура на всех делала страницу
+     плоской. Значения из пакета, поэтому переходы между секциями сходятся. */
+  --bg-hero:
+    radial-gradient(ellipse at 7% 14%, rgb(151 72 43 / 18%), transparent 44%),
+    radial-gradient(ellipse at 83% 64%, rgb(30 34 61 / 46%), transparent 62%),
+    linear-gradient(155deg, #191A20, #101013 68%, #171C2A);
+  --bg-work:
+    radial-gradient(ellipse at 92% 35%, rgb(30 34 61 / 18%), transparent 62%),
+    linear-gradient(175deg, #101013, #121318 58%, #101013);
+  --bg-experience: linear-gradient(115deg, #171C2A, #191A20 65%, #101013);
+  --bg-about:      linear-gradient(150deg, #101013, #191A20 56%, #101013);
+  --bg-skills:     linear-gradient(125deg, #191A20, #171C2A 60%, #101013);
+  --bg-contacts:
+    radial-gradient(ellipse at 0% 93%, rgb(151 72 43 / 16%), transparent 44%),
+    linear-gradient(130deg, #101013, #171C2A);
+
+  /* Фактура живёт только на фоновых слоях, под содержимым.
+     Прежние 0.42 зерна + 0.16 строк поверх всей страницы сняты. */
+  --grain-opacity:   0.045;
+  --texture-opacity: 0.18;
 
   /* --- типографика ---
-     Роли назначены по READ ME 2. Коммерческих Splatunk/Restime в папке нет,
-     поэтому взяты бесплатные аналоги с кириллицей — подробности в fonts.css. */
-  --font-title:   'Splatink', 'Guano Apes', cursive;                 /* имя на титульнике (латиница) */
-  --font-graf:    'Guano Apes', 'Sedgwick Ave Display', cursive;    /* граффити-надписи по-русски */
-  --font-display: 'Dela Gothic One', 'Oswald', Impact, sans-serif;  /* тяжёлые заголовки */
-  --font-spray:   'Rubik Spray Paint', 'Caveat', cursive;           /* распылённые надписи */
-  --font-marker:  'Rubik Marker Hatch', 'Caveat', cursive;          /* тонкий маркер */
-  --font-drip:    'Rubik Wet Paint', 'Caveat', cursive;             /* краска с потёками */
-  --font-cond:    'Oswald', 'Arial Narrow', sans-serif;             /* узкий гротеск */
-  --font-hand:    'Caveat', 'Comic Sans MS', cursive;               /* от руки */
-  --font-tech:    'JetBrains Mono', 'Courier New', monospace;       /* таймкод, REC */
+     Узкие заголовки — Oswald. Текст и кнопки — Montserrat. Граффити —
+     отдельная роль, а не шрифт для каждого заголовка. */
+  --font-title:   'Splatink', 'Guano Apes', cursive;               /* латинский леттеринг */
+  --font-graf:    'Guano Apes', 'Sedgwick Ave Display', cursive;   /* «Обо мне», «Снимем что-нибудь?» */
+  --font-cond:    'Oswald', 'Arial Narrow', sans-serif;            /* WORK, названия работ, секции */
   --font-body:    'Montserrat', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-tech:    'JetBrains Mono', 'Courier New', monospace;      /* только служебные подписи */
 
-  /* размеры: crush-заголовки как в рефах 0418 / 0422 / 0435 */
-  --fs-mega:  clamp(3.5rem, 15vw, 15rem);
+  /* размеры */
+  --fs-mega:  clamp(4.5rem, 14vw, 13rem);
   --fs-h1:    clamp(2.75rem, 9vw, 8.5rem);
-  --fs-h2:    clamp(2.25rem, 6.5vw, 6rem);
-  --fs-h3:    clamp(1.5rem, 3vw, 2.75rem);
-  --fs-lead:  clamp(1.05rem, 1.7vw, 1.5rem);
-  --fs-body:  clamp(0.95rem, 1.15vw, 1.075rem);
-  --fs-label: clamp(0.66rem, 0.85vw, 0.8rem);
+  --fs-h2:    clamp(2.4rem, 5.5vw, 5.5rem);
+  --fs-h3:    clamp(1.9rem, 3.2vw, 3.4rem);
+  --fs-lead:  clamp(1.05rem, 1.5vw, 1.4rem);
+  --fs-body:  clamp(1rem, 1.1vw, 1.125rem);
+  /* Нижняя граница 0.8125rem = 13px: мельче по ТЗ нельзя. */
+  --fs-label: clamp(0.8125rem, 0.95vw, 0.875rem);
+  --leading:  1.6;
 
   /* --- сетка --- */
-  --gutter:   clamp(1rem, 4vw, 4.5rem);
-  --maxw:     1680px;
-  --section-y: clamp(5rem, 12vh, 11rem);
+  --gutter:    clamp(1rem, 4vw, 4rem);
+  --maxw:      1520px;
+  --section-y: clamp(4.5rem, 10vh, 9rem);
+  --work-gap:  clamp(7.5rem, 9vw, 10.5rem);
+  --control-h: 52px;
 
-  /* --- движение (гранж: резко, с рывком, без «корпоративной» плавности) --- */
-  --ease-snap:  cubic-bezier(0.16, 1.2, 0.3, 1);   /* с перелётом */
-  --ease-cut:   cubic-bezier(0.85, 0, 0.15, 1);    /* резкий рез */
+  /* --- движение --- */
+  --ease-snap:  cubic-bezier(0.16, 1.2, 0.3, 1);
+  --ease-cut:   cubic-bezier(0.85, 0, 0.15, 1);
   --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-quick: 180ms;
+  --motion-enter: 320ms;
+
+  /* --- тени --- */
+  --paper-shadow: 0 9px 15px rgb(0 0 0 / 24%);
+  --photo-shadow: 0 12px 26px rgb(0 0 0 / 32%);
 
   /* --- слои --- */
-  --z-grain:   9000;
   --z-modal:   8000;
-  --z-header:  7000;
-  --z-cursor:  9500;
+  --z-seam:    5;
+}
+
+@media (max-width: 767px) {
+  :root { --work-gap: 4.5rem; --control-h: 48px; }
 }
 
 /* Пользователь просил меньше движения — уважаем. */
 @media (prefers-reduced-motion: reduce) {
-  :root { --ease-snap: linear; --ease-cut: linear; --ease-out: linear; }
+  :root {
+    --ease-snap: linear; --ease-cut: linear; --ease-out: linear;
+    --motion-quick: 0ms; --motion-enter: 0ms;
+  }
 }

@@ -1,74 +1,50 @@
-import { craft, programs } from '../content/skills';
-import { TornEdge } from './grunge/TornEdge';
+import { skills } from '../content/skills';
+import { SectionSeam } from './grunge/SectionSeam';
 import { Reveal } from './grunge/Reveal';
-import { Marquee } from './grunge/Marquee';
 import './Skills.css';
 
 /**
- * Навыки.
+ * «Инструменты».
  *
- * Брифом просили компактно и визуально, без ощущения резюме: программы идут
- * крупными плашками с марками (Pr / Ae / DR), практические навыки — плотной
- * сеткой тегов, разбитой на «площадку» и «пост».
+ * Короткая полоса: заголовок, три компактных бумажных ярлыка и одна строка
+ * направлений. Прежние крупные карточки, две группы навыков и нижняя
+ * бегущая строка убраны — в макете это небольшая секция.
+ *
+ * У DaVinci Resolve марки нет намеренно: официального знака в пакете нет,
+ * а рисовать похожий нельзя. Там остаётся название.
  */
 export function Skills() {
-  const groups = [craft.shooting, craft.post];
-
   return (
-    <section className="skills section section--paper" id="skills">
-      {/* Оранжевый разрыв на стыке — см. комментарий в Experience. */}
-      <TornEdge side="top" color="var(--orange)" seed={41} height={60} />
+    <section className="section section--skills sk" id="skills">
+      <SectionSeam id="section-edge-04" sheet="#191A20" overlap={44} fiber={5} accent />
 
-      <div className="shell">
-        <Reveal mode="mask">
-          <h2 className="skills__title u-head">Чем работаю</h2>
+      <div className="shell sk__shell">
+        <Reveal mode="rise">
+          <h2 className="sk__title u-cond">
+            {skills.heading}
+            <span className="sk__rule" aria-hidden="true" />
+          </h2>
         </Reveal>
 
-        {/* ---------- программы ---------- */}
-        <div className="skills__programs">
-          {programs.map((p, i) => (
-            <Reveal mode="tear" delay={i * 0.08} key={p.mark} className="prog">
-              {/* Марка программы — крупная плашка, как иконка в доке. */}
-              <span className="prog__mark u-display" aria-hidden="true">{p.mark}</span>
-              <span className="prog__body">
-                <span className="prog__name">{p.name}</span>
-                <span className="prog__role u-label">{p.role}</span>
+        <div className="sk__side">
+          <ul className="sk__programs">
+            {skills.programs.map((p) => (
+              <li className="sk__prog" key={p.name}>
+                {p.mark && <span className="sk__mark" aria-hidden="true">{p.mark}</span>}
+                <span className="sk__name">{p.name}</span>
+              </li>
+            ))}
+          </ul>
+
+          <p className="sk__items u-label">
+            {skills.items.map((item, i) => (
+              <span key={item}>
+                {i > 0 && <span className="sk__sep" aria-hidden="true"> / </span>}
+                {item}
               </span>
-            </Reveal>
-          ))}
+            ))}
+          </p>
         </div>
-
-        {/* ---------- практические навыки ---------- */}
-        <div className="skills__craft">
-          {groups.map((g, gi) => (
-            <div className="craft" key={g.label}>
-              <Reveal mode="jerk" delay={gi * 0.1}>
-                <h3 className="craft__label u-label">{g.label}</h3>
-              </Reveal>
-              <ul className="craft__list">
-                {g.items.map((item, i) => (
-                  <Reveal as="li" mode="jerk" delay={gi * 0.1 + i * 0.04} key={item} className="craft__item">
-                    {item}
-                  </Reveal>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Лента закрывает секцию и уводит в тёмные контакты, поэтому её
-          верхний край тоже рваный — переход между блоками не должен быть
-          прямой линией. */}
-      <div className="skills__band">
-        <TornEdge side="top" color="var(--orange)" seed={89} height={44} />
-        <Marquee
-          className="skills__marquee"
-          items={['Съёмка', 'Монтаж', 'Цвет', 'Звук', 'Графика']}
-          duration={22}
-          tone="ink"
-          reverse
-        />
       </div>
     </section>
   );

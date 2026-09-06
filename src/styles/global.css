@@ -13,55 +13,45 @@ body {
   color: var(--fg);
   font-family: var(--font-body);
   font-size: var(--fs-body);
-  line-height: 1.55;
+  line-height: var(--leading);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
   overscroll-behavior-y: none;
 }
+/* Горизонтальное переполнение режем отдельной оболочкой, а не на body:
+   на body это заодно отрезало бы вертикальный нахлёст бумажных стыков. */
+.page { position: relative; overflow-x: clip; }
 img, video, svg { display: block; max-width: 100%; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
 ul, ol { list-style: none; padding: 0; }
-::selection { background: var(--orange); color: var(--ink); }
+::selection { background: var(--orange); color: var(--on-orange); }
 
-/* Скролл заблокирован, пока открыта модалка проекта */
+/* Скролл заблокирован, пока открыт плеер */
 body.is-locked { overflow: hidden; }
 
-/* ============================ ТИПОГРАФИКА ============================ */
-.u-display {
-  font-family: var(--font-display);
+/* ============================ ТИПОГРАФИКА ============================
+   Три роли, и только три. Узкий наборный Oswald — заголовки секций и
+   названия работ. Граффити — «Обо мне» и «Снимем что-нибудь?». Montserrat —
+   весь остальной текст, кнопки и подписи. Основной текст никогда не
+   набирается граффити-шрифтом. */
+.u-cond {
+  font-family: var(--font-cond);
   font-weight: 700;
-  text-transform: uppercase;
-  line-height: 0.82;
-  letter-spacing: -0.02em;
+  line-height: 0.92;
+  letter-spacing: 0.01em;
 }
-.u-hand {
-  font-family: var(--font-hand);
-  font-weight: 700;
-  line-height: 0.95;
+.u-graf {
+  font-family: var(--font-graf);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: 0;
 }
-/* Мелкие подписи — навигация, «съёмка / монтаж», лиды — набраны Montserrat:
-   моношрифт остался только на технических показаниях камеры (.u-tech). */
 .u-label {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--fs-label);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-}
-
-/* Показания камеры: REC, таймкод, 4K·25FPS. Здесь моноширинный уместен. */
-.u-tech {
-  font-family: var(--font-tech);
-  font-size: var(--fs-label);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-}
-
-/* Заголовок «в разрез»: заливка + контурная копия со сдвигом (реф 0427 SPIDER-PUNK) */
-.u-outline {
-  -webkit-text-stroke: 2px currentColor;
-  color: transparent;
+  letter-spacing: 0.12em;
 }
 
 /* ============================ РАСКЛАДКА ============================ */
@@ -74,14 +64,18 @@ body.is-locked { overflow: hidden; }
 .section {
   position: relative;
   padding-block: var(--section-y);
+  background: var(--bg-work);
+  color: var(--chalk);
 }
-/* Тон секций подбит под титульник: он тёмный, и светлые вставки из него
-   выпадали. Ритм держится не сменой «бумага/тьма», а фактурой фона и
-   оранжевыми полосами на стыках. */
-.section--ink   { background: var(--ink-deep); color: var(--chalk); }
-.section--paper { background: var(--ink);      color: var(--chalk); }
+/* Фон у каждой секции свой. Общего слоя фактуры поверх страницы больше
+   нет: она живёт на фоне секции, под содержимым. */
+.section--hero       { background: var(--bg-hero); }
+.section--work       { background: var(--bg-work); }
+.section--experience { background: var(--bg-experience); }
+.section--about      { background: var(--bg-about); }
+.section--skills     { background: var(--bg-skills); }
+.section--contacts   { background: var(--bg-contacts); }
 
-/* Фактура фона на всех секциях — фон нигде не должен быть однотонным. */
 .section::before {
   content: '';
   position: absolute;
@@ -89,24 +83,61 @@ body.is-locked { overflow: hidden; }
   z-index: 0;
   pointer-events: none;
   background-image: url('/textures/paper.png');
-  background-size: 300px;
+  background-size: 320px;
   mix-blend-mode: overlay;
-  opacity: 0.38;
+  opacity: var(--texture-opacity);
 }
 /* Поднимаем над фактурой только контентную обёртку. Правило вида
-   `.section > *` перебивало position: absolute у рваных краёв — они
-   выпадали в поток и уезжали на сотню пикселей вниз от стыка. */
+   `.section > *` перебивало position: absolute у бумажных стыков — они
+   выпадали в поток и уезжали на сотню пикселей вниз. */
 .section > .shell { position: relative; z-index: 1; }
 
-/* Заголовок секции — граффити-шрифтом, как имя на титульнике. */
-.u-head {
-  font-family: var(--font-graf);
-  font-weight: 400;
-  line-height: 0.9;
-  color: var(--paper);
-  text-transform: none;
-  letter-spacing: 0;
+/* ============================ ОРАНЖЕВАЯ КНОПКА ============================
+   Один тип на весь сайт: Hero CTA и «Смотреть» в каждой работе выглядят
+   одинаково — оранжевая бумажная плашка с чуть неровным краем.
+
+   Неровный край рисует ПСЕВДОЭЛЕМЕНТ, а не clip-path на самой кнопке.
+   На кнопке он срезал контур фокуса целиком: :focus-visible рисует outline
+   снаружи бордер-бокса, и clip-path его отрезал — с клавиатуры не было
+   видно, где ты находишься. */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-h);
+  padding: 0.75rem 1.6rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: clamp(0.9375rem, 1vw, 1.0625rem);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--on-orange);
+  transition: transform var(--motion-quick) var(--ease-cut);
 }
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--orange);
+  clip-path: polygon(0.4% 0, 99.6% 1.5%, 100% 96%, 0.8% 100%);
+  transition: background var(--motion-quick) var(--ease-cut);
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:hover::before { background: #FF5D2B; }
+.btn:active { transform: translateY(0); }
+
+/* Вторая кнопка — контур, без заливки. */
+.btn--ghost { color: var(--chalk); }
+.btn--ghost::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--orange);
+  /* Срез только сверху и снизу: при срезе по бокам от рамки оставались
+     две горизонтальные черты. */
+  clip-path: polygon(0 1.5%, 100% 0, 100% 98.5%, 0 100%);
+}
+.btn--ghost:hover::before { background: rgb(245 79 27 / 14%); }
 
 /* ============================ ФОКУС / ДОСТУПНОСТЬ ============================ */
 :focus-visible {
@@ -115,7 +146,7 @@ body.is-locked { overflow: hidden; }
 }
 .skip-link {
   position: absolute; left: -9999px; top: 0; z-index: 10000;
-  background: var(--orange); color: var(--ink);
+  background: var(--orange); color: var(--on-orange);
   padding: 0.75rem 1.25rem; font-family: var(--font-body);
 }
 .skip-link:focus { left: 0; }

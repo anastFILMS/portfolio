@@ -1,11 +1,10 @@
 import { motion, useInView, type Variants } from 'framer-motion';
-import { useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
-type Mode = 'mask' | 'jerk' | 'tear' | 'glitch';
+type Mode = 'rise' | 'jerk' | 'tear';
 
 type Props = {
   children: ReactNode;
-  /** Как элемент выходит на экран. */
   mode?: Mode;
   delay?: number;
   className?: string;
@@ -13,72 +12,51 @@ type Props = {
 };
 
 /**
- * Появление элементов в гранж-логике: резко, со смещением и рывком.
+ * Появление элементов при прокрутке.
  *
- * Брифом отдельно оговорено «не использовать стерильные корпоративные
- * появления», поэтому здесь нет мягкого fade-up — вместо него маски, сдвиги
- * по кадрам и короткий glitch.
+ * Короткое и однократное: 220–420 мс, со сдвигом и лёгким перелётом.
+ * Прежний режим `glitch` мигал прозрачностью 0→1→0.35→1 и «рвал» текст —
+ * это отдельно запрещено и убрано.
  *
- *  mask   — текст выезжает из-под маски (шторка снизу)
- *  jerk   — влетает со сдвигом и перелётом, как приклеенный рывком
- *  tear   — «отрывается» с поворотом, будто кусок бумаги
- *  glitch — дёргается по горизонтали, VHS-срыв
+ * При `prefers-reduced-motion: reduce` анимации нет вообще: содержимое
+ * сразу на месте. Настройку слушаем, а не читаем один раз при загрузке.
  */
 const VARIANTS: Record<Mode, Variants> = {
-  mask: {
-    hidden: { y: '108%' },
-    show: { y: '0%', transition: { duration: 0.62, ease: [0.16, 1.2, 0.3, 1] } },
+  rise: {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
   },
   jerk: {
-    hidden: { opacity: 0, y: 46, x: -14 },
-    show: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-      transition: { duration: 0.5, ease: [0.16, 1.2, 0.3, 1] },
-    },
+    hidden: { opacity: 0, y: 34, x: -10 },
+    show: { opacity: 1, y: 0, x: 0, transition: { duration: 0.38, ease: [0.16, 1.2, 0.3, 1] } },
   },
   tear: {
-    hidden: { opacity: 0, y: 60, rotate: -3.5, scale: 0.965 },
-    show: {
-      opacity: 1,
-      y: 0,
-      rotate: 0,
-      scale: 1,
-      transition: { duration: 0.58, ease: [0.16, 1.2, 0.3, 1] },
-    },
-  },
-  glitch: {
-    hidden: { opacity: 0, x: -26, skewX: 9 },
-    show: {
-      opacity: [0, 1, 0.35, 1],
-      x: [-26, 7, -3, 0],
-      skewX: [9, -4, 2, 0],
-      transition: { duration: 0.4, times: [0, 0.45, 0.7, 1], ease: 'linear' },
-    },
+    hidden: { opacity: 0, y: 40, rotate: -2.2 },
+    show: { opacity: 1, y: 0, rotate: 0, transition: { duration: 0.42, ease: [0.16, 1.2, 0.3, 1] } },
   },
 };
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => setReduced(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+  return reduced;
+}
 
 export function Reveal({ children, mode = 'jerk', delay = 0, className = '', as = 'div' }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-8% 0px -8% 0px' });
+  const reduced = useReducedMotion();
   const MotionTag = motion[as] as typeof motion.div;
 
-  // Для маски нужен внешний контейнер с overflow: hidden, иначе шторки не будет.
-  if (mode === 'mask') {
-    return (
-      <span ref={ref} className={className} style={{ display: 'block', overflow: 'hidden' }}>
-        <motion.span
-          style={{ display: 'block', willChange: 'transform' }}
-          variants={VARIANTS.mask}
-          initial="hidden"
-          animate={inView ? 'show' : 'hidden'}
-          transition={{ delay }}
-        >
-          {children}
-        </motion.span>
-      </span>
-    );
+  if (reduced) {
+    const Tag = as;
+    return <Tag className={className}>{children}</Tag>;
   }
 
   return (

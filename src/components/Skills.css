@@ -1,98 +1,65 @@
-/* Бегущая строка — последний элемент секции, поэтому нижний отступ снимаем:
-   иначе под лентой оставалась полоса пустой бумаги. */
-.skills { position: relative; overflow: hidden; }
-/* .section задаёт padding-block, а global.css подключается после CSS
-   компонентов — одноклассовое переопределение проигрывало по порядку,
-   и под лентой оставалась полоса пустой бумаги. */
-.section.skills { padding-bottom: 0; }
-
-.skills__title {
-  font-size: clamp(2.6rem, 7vw, 6.5rem);
-  color: var(--paper);
-  margin-bottom: clamp(1.75rem, 4vh, 3rem);
-}
-
-/* ---------------- программы ---------------- */
-.skills__programs {
+/* «Инструменты» — короткая полоса, а не отдельный большой раздел. */
+.sk__shell {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-  gap: clamp(0.85rem, 2vw, 1.5rem);
-  margin-bottom: clamp(2.5rem, 6vh, 4rem);
+  grid-template-columns: minmax(12rem, 28%) 1fr;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  align-items: center;
 }
 
-.prog {
+.sk__title {
+  margin: 0;
+  font-size: clamp(2.375rem, 5vw, 5rem);
+  color: var(--chalk);
+}
+.sk__rule {
+  display: block;
+  width: 58%;
+  height: 5px;
+  margin-top: 0.85rem;
+  background: var(--orange);
+  clip-path: polygon(0 20%, 100% 0, 99% 80%, 1% 100%);
+}
+
+.sk__programs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+/* Ярлык — маленький бумажный прямоугольник с чуть неровным краем. */
+.sk__prog {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
-  padding: clamp(1rem, 2vw, 1.4rem);
-  background: var(--ink-soft);
-  color: var(--chalk);
-  transition: transform 0.18s var(--ease-snap), box-shadow 0.18s var(--ease-snap);
-  /* Неровный низ — плашка «оторвана», а не залита прямоугольником. */
-  clip-path: polygon(0 0, 100% 0, 100% 88%, 94% 100%, 0 100%);
+  gap: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--paper-shadow);
+  clip-path: polygon(1% 4%, 99% 0, 100% 95%, 0.5% 100%);
 }
-.prog:hover {
-  transform: translate(-3px, -5px) rotate(-0.8deg);
-  box-shadow: 10px 14px 0 var(--orange);
-}
-
-.prog__mark {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 3.4rem;
-  height: 3.4rem;
+.sk__prog:nth-child(2) { rotate: -1.4deg; }
+.sk__prog:nth-child(3) { rotate: 1.1deg; }
+.sk__mark {
+  font-family: var(--font-cond);
+  font-weight: 700;
   font-size: 1.5rem;
-  color: var(--ink);
-  background: var(--orange);
-  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--brand-navy);
 }
-.prog__body { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
-.prog__name { font-weight: 600; font-size: 0.95rem; }
-.prog__role { font-size: 0.75rem; color: var(--orange); }
-
-/* ---------------- практические навыки ---------------- */
-.skills__craft {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  gap: clamp(1.75rem, 4vw, 3.5rem);
+.sk__name {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-label);
 }
 
-.craft__label {
-  padding-bottom: 0.6rem;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid var(--orange);
-  color: var(--paper);
+.sk__items {
+  margin-top: 1.5rem;
+  color: var(--chalk-dim);
+  letter-spacing: 0.1em;
 }
-.craft__list { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.sk__sep { color: var(--orange); }
 
-.craft__item {
-  padding: 0.5rem 1rem;
-  border: 2px solid rgba(233, 225, 210, 0.35);
-  font-size: 0.85rem;
-  color: var(--paper);
-  transition: transform 0.15s var(--ease-cut), background 0.15s var(--ease-cut), color 0.15s var(--ease-cut);
-}
-/* У тегов чередуется наклон — сетка не выглядит машинной. */
-.craft__item:nth-child(odd)  { transform: rotate(-0.9deg); }
-.craft__item:nth-child(even) { transform: rotate(0.7deg); }
-.craft__item:hover {
-  background: var(--orange);
-  border-color: var(--orange);
-  color: var(--ink);
-  transform: rotate(0deg) translateY(-3px);
-}
-
-/* Полоса под ленту: разрыв рисуется внутри неё, поэтому нужен запас сверху,
-   иначе зубцы наедут на текст ленты. */
-.skills__band {
-  position: relative;
-  margin-top: clamp(2.5rem, 6vh, 4rem);
-  padding-top: 44px;
-  background: var(--ink-deep);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .prog:hover,
-  .craft__item:hover { transform: none; }
+@media (max-width: 767px) {
+  .sk__shell { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  /* На самом узком экране ярлыки переносятся строками. */
+  .sk__prog { flex: 1 1 auto; }
 }

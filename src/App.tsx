@@ -1,5 +1,4 @@
 import { useLenis } from './hooks/useLenis';
-import { Grain } from './components/grunge/Grain';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
 import { Experience } from './components/Experience';
@@ -8,22 +7,24 @@ import { Skills } from './components/Skills';
 import { Contacts } from './components/Contacts';
 
 /**
- * Порядок блоков задан брифом:
- * первый экран → WORK → опыт → обо мне → навыки → контакты.
+ * Порядок секций: первый экран → WORK → На площадке → Обо мне →
+ * Инструменты → Контакты.
  *
- * Переходы между секциями рисуют сами секции (TornEdge на своих краях),
- * поэтому здесь остаётся только последовательность.
+ * Переходы рисуют сами секции: каждая начинается компонентом SectionSeam
+ * со своим профилем рваной бумаги.
+ *
+ * Глобального слоя зерна поверх страницы больше нет. Прежний Grain стоял
+ * выше модалки по z-index и накладывал шум на видео, лица и текст.
+ * Фактура теперь живёт на фонах секций, под содержимым.
+ *
+ * У обёртки есть id: плеер помечает её `inert`, пока открыт просмотр.
  */
 export default function App() {
   useLenis();
 
   return (
-    <>
+    <div className="page" id="page">
       <a className="skip-link" href="#work">К работам</a>
-
-      <Grain />
-      {/* Шапка с логотипом и навигацией убрана с титульника по правкам —
-          вернётся отдельным блоком ниже по странице. */}
 
       <main>
         <Hero />
@@ -33,6 +34,6 @@ export default function App() {
         <Skills />
         <Contacts />
       </main>
-    </>
+    </div>
   );
 }

@@ -1,124 +1,71 @@
-.about { position: relative; overflow: hidden; }
-
-.about__inner {
+/* «Обо мне»: слева коллаж, справа сведения. Пропорции из пакета — 47/45
+   с зазором 6–8%. */
+.about__shell {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(2.5rem, 7vw, 6rem);
+  grid-template-columns: 47% 45%;
+  gap: 8%;
   align-items: center;
 }
 
-/* ---------------- коллаж ---------------- */
-.about__media {
+/* Высоту коллажа держит контейнер: фотографии в нём позиционированы
+   абсолютно, и без своей высоты блок схлопнулся бы под текст. */
+.about__collage {
   position: relative;
-  padding-bottom: clamp(3rem, 8vw, 6rem);
-  padding-right: clamp(1.5rem, 5vw, 4rem);
+  aspect-ratio: 1.1 / 1;
 }
 
-.about__photo { position: relative; }
-
-/* Дуотон: обесцвечиваем исходник и подмешиваем цвета сайта, чтобы любое фото
-   встало в палитру, а не выпало из неё (реф 0429, 0436). Включается только
-   когда фотография действительно есть — см. About.tsx. */
-.about__photo.is-toned {
-  filter: grayscale(1) contrast(1.15);
-}
-.about__photo.is-toned::after {
-  content: '';
+.ph {
   position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background: linear-gradient(150deg, rgba(30, 34, 61, 0.78), rgba(245, 79, 27, 0.42));
-  mix-blend-mode: screen;
-}
-/* Полутоновая сетка поверх — «печать на плохой бумаге». */
-.about__photo.is-toned::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-  opacity: 0.3;
-  background-image: radial-gradient(rgba(20, 23, 40, 0.85) 0 32%, transparent 34%);
-  background-size: 4px 4px;
-}
-
-.about__photo--main {
-  transform: rotate(-2.2deg);
-  box-shadow: 12px 16px 0 rgba(20, 23, 40, 0.6);
-}
-/* Второй кадр наезжает на первый снизу-справа — слоистость коллажа. */
-.about__photo--back {
-  position: absolute;
-  right: 0;
-  bottom: clamp(0.5rem, 3vw, 2rem);
-  width: 56%;
-  transform: rotate(3.4deg);
-  box-shadow: -10px 14px 0 rgba(245, 79, 27, 0.35);
-  z-index: 5;
-}
-
-.about__note {
-  position: absolute;
-  left: -0.5rem;
-  bottom: 0.5rem;
-  max-width: 12ch;
-  font-size: clamp(1.05rem, 1.9vw, 1.55rem);
-  line-height: 1.05;
-  color: var(--orange);
-  transform: rotate(-5deg);
-  z-index: 6;
-}
-.about__zigzag {
-  position: absolute;
-  top: -1.25rem;
-  right: -1rem;
-  transform: rotate(-8deg);
-  z-index: 6;
-}
-
-/* ---------------- текст ---------------- */
-.about__title {
-  font-size: clamp(2.6rem, 7vw, 6.5rem);
-  color: var(--chalk);
-  margin-bottom: clamp(1rem, 2.5vh, 1.75rem);
-}
-.about__lead {
-  font-size: clamp(1.35rem, 2.9vw, 2.4rem);
-  line-height: 1.02;
-  color: var(--orange);
-  margin-bottom: clamp(1.25rem, 3vh, 2rem);
-  text-transform: none;
-}
-.about__p {
-  max-width: 62ch;
-  margin-bottom: 1.1rem;
-  color: rgba(233, 225, 210, 0.82);
-  font-size: var(--fs-body);
-  line-height: 1.68;
-}
-
-/* ---------------- факты ---------------- */
-.about__facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem 2.5rem;
-  margin-top: clamp(1.5rem, 4vh, 2.5rem);
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(233, 225, 210, 0.18);
-}
-.about__fact dt {
-  font-size: 0.75rem;
-  color: rgba(233, 225, 210, 0.5);
-  margin-bottom: 0.3rem;
-}
-.about__fact dd {
   margin: 0;
-  font-size: clamp(1.05rem, 1.8vw, 1.5rem);
+  padding: 7px;
+  background: var(--paper);
+  box-shadow: var(--photo-shadow);
+  /* Тонкие неровные поля вместо ровной рамки. */
+  clip-path: polygon(0.6% 1%, 99.4% 0, 100% 99%, 1.2% 100%);
+}
+.ph__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Лицо остаётся лицом: тяжёлого дуотона и полутоновой сетки тут нет,
+     только лёгкое приглушение, чтобы фото не спорило с фоном. */
+  filter: saturate(0.92) contrast(1.04);
+}
+.ph__tape { top: -14px; left: 12%; }
+
+/* Раскладка по ролям из данных, а не по порядку в массиве. */
+.ph--left-back   { left: 0;   top: 9%;  width: 54%; aspect-ratio: 3 / 2;   rotate: -7deg; z-index: 1; }
+.ph--center-main { left: 40%; top: 3%;  width: 55%; aspect-ratio: 3 / 2;   rotate: 4deg;  z-index: 2; }
+.ph--front-small { left: 58%; top: 44%; width: 36%; aspect-ratio: 4 / 3;   rotate: -8deg; z-index: 3; }
+.ph--center-main .ph__tape { left: auto; right: 14%; }
+.ph--front-small .ph__tape { top: -10px; left: 8%; }
+
+.about__head {
+  margin: 0 0 1.25rem;
+  font-size: clamp(3.25rem, 7vw, 6.5rem);
+  color: var(--orange);
+  line-height: 0.88;
+}
+.about__name {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
   color: var(--chalk);
+  margin-bottom: 0.35rem;
+}
+.about__role { color: var(--chalk-dim); margin-bottom: 1.4rem; }
+.about__body { max-width: 30rem; color: var(--chalk); }
+
+@media (max-width: 1023px) {
+  .about__shell { grid-template-columns: 50% 44%; gap: 6%; }
+  .about__head { font-size: clamp(2.75rem, 6vw, 4rem); }
 }
 
-@media (max-width: 900px) {
-  .about__inner { grid-template-columns: minmax(0, 1fr); }
-  .about__media { max-width: 460px; margin-inline: auto; padding-right: 2.5rem; }
+@media (max-width: 767px) {
+  /* Телефон: сначала коллаж, потом текст обычным потоком. */
+  .about__shell { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  /* 32 px между нижним видимым краем фото и текстом. Нижнее фото уходит
+     на 62% + высота, поэтому коллажу нужен запас снизу. */
+  .about__collage { aspect-ratio: 1 / 1; margin-bottom: 2rem; }
+  .ph__tape { display: none; }
 }

@@ -1,0 +1,84 @@
+/* Просмотр мини-шоурила. Окно чистое: ни фактуры, ни зерна, ни рваных
+   краёв — они мешали бы смотреть само видео. */
+.rp {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: rgb(9 10 14 / 88%);
+  backdrop-filter: blur(3px);
+}
+
+.rp__panel {
+  width: min(100%, 1180px);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  background: var(--ink-deep);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 55%);
+}
+
+.rp__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem clamp(0.9rem, 2vw, 1.4rem) 0;
+}
+.rp__title {
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  color: var(--chalk);
+}
+.rp__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  color: var(--chalk-dim);
+  box-shadow: inset 0 0 0 1px rgb(239 234 227 / 26%);
+  transition: color var(--motion-quick) var(--ease-cut),
+              box-shadow var(--motion-quick) var(--ease-cut);
+}
+.rp__close svg { width: 15px; height: 15px; }
+.rp__close:hover { color: var(--orange); box-shadow: inset 0 0 0 1px var(--orange); }
+
+.rp__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* Сцена ограничена и по высоте, и по ширине. Пропорции заданы заранее,
+     чтобы загрузка ролика не меняла геометрию, а ширина следует за
+     высотой — иначе вертикальный ролик распирал панель и уходил под
+     нижний край экрана. */
+  --cap: min(70vh, 820px);
+  max-height: var(--cap);
+  width: min(100%, calc(var(--cap) * var(--ar, 1.778)));
+  margin: 0 auto clamp(0.9rem, 2vw, 1.4rem);
+  background: #000;
+}
+.rp__video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.rp__note {
+  position: absolute;
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--chalk-dim);
+  font-size: var(--fs-body);
+}
+.rp__retry { min-width: 10rem; }
+
+@media (max-width: 767px) {
+  .rp { padding: 0.75rem; }
+  .rp__stage { --cap: 58vh; }
+}

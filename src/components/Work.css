@@ -1,331 +1,214 @@
-/* Раздел стоит на своей поверхности — мятой тёмной ткани из рефа «фон».
-   На постере работы лежат именно на ней; сливаться с фактурой первого
-   экрана раздел не должен. */
-/* Специфичность нужна: .section--ink задаёт фон сокращённой записью
-   в global.css, который подключается после CSS компонентов, и картинку
-   сносило. */
-.work { position: relative; overflow: hidden; }
-.section.work {
-  background-color: #0a0a0d;
-  background-image: url('/textures/bg/cloth.jpg');
-  background-size: 900px;
-  background-position: center;
+/* ================= РАЗДЕЛ WORK =================
+   Чёрная поверхность с еле заметным синим, как в макете. Мятая ткань из
+   рефа оставлена как фактура под градиентом, а не как сплошная заливка:
+   раньше она забивала весь раздел серым шумом. */
+.work {
+  overflow: visible; /* бумажный стык наезжает вверх — резать его нельзя */
 }
-/* Общая фактура секций поверх ткани лишняя — она её замыливает. */
-.section.work::before { opacity: 0.12; }
-
-/* ---------------- титул раздела ----------------
-   Построен как шапка постера: крупная надпись в две строки со смещением,
-   мелкие выходные данные по углам, короткая врезка справа. Прошлый вариант
-   был обычной строкой «заголовок + счётчик» и читался панелью. */
-.work__masthead {
-  position: relative;
-  padding-block: clamp(1rem, 4vh, 3rem) clamp(0.5rem, 2vh, 1.25rem);
-}
-.work__credit {
-  position: absolute;
-  top: clamp(0.5rem, 2vh, 1.5rem);
-  font-size: 0.75rem;
-  color: rgba(233, 225, 210, 0.42);
-}
-.work__credit--l { left: 0; }
-.work__credit--r { right: 0; }
-
-.work__title { position: relative; margin: 0; }
-.work__title-a,
-.work__title-b { display: block; line-height: 0.86; }
-.work__title-a {
-  font-size: clamp(3.5rem, 19vw, 17rem);
-  color: var(--paper);
-  /* Смазанная копия под буквами — «плохая печать» с постера. */
-  text-shadow: 4px 4px 0 rgba(245, 79, 27, 0.6);
-}
-/* Вторая строка мельче и со сдвигом вправо, как на рефе. */
-.work__title-b {
-  font-size: clamp(1.6rem, 8vw, 7rem);
-  /* Вторая строка заезжает на первую — на рефе строки титула наложены. */
-  margin-top: -0.34em;
-  margin-left: clamp(2rem, 22vw, 20rem);
-  color: var(--orange);
-}
-.work__title-line {
-  position: absolute;
-  /* Подчёркивание сидит под самим словом: на всю ширину титула второй
-     штрих каракули отрывался и читался посторонним пятном. */
-  left: -1%;
-  bottom: 3.4rem;
-  width: 46%;
-  height: 2rem;
-  color: var(--orange);
-}
-
-.work__intro {
-  max-width: 24rem;
-  margin-top: clamp(-2rem, -3vh, -0.5rem);
-  margin-left: auto;
-  text-align: right;
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: rgba(233, 225, 210, 0.6);
-}
-
-.work__filter-label {
-  align-self: center;
-  margin-right: 0.5rem;
-  font-size: 0.75rem;
-  color: rgba(233, 225, 210, 0.4);
-}
-
-/* ---------------- фильтр ---------------- */
-.work__filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-  margin-bottom: clamp(1rem, 3vh, 2rem);
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(233, 225, 210, 0.14);
-}
-.chip {
-  /* 44px — минимальная зона нажатия; было 35px. */
-  min-height: 44px;
-  padding: 0.6rem 0.9rem;
-  border: 1px solid rgba(233, 225, 210, 0.28);
-  color: rgba(233, 225, 210, 0.7);
-  transition: transform 0.14s var(--ease-cut), background 0.14s var(--ease-cut),
-              color 0.14s var(--ease-cut), border-color 0.14s var(--ease-cut);
-}
-/* Разворот у каждой наклейки свой — ровный ряд читался интерфейсом. */
-.chip:nth-child(3n)   { rotate: -1.6deg; }
-.chip:nth-child(3n+1) { rotate: 1.1deg; }
-.chip:nth-child(4n+2) { rotate: -0.7deg; translate: 0 -3px; }
-.chip:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px) rotate(-0.8deg); }
-.chip.is-active { background: var(--orange); border-color: var(--orange); color: var(--ink); }
-
-/* ================= БЛОКИ ПРОЕКТОВ =================
-   Композиция снята с постера-рефа. Там кадры не вписаны в лист: каждый
-   уходит за его край, стороны выноса чередуются, а текст стоит вплотную
-   к сколу и местами заезжает под иглы. Блоки идут внахлёст по вертикали,
-   без воздуха между ними — на постере пустого поля почти нет. */
-.work__rows { display: flex; flex-direction: column; }
-.work__row { will-change: transform; }
-/* Нахлёст сильный: раньше между блоками оставалась пустая полоса
-   в пол-экрана, и раздел читался списком, а не листом. */
-.work__row + .work__row { margin-top: clamp(-7rem, -5.5vw, -2rem); }
-
-.pw {
-  display: grid;
-  align-items: start;
-  gap: clamp(0.5rem, 1.5vw, 1.5rem);
-  margin-top: var(--lift, 0);
-}
-.pw--left  { grid-template-columns: var(--media) var(--text); }
-.pw--right { grid-template-columns: var(--text) var(--media); }
-/* Обе колонки жёстко в первой строке. Без этого у блоков с выносом
-   вправо кадр (колонка 2) шёл первым по разметке, автораскладка не
-   возвращалась к колонке 1, и текст уезжал строкой ниже — под картинку
-   следующего блока. */
-.pw__frame, .pw__text { grid-row: 1; }
-
-/* ---------------- кадр ----------------
-   Белого паспарту как рамки тут нет. Подложка вырезана осколком с
-   длинными иглами, кадр внутри — тем же осколком, поджатым внутрь на
-   пару процентов. Белое из-за этого читается рваными треугольниками по
-   краю, а не ровной каймой вокруг картинки. */
-.pw__frame {
-  position: relative;
-  display: block;
-  background: var(--chalk);
-  padding: 11px;
-  max-height: 62vh;
-  overflow: hidden;
-  rotate: var(--rot, 0deg);
-  transition: transform 0.25s var(--ease-snap);
-}
-/* Вынос за край листа: снимаем и внутренний отступ .shell, и поле
-   центрирования контейнера. Секция режет всё лишнее по overflow. */
-.pw--left .pw__frame {
-  grid-column: 1;
-  margin-left: calc(-1 * var(--gutter) - (100vw - min(100vw, var(--maxw))) / 2);
-  /* Со стороны выноса кромки нет: иначе у самого края экрана оставалась
-     белая полоска в толщину отступа, и кадр читался обрезанным, а не
-     уходящим за лист. */
-  padding-left: 0;
-}
-.pw--right .pw__frame {
-  grid-column: 2;
-  margin-right: calc(-1 * var(--gutter) - (100vw - min(100vw, var(--maxw))) / 2);
-  padding-right: 0;
-}
-.pw__frame { align-self: center; }
-.pw:hover .pw__frame { transform: scale(1.012); }
-
-.pw__shot { position: relative; display: block; }
-
-/* Трафаретная печать в наши акценты. На рефе картинки не приглушены —
-   они перекрашены в два-три цвета и забиты полутоновой точкой.
-   Сила вынесена в переменную: когда придут настоящие работы, её можно
-   убавить, чтобы обработка не подменяла авторский цвет видео. */
-.pw__shot { --tone: 0.92; }
-.pw__shot::before,
-.pw__shot::after {
+.section.work::after {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 4;
+  z-index: 0;
   pointer-events: none;
+  background-image: url('/textures/bg/cloth.jpg');
+  background-size: 1100px;
+  background-position: center;
+  mix-blend-mode: soft-light;
+  opacity: 0.35;
 }
-.pw__shot::before {
-  background: linear-gradient(150deg, #FF2E7E, #6B21D9 46%, #1B2AC4);
-  mix-blend-mode: color;
-  opacity: var(--tone);
-}
-/* Полутоновая точка и зерно поверх — «печать на плохой бумаге». */
-.pw__shot::after {
-  background-image:
-    radial-gradient(rgba(0, 0, 0, 0.6) 0 32%, transparent 34%),
-    url('/textures/paper.png');
-  background-size: 3px 3px, 220px;
-  mix-blend-mode: overlay;
-  opacity: 0.72;
-}
-/* Каждая работа своего разворота — как три блока на постере. */
-.pw__shot[data-tone='1']::before { background: linear-gradient(28deg, #E01010, var(--orange) 38%, #1B2AC4); }
-.pw__shot[data-tone='2']::before { background: linear-gradient(206deg, #2A3BF0, #B517D6 54%, var(--orange)); }
 
-.pw__shot .slot__video,
-.pw__shot .slot__img { filter: saturate(1.7) contrast(1.35); }
-
-/* Выходные данные прямо по кадру. */
-.pw__stamp {
-  position: absolute;
-  top: 7%;
-  z-index: 6;
-  font-size: 0.75rem;
-  letter-spacing: 0.18em;
-  /* Подпись лежит прямо на кадре и местами попадает на белую кромку,
-     поэтому у неё своя тёмная плашка — как подписи на плашках у постера.
-     Одной обводкой контраст там не держался. */
-  padding: 0.22rem 0.55rem;
-  background: var(--ink-deep);
-  color: var(--chalk);
-  rotate: -1.4deg;
+/* ---------------- шапка раздела ----------------
+   WORK по центру, «избранное» на маленькой бумажке чуть правее и внахлёст
+   на низ букв. Прежние выходные данные по углам, правая врезка и панель
+   фильтров из этого места убраны. */
+.work__masthead {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-block: clamp(1rem, 3vh, 2.5rem) clamp(3.5rem, 7vh, 6rem);
 }
-.pw--left  .pw__stamp { left: 6%; }
-.pw--right .pw__stamp { right: 6%; }
-
-.pw__play {
+.work__title {
+  margin: 0;
+  font-size: clamp(4.5rem, 14vw, 13rem);
+  line-height: 0.84;
+  color: var(--orange);
+  letter-spacing: 0.02em;
+  /* Плохой прогон краски: тёмная копия со сдвигом под буквами. */
+  text-shadow: 5px 6px 0 rgb(0 0 0 / 45%);
+}
+.work__sub {
   position: absolute;
   left: 50%;
-  bottom: 13%;
-  z-index: 6;
-  transform: translate(-50%, 10px);
-  padding: 0.45rem 1rem;
-  background: var(--orange);
-  color: var(--ink-deep);
-  font-size: 0.75rem;
-  opacity: 0;
-  transition: opacity 0.16s var(--ease-cut), transform 0.16s var(--ease-cut);
-}
-.pw:hover .pw__play,
-.pw:focus-within .pw__play { opacity: 1; transform: translate(-50%, 0); }
-
-/* ---------------- текст ---------------- */
-.pw__text {
-  position: relative;
-  max-width: 30rem;
-  /* Текст всегда поверх кадров: блоки идут внахлёст, и без этого соседний
-     кадр перекрывал строку с форматами. */
-  z-index: 3;
-}
-/* Отрицательный pull придвигает колонку под иглы скола — на постере
-   абзац начинается прямо у рваного края. */
-.pw--left  .pw__text { grid-column: 2; margin-left: var(--pull); }
-.pw--right .pw__text { grid-column: 1; margin-right: var(--pull); }
-.pw__text { padding-top: var(--top, 0); }
-
-.pw__kicker {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-  color: rgba(233, 225, 210, 0.55);
-  margin-bottom: 0.1rem;
-}
-.pw__kicker sup {
-  font-family: var(--font-tech);
-  font-size: 0.75rem;
-  color: var(--orange);
-  margin-left: 0.35em;
-  vertical-align: super;
-}
-
-.pw__title {
-  position: relative;
-  margin: 0 0 1.35rem;
-  font-size: clamp(2rem, 4.8vw, 4rem);
-  line-height: 0.94;
-  /* Смазанная копия под буквами — плохой прогон краски с постера. */
-  text-shadow: 3px 3px 0 rgba(245, 79, 27, 0.6);
-  transition: color 0.16s var(--ease-cut);
-}
-.pw:hover .pw__title { color: var(--orange); }
-/* Росчерк лежит под самим заголовком, а не сбоку от него. */
-.pw__mark {
-  position: absolute;
-  left: -2%;
-  bottom: -0.34em;
-  width: 58%;
-  height: 0.7em;
-  color: var(--orange);
-  pointer-events: none;
-}
-
-.pw__note {
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: rgba(233, 225, 210, 0.82);
-}
-/* Подсветка ключевых фраз внутри абзаца — как в тексте на постере. */
-.pw__hl {
+  bottom: clamp(2.2rem, 5vh, 4.4rem);
+  transform: translateX(-6%) rotate(-1.6deg);
+  padding: 0.3rem 1.1rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-cond);
   font-weight: 700;
+  font-size: clamp(1.375rem, 2.4vw, 2.75rem);
+  line-height: 1.15;
+  box-shadow: var(--paper-shadow);
+  /* Края бумажки неровные, но без зубцов — это маленький обрывок. */
+  clip-path: polygon(1% 6%, 99% 0, 100% 92%, 2% 100%);
+}
+
+/* ---------------- ряды работ ----------------
+   Каждая работа — своя горизонтальная композиция. Между работами
+   положительный промежуток: прежние отрицательные margin-top и --lift
+   заставляли разные работы налезать друг на друга. */
+.work__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--work-gap);
+}
+
+.wk {
+  position: relative;
+  display: grid;
+  align-items: center;
+  gap: clamp(1.5rem, 6vw, 5rem);
+}
+/* Обе колонки жёстко в первой строке. Без этого у правых композиций кадр
+   (колонка 2) шёл первым по разметке, автораскладка грида не возвращалась
+   к колонке 1, и текст уезжал строкой ниже. */
+.wk__shot, .wk__text { grid-row: 1; }
+.wk--left  { grid-template-columns: var(--media) var(--text); }
+.wk--right { grid-template-columns: var(--text) var(--media); }
+.wk--left  .wk__shot { grid-column: 1; }
+.wk--left  .wk__text { grid-column: 2; }
+.wk--right .wk__shot { grid-column: 2; }
+.wk--right .wk__text { grid-column: 1; }
+
+/* ---------------- кадр ----------------
+   Внешняя кнопка НЕ режется маской: clip-path на ней срезал бы контур
+   фокуса. Форма живёт на внутренней подложке. */
+.wk__shot {
+  display: block;
+  padding: 0;
+  will-change: transform;
+}
+/* Край изображения выходит за поля контейнера — но только изображение,
+   не текст и не кнопки. */
+.wk--left  .wk__shot { margin-left: clamp(-3.5rem, -2.6vw, -1.5rem); }
+.wk--right .wk__shot { margin-right: clamp(-3.5rem, -2.6vw, -1.5rem); }
+
+/* Бумажная подложка: её видно в надрывах как светлую волокнистую кромку.
+   Толщину кромки задаёт padding — 8–14 px на широком экране, 4–7 px на
+   телефоне. Контур у подложки и у кадра один, поэтому кромка идёт ровно
+   по надрывам и нигде не распадается на треугольники. */
+.wk__paper {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: clamp(5px, 0.8vw, 13px);
+  /* Пропорции внешнего кадра приходят из данных переменной, а не инлайном:
+     на телефоне их надо переопределить, иначе кадр выходит слишком низким. */
+  aspect-ratio: var(--cover, 1.95 / 1);
+  background: var(--paper);
+  background-image: url('/textures/paper.png');
+  background-size: 380px;
+  rotate: var(--rot, 0deg);
+  filter: drop-shadow(0 14px 22px rgb(0 0 0 / 42%));
+  transition: transform var(--motion-quick) var(--ease-cut);
+}
+.wk__shot:hover .wk__paper { transform: scale(1.015); }
+
+.wk__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #05050a;
+}
+/* Временная обложка-вырезка вписывается целиком, и вокруг неё остаётся
+   пустота. Даём ей мягкую подложку, чтобы слот читался подготовленным
+   местом под кадр, а не дырой. */
+.wk__inner[data-fit='contain'] {
+  background: radial-gradient(70% 70% at 50% 45%, #23252E, #0D0E13 78%);
+}
+
+.wp { position: absolute; inset: 0; }
+.wp__img,
+.wp__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Видео появляется поверх постера только когда играет. */
+.wp__video { position: absolute; inset: 0; opacity: 0; }
+.wk:hover .wp__video,
+.wk:focus-within .wp__video { opacity: 1; }
+/* Кадра ещё нет — нейтральная бумажная композиция, без ложных подписей. */
+.wp__blank {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(114deg, rgb(230 224 215 / 6%) 0 3px, transparent 3px 9px),
+    linear-gradient(150deg, var(--coal), var(--navy-soft) 62%, var(--ink));
+}
+
+/* ---------------- текст работы ----------------
+   Только номер, название, категория и кнопка. Годов, длинных описаний,
+   счётчиков «01/8» и английских комментариев здесь нет. */
+.wk__text { position: relative; }
+.wk__num {
+  margin: 0 0 0.15rem;
+  font-size: clamp(1.375rem, 1.9vw, 1.75rem);
+  color: var(--orange);
+  letter-spacing: 0.06em;
+}
+/* Селектор из двух классов нужен, чтобы перебить line-height: 0.92 из
+   .u-cond — там одинаковая специфичность, и побеждал порядок подключения.
+   Плотная строка нужна крупным титулам, а у названия работы при увеличении
+   текста до 200% выносные элементы букв вылезали за строку. */
+.wk__text .wk__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 3.6vw, 4rem);
+  line-height: 1.2;
   color: var(--chalk);
 }
-.pw__dirs {
-  margin-top: 0.8rem;
-  padding-top: 0.6rem;
-  border-top: 1px solid rgba(233, 225, 210, 0.2);
-  font-size: 0.75rem;
-  color: var(--orange);
+.wk__cat {
+  margin: 0 0 1.5rem;
+  color: var(--chalk-dim);
+  letter-spacing: 0.18em;
 }
-
-.work__empty {
-  padding: 3rem 0;
-  text-align: center;
-  color: rgba(233, 225, 210, 0.45);
-}
+.wk__btn { min-width: 13rem; }
 
 /* ---------------- адаптив ---------------- */
-@media (max-width: 800px) {
-  /* На телефоне чередование сторон не читается — кадр всегда сверху,
-     и нахлёст снимаем, иначе текст уезжает под картинку. */
-  .pw--left, .pw--right { grid-template-columns: minmax(0, 1fr); }
-  .pw__frame,
-  .pw--left .pw__frame,
-  .pw--right .pw__frame {
-    grid-column: 1;
-    margin-inline: calc(-1 * var(--gutter));
-    rotate: 0deg;
-  }
-  .pw__text,
-  .pw--left .pw__text,
-  .pw--right .pw__text { grid-column: 1; max-width: none; margin-inline: 0; }
-  .pw { margin-top: 0; }
-  .pw__mark { display: none; }
-  .work__row + .work__row { margin-top: 2.5rem; }
-  .work__row { transform: none !important; }
+@media (max-width: 1023px) {
+  .wk { gap: clamp(1.25rem, 4vw, 2.5rem); }
+  .wk--left  { grid-template-columns: 56% 1fr; }
+  .wk--right { grid-template-columns: 1fr 56%; }
 }
+
+@media (max-width: 767px) {
+  /* Телефон: кадр, потом номер/название/категория, потом кнопка.
+     Чередование сторон в одну колонку не читается. */
+  .wk--left, .wk--right { grid-template-columns: minmax(0, 1fr); }
+  .wk__shot,
+  .wk--left .wk__shot,
+  .wk--right .wk__shot {
+    grid-row: 1;
+    grid-column: 1;
+    margin-inline: 0;
+  }
+  .wk__text,
+  .wk--left .wk__text,
+  .wk--right .wk__text { grid-row: 2; grid-column: 1; }
+  .wk { gap: clamp(1.25rem, 5vw, 1.75rem); }
+  /* На узком экране 1.95–2.2:1 даёт кадр в 165 px высотой — мало, чтобы
+     что-то разглядеть. Ориентир по ТЗ 200–300 px. */
+  .wk__paper { rotate: 0deg; --cover: 1.5 / 1; }
+  .wk__cat { margin-bottom: 1.1rem; }
+  .wk__btn { width: 100%; }
+
+  .work__masthead { padding-bottom: clamp(2.5rem, 6vh, 3.5rem); }
+  .work__sub { bottom: clamp(1.2rem, 3vh, 2rem); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .pw:hover .pw__frame { transform: none; }
-  .work__row { transform: none !important; }
+  .wk__shot { transform: none !important; }
+  .wk__shot:hover .wk__paper { transform: none; }
 }

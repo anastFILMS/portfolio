@@ -1,85 +1,53 @@
 import { about } from '../content/about';
-import { MediaSlot } from './grunge/MediaSlot';
-import { Tape } from './grunge/Tape';
+import { asset } from '../lib/asset';
+import { SectionSeam } from './grunge/SectionSeam';
 import { Reveal } from './grunge/Reveal';
-import { Scribble } from './grunge/Scribble';
-import { TornEdge } from './grunge/TornEdge';
+import { Tape } from './grunge/Tape';
 import './About.css';
 
 /**
- * Блок «Обо мне».
+ * «Обо мне».
  *
- * Фотографии собраны коллажем (реф «использование граффити с материалами
- * /IMG_0429»): два кадра под разными углами, приклеенные скотчем внахлёст,
- * с дуотон-обработкой в цвета сайта — чтобы любые исходники встали в палитру.
+ * На десктопе жёстко: коллаж только слева, сведения только справа. Общей
+ * фотоленты на всю ширину с текстом снизу здесь быть не должно.
  *
- * Текст живой и от первого лица; {years} подставляется из контента, чтобы
- * стаж правился в одном месте.
+ * Текст короткий и точный. Прежние четыре абзаца, стаж «5 лет», проценты
+ * «съёмка/монтаж 50/50» и приписка на полях убраны — это были придуманные
+ * сведения. Дописывать вместо них новые нельзя.
  */
 export function About() {
-  const paragraphs = about.paragraphs.map((p) => p.replace('{years}', String(about.years)));
-  // Дуотон и полутоновая сетка нужны только настоящим фотографиям: на пустом
-  // слоте они гасят оформление заглушки до нечитаемой серой плашки.
-  const portraitClass = about.photo.portrait.src ? 'is-toned' : '';
-  const backstageClass = about.photo.backstage.src ? 'is-toned' : '';
-
   return (
-    <section className="about section section--ink" id="about">
-      {/* Оранжевый разрыв на стыке — см. комментарий в Experience. */}
-      <TornEdge side="top" color="var(--orange)" seed={64} height={58} />
+    <section className="section section--about about" id="about">
+      <SectionSeam id="section-edge-03" sheet="#101013" overlap={36} fiber={4} />
 
-      <div className="shell about__inner">
-        {/* ---------- коллаж ---------- */}
-        <Reveal mode="tear" className="about__media">
-          <div className={`about__photo about__photo--main ${portraitClass}`}>
-            <Tape angle={-9} width={140} style={{ top: -16, left: '18%' }} />
-            <MediaSlot
-              poster={about.photo.portrait.src || undefined}
-              label={about.photo.portrait.label}
-              hint={about.photo.portrait.hint}
-              ratio="4 / 5"
-            />
-          </div>
-
-          <div className={`about__photo about__photo--back ${backstageClass}`}>
-            <Tape angle={7} width={110} tone="orange" style={{ top: -12, right: '14%' }} />
-            <MediaSlot
-              poster={about.photo.backstage.src || undefined}
-              label={about.photo.backstage.label}
-              hint={about.photo.backstage.hint}
-              ratio="3 / 2"
-            />
-          </div>
-
-          <span className="about__note u-hand">{about.note}</span>
-          <Scribble kind="zigzag" className="about__zigzag" color="var(--orange)" width={210} delay={0.4} />
-        </Reveal>
-
-        {/* ---------- текст ---------- */}
-        <div className="about__text">
-          <Reveal mode="mask">
-            <h2 className="about__title u-head">Обо мне</h2>
-          </Reveal>
-
-          <Reveal mode="jerk" delay={0.1}>
-            <p className="about__lead u-display">{about.lead}</p>
-          </Reveal>
-
-          {paragraphs.map((p, i) => (
-            <Reveal mode="jerk" delay={0.12 + i * 0.06} key={i}>
-              <p className="about__p">{p}</p>
-            </Reveal>
+      <div className="shell about__shell">
+        {/* Коллаж: высоту задаёт контейнер, чтобы абсолютные фото не
+            наехали на текст под ними на телефоне. */}
+        <div className="about__collage">
+          {about.photos.map((photo, i) => (
+            <figure className={`ph ph--${photo.role}`} key={photo.src}>
+              <img
+                className="ph__img"
+                src={asset(photo.src)}
+                alt={photo.alt}
+                loading="lazy"
+                decoding="async"
+                style={{ objectPosition: photo.objectPosition }}
+              />
+              {/* Скотч по углу — не поперёк лица. */}
+              <Tape angle={i % 2 ? 8 : -9} width={96} className="ph__tape" />
+            </figure>
           ))}
+        </div>
 
-          <Reveal mode="jerk" delay={0.4}>
-            <dl className="about__facts">
-              {about.facts.map((f) => (
-                <div className="about__fact" key={f.k}>
-                  <dt className="u-label">{f.k}</dt>
-                  <dd className="u-display">{f.v}</dd>
-                </div>
-              ))}
-            </dl>
+        <div className="about__text">
+          <Reveal mode="rise">
+            <h2 className="about__head u-graf">{about.heading}</h2>
+          </Reveal>
+          <Reveal mode="rise" delay={0.06}>
+            <p className="about__name">{about.name}</p>
+            <p className="about__role">{about.role}</p>
+            <p className="about__body">{about.body}</p>
           </Reveal>
         </div>
       </div>

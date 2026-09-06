@@ -1,65 +1,59 @@
+/* ======================= ПЕРВЫЙ ЭКРАН =======================
+   Фон спокойный: чёрно-угольный с мягким синим объёмом и слабым тёплым
+   пятном у края. Прежние spray на 0.9 в hard-light, зерно 0.5 и строчки
+   VHS 0.3 сняты — они делали экран пёстрым и мешали читать. */
 .hero {
   position: relative;
+  /* min-height, а не фиксированная высота: при переносах строк или
+     увеличенном шрифте кнопки не должны обрезаться. */
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--ink-deep);
+  background: var(--bg-hero);
 }
-
-/* ======================= ФОН ======================= */
-.hero__bg { position: absolute; inset: 0; pointer-events: none; }
-
-.hero__spray {
-  position: absolute;
-  inset: 0;
-  background-image: url('/textures/bg/spray.jpg');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.9;
-}
-.hero__spray::after {
+/* Фактура — один слой под содержимым, приглушённый. */
+.hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(58% 48% at 20% 20%, rgba(245, 79, 27, 0.72), transparent 68%),
-    radial-gradient(52% 52% at 84% 84%, rgba(245, 79, 27, 0.38), transparent 70%),
-    linear-gradient(rgba(11, 12, 22, 0.42), rgba(11, 12, 22, 0.86));
-  mix-blend-mode: hard-light;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/textures/bg/spray.jpg');
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: soft-light;
+  opacity: 0.28;
 }
-.hero__grain {
+.hero::after {
+  content: '';
   position: absolute;
   inset: 0;
+  z-index: 0;
+  pointer-events: none;
   background-image: url('/textures/paper.png');
-  background-size: 300px;
+  background-size: 320px;
   mix-blend-mode: overlay;
-  opacity: 0.5;
-}
-.hero__scan {
-  position: absolute;
-  inset: 0;
-  opacity: 0.3;
-  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0 1px, transparent 1px 3px);
+  opacity: var(--grain-opacity);
 }
 
-/* ======================= ИМЯ + КАМЕРА =======================
-   Слои лежат абсолютно: в рефе слова не стоят в ряд, их перекрывает объект.
-   Каждый слой двигается с своей амплитудой — отсюда глубина. */
+/* ======================= АРТ-КОМПОЗИЦИЯ =======================
+   Слои: фон → декор → первая бумага → камера → фамилия → кнопки.
+   Граффити НЕ поднимаются поверх имени. */
+.hero__art { position: absolute; inset: 0; z-index: 2; }
 
 /* Клочок бумаги со словом. Тень на обёртке: clip-path подложки срезал бы её. */
 .hero__slip {
   position: absolute;
   pointer-events: none;
-  filter: drop-shadow(8px 10px 0 rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(8px 10px 0 rgb(0 0 0 / 55%));
   will-change: transform;
-  animation: word-in 0.6s var(--ease-cut) backwards;
-  z-index: 3;
+  animation: word-in 0.4s var(--ease-cut) backwards;
 }
 .hero__word { position: relative; display: block; width: 100%; height: auto; z-index: 1; }
 
-/* Подложка чуть больше слова, чтобы буквы сидели с запасом, но подтёки
-   свисали с края — как на присланном образце. */
+/* Подложка чуть больше слова: буквы сидят с запасом, а подтёки свисают
+   с края — как на присланном образце. */
 .hero__paper {
   position: absolute;
   inset: 2% -3% 16%;
@@ -70,155 +64,172 @@
   background-size: 260px;
 }
 .hero__paper--orange { background-color: var(--orange); }
-
 .hero__tape { z-index: 2; }
-/* Слова уходят за края экрана — как «UARDA» в рефе. */
-.hero__slip--first {
-  top: 6%;
-  left: 5vw;
-  width: min(56vw, 830px);
-  rotate: -2.4deg;
-}
-.hero__slip--last {
-  bottom: 15%;
-  right: 6vw;
-  width: min(48vw, 690px);
-  rotate: 2.2deg;
-  z-index: 5;
-  animation-delay: 0.12s;
-}
-@keyframes word-in {
-  from { opacity: 0; translate: 0 22px; }
-}
 
-/* Камера вылетает между словами. Ширина большая: по рефу объект занимает
-   середину кадра целиком и перекрывает надписи. */
+.hero__slip--first { top: 5%;  left: 6%;  width: min(56vw, 830px); rotate: -3deg; z-index: 3; }
+.hero__slip--last  { top: 58%; right: 6%; width: min(46vw, 690px); rotate: 2deg;  z-index: 5;
+                     animation-delay: 0.1s; }
+
+@keyframes word-in { from { opacity: 0; translate: 0 16px; } }
+
+/* Камера: родительский якорь абсолютным позиционированием, движение —
+   отдельным transform из JS. Смешивать здесь translate(-50%),
+   отрицательные min()-отступы и анимируемый transform нельзя. */
 .hero__cam {
   position: absolute;
-  top: 46%;
-  left: 57%;
-  width: min(50vw, 64vh, 700px);
-  margin-left: min(-25vw, -350px);
-  margin-top: min(-20vh, -250px);
+  top: 45%;
+  left: 55%;
+  width: min(46vw, 62vh, 700px);
+  margin-left: min(-23vw, -350px);
+  margin-top: min(-19vh, -250px);
   z-index: 4;
   pointer-events: none;
-  filter: drop-shadow(0 34px 70px rgba(0, 0, 0, 0.8));
+  filter: drop-shadow(0 30px 60px rgb(0 0 0 / 72%));
   will-change: transform;
-  animation: cam-in 0.7s var(--ease-snap) backwards;
+  animation: cam-in 0.42s var(--ease-snap) backwards;
 }
-@keyframes cam-in {
-  from { opacity: 0; scale: 0.9; }
-}
+@keyframes cam-in { from { opacity: 0; scale: 0.94; } }
 
-/* ======================= НИЖНИЙ ЛЕВЫЙ УГОЛ ======================= */
+/* ======================= БЛОК ДЕЙСТВИЯ ======================= */
 .hero__corner {
   position: absolute;
-  left: var(--gutter);
-  bottom: clamp(3.5rem, 9vh, 6rem);
+  left: 6%;
+  /* Между кнопками и фамилией остаётся зазор: фамилия начинается на 58%
+     и уходит вправо, блок действия стоит ниже и левее. */
+  bottom: clamp(5rem, 13vh, 8.5rem);
   z-index: 6;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.7rem;
-  max-width: min(38rem, 52vw);
+  gap: 1.1rem;
+  width: min(24rem, 46vw);
 }
-.hero__stars { color: var(--orange); letter-spacing: 0.3em; font-size: 0.8rem; }
 .hero__lead {
-  font-size: 0.75rem;
-  line-height: 1.75;
-  letter-spacing: 0.08em;
-  color: rgba(233, 225, 210, 0.88);
+  /* Основной текст не мельче 16 px — правило проекта. */
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.55;
+  color: var(--chalk);
 }
-
-/* Мелкий блок в правом нижнем углу — как в рефе. */
-.hero__note {
-  position: absolute;
-  right: var(--gutter);
-  bottom: clamp(3.5rem, 9vh, 6rem);
-  z-index: 6;
-  text-align: right;
-  font-size: 0.75rem;
-  line-height: 1.7;
-  letter-spacing: 0.1em;
-  color: rgba(233, 225, 210, 0.62);
-}
-
-/* ---------- кнопки: крупнее, чем были ---------- */
-/* Кнопки в два ряда — как в мобильной вёрстке. */
-.hero__cta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.7rem;
-  margin-top: 0.35rem;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 1.05rem 2rem;
-  font-family: var(--font-body);
-  font-weight: 800;
-  font-size: clamp(0.92rem, 1.35vw, 1.15rem);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border: 3px solid var(--orange);
-  transition: transform 0.15s var(--ease-cut), background 0.15s var(--ease-cut), color 0.15s var(--ease-cut);
-  clip-path: polygon(0 0, 100% 0, 100% 76%, 96% 100%, 0 100%);
-}
-.btn--solid { background: var(--orange); color: var(--ink-deep); transform: rotate(-1.2deg); }
-.btn--ghost { color: var(--paper); transform: rotate(0.9deg); }
-.btn:hover  { transform: translate(-3px, -4px) rotate(-1.8deg); }
-.btn:active { transform: translate(1px, 1px); }
-.btn--solid:hover { background: var(--paper); border-color: var(--paper); }
-.btn--ghost:hover { background: var(--orange); color: var(--ink-deep); }
+/* Кнопки строго друг под другом, зазор 12–16 px. */
+.hero__cta { display: flex; flex-direction: column; align-items: stretch; gap: 0.875rem; width: 100%; }
+.hero__cta .btn { width: 100%; }
 
 /* ======================= ДЕКОР ======================= */
 .hero__deco {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 1;
   pointer-events: none;
-  will-change: transform;
 }
 
-.hero__marquee {
+/* ======================= ЛЕНТА ПЕРЕХОДА =======================
+   Тонкая рваная полоса «Съёмка / Монтаж». Статичная. */
+.hero__ribbon {
   position: relative;
   z-index: 7;
-  /* Остальные слои абсолютные, лента — единственная в потоке: без этого
-     она прижимается к верху секции вместо низа. */
   margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  padding: 0.6rem 1rem;
+  background: var(--orange);
+  color: var(--on-orange);
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  clip-path: polygon(
+    0 18%, 8% 6%, 19% 16%, 31% 4%, 44% 14%, 57% 3%, 69% 15%, 81% 5%, 92% 16%, 100% 8%,
+    100% 88%, 90% 98%, 78% 87%, 65% 97%, 52% 86%, 39% 96%, 27% 85%, 14% 97%, 4% 87%, 0 95%
+  );
 }
+.hero__ribbon-word { display: inline-flex; align-items: center; gap: clamp(1.5rem, 5vw, 4rem); }
+.hero__ribbon-sep { opacity: 0.55; }
 
 /* ======================= АДАПТИВ ======================= */
-@media (max-width: 900px) {
-  /* На телефоне слова разводим к верху и низу, камера — между ними. */
-  .hero__slip--first { top: 7%; left: -2vw; width: 82vw; }
-  .hero__word--last  { bottom: auto; top: 26%; right: -4vw; width: 62vw; }
+@media (max-width: 1023px) {
+  .hero__slip--first { width: 62vw; }
+  .hero__slip--last  { width: 52vw; }
+  .hero__corner { width: min(20rem, 52vw); bottom: clamp(4rem, 11vh, 6rem); }
+}
+
+/* Низкий экран в альбомной ориентации: абсолютная композиция там не
+   помещается — фамилия ложилась на кнопки. Разворачиваем в поток, высоту
+   первому экрану не навязываем. */
+@media (min-width: 768px) and (max-height: 620px) {
+  .hero { min-height: 0; padding-block: 1.5rem 0; }
+  .hero__art { position: relative; inset: auto; height: 46vw; max-height: 22rem; }
+  .hero__slip--first { top: 0; left: 4%; width: 52vw; }
+  .hero__slip--last  { top: auto; bottom: 0; right: 4%; width: 42vw; }
   .hero__cam {
-    top: 42%;
-    /* Сдвиг вправо нужен только на десктопе, где слева стоит имя. */
+    top: 50%;
     left: 50%;
-    width: min(96vw, 40vh, 430px);
-    margin-left: min(-48vw, -215px);
-    margin-top: min(-17vh, -180px);
+    width: min(38vw, 60vh, 420px);
+    margin-left: min(-19vw, -210px);
+    margin-top: min(-19vh, -150px);
   }
   .hero__corner {
-    left: var(--gutter);
-    right: var(--gutter);
-    bottom: clamp(3rem, 8vh, 5rem);
-    max-width: none;
-    align-items: center;
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: min(26rem, 62vw);
+    margin: 1.5rem var(--gutter) 1.75rem;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Телефон: настольную абсолютную композицию не ужимаем целиком.
+     Арт-контейнер становится обычным блоком фиксированной высоты, текст
+     и кнопки идут после него нормальным потоком. */
+  .hero { min-height: auto; padding-block: 2rem 0; gap: 1.75rem; }
+
+  .hero__art {
+    position: relative;
+    inset: auto;
+    height: 62vh;
+    min-height: 24rem;
+  }
+  .hero__slip--first { top: 0; left: 3%; width: 84vw; rotate: -2.4deg; }
+  /* Селектор чинится: в разметке обёртка называется .hero__slip--last,
+     а прежнее правило целилось в .hero__word--last, которого нет. */
+  .hero__slip--last {
+    top: auto;
+    bottom: 2%;
+    right: 3%;
+    width: 66vw;
+    rotate: 2deg;
+  }
+  /* Камера опускается ниже и уменьшается: при прежнем положении она
+     накрывала имя почти целиком и буквы переставали читаться. */
+  .hero__cam {
+    top: 58%;
+    left: 50%;
+    width: min(76vw, 30vh, 330px);
+    margin-left: min(-38vw, -165px);
+    margin-top: min(-15vh, -165px);
+  }
+
+  .hero__corner {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    z-index: 6;
+    width: auto;
+    margin-inline: var(--gutter);
+    align-items: stretch;
     text-align: center;
   }
-  .hero__note { display: none; }
+  .hero__lead { text-align: center; }
 
-  .hero__deco .stk { display: none; }
-  .hero__deco .stk--mob { display: block; }
-  .hero__deco .hero__star { bottom: auto !important; top: 4%; left: 4% !important; width: 64px; }
+  /* Граффити мельче и точно под содержимым. */
+  .hero__deco { opacity: 0.6 !important; }
+  .hero__deco .stk { width: 62vw !important; }
+  .hero__ribbon { letter-spacing: 0.14em; gap: 1.25rem; }
+  .hero__ribbon-word { gap: 1.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__name { animation: none; }
-  .btn:hover { transform: none; }
+  .hero__slip, .hero__cam { animation: none; }
 }

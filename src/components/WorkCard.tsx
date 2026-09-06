@@ -1,119 +1,107 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Project } from '../content/projects';
-import { MediaSlot } from './grunge/MediaSlot';
-import { Scribble } from './grunge/Scribble';
-import { shardClipPath } from '../lib/rough';
-
-/**
- * Варианты раскладки блока.
- *
- * На постере-рефе кадры не вписаны в лист: каждый уходит за его край, и
- * стороны выноса чередуются. Текст стоит вплотную к сколу, местами
- * заезжая под иглы. Одинакового шаблона, зеркалимого по строкам, тут нет —
- * именно он читался сеткой.
- *
- * side — за какой край уходит кадр; media/text — ширины колонок;
- * pull — насколько текстовая колонка придвинута к сколу (отрицательное
- * значение = наезжает); lift — вертикальный сдвиг блока.
- */
-const VARIANTS = [
-  { side: 'left' as const, media: 56, text: 44, pull: -2, lift: 0, rot: -1.2, top: 4 },
-  { side: 'right' as const, media: 52, text: 48, pull: -3, lift: -3, rot: 1.4, top: 1 },
-  { side: 'left' as const, media: 50, text: 50, pull: -2, lift: -2, rot: -0.8, top: 6 },
-];
-
-/**
- * Внутри описания жирным выделены ключевые слова — как на постере, где
- * в абзаце подсвечены отдельные фразы. Разметка минимальная: `**фраза**`.
- */
-function accents(text: string): ReactNode[] {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
-    part.startsWith('**') && part.endsWith('**') ? (
-      <b className="pw__hl" key={i}>
-        {part.slice(2, -2)}
-      </b>
-    ) : (
-      part
-    ),
-  );
-}
+import { maskClipPath } from '../lib/workShapes';
+import { WorkPreview } from './WorkPreview';
 
 type Props = {
   project: Project;
   onOpen: (project: Project) => void;
-  index: number;
-  total: number;
+  /** Параллакс и hover-loop: на телефоне и при reduced motion выключены. */
+  motionEnabled: boolean;
 };
 
 /**
- * Блок проекта в разделе WORK.
+ * Одна работа в разделе WORK.
  *
- * Белая подложка вырезана осколком с длинными иглами, кадр внутри — тем же
- * осколком, но поджатым внутрь. За счёт этого белое читается рваными
- * треугольниками по краю, а не ровной рамкой вокруг картинки.
+ * Композиция горизонтальная: кадр и его собственный текст на одной
+ * горизонтали, следующая работа начинается ниже с противоположной стороны.
+ * Двух разных работ в одном ряду нет.
+ *
+ * Форма кадра — одна из пяти фиксированных масок, привязанная к `id`
+ * направления, а не к seed или индексу в массиве.
  */
-export function WorkCard({ project, onOpen, index, total }: Props) {
-  const v = VARIANTS[index % VARIANTS.length];
-  const seed = index * 97 + 13;
-  const clip = shardClipPath(seed, v.side, { deep: 26, edge: 13 });
+export function WorkCard({ project, onOpen, motionEnabled }: Props) {
+  const rowRef = useRef<HTMLElement>(null);
+  const [shift, setShift] = useState(0);
+
+  // Прогресс считаем ЛОКАЛЬНО для этой работы. Раньше один прогресс всей
+  // гигантской секции двигал сразу все блоки, и они шли синхронно.
+  useEffect(() => {
+    if (!motionEnabled) { setShift(0); return; }
+    const el = rowRef.current;
+    if (!el) return;
+
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      const p = (vh - r.top) / (vh + r.height); // 0 внизу экрана → 1 вверху
+      setShift((Math.min(1, Math.max(0, p)) - 0.5) * 24); // ±12 px
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(measure); };
+
+    measure();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [motionEnabled]);
+
+  // Подложка и кадр режутся ОДНИМ контуром: подложка крупнее ровно на свой
+  // padding, за счёт этого светлая кромка ровная по толщине.
+  const clip = maskClipPath(project.maskId);
+  const open = () => onOpen(project);
 
   return (
     <article
-      className={`pw pw--${v.side}`}
+      className={`wk wk--${project.side}`}
+      ref={rowRef}
       data-hover-media
       style={
         {
-          '--media': `${v.media}%`,
-          '--text': `${v.text}%`,
-          '--pull': `${v.pull}%`,
-          '--lift': `${v.lift}rem`,
-          '--rot': `${v.rot}deg`,
-          '--top': `${v.top}rem`,
+          '--media': `${project.mediaWidthPercent}%`,
+          '--text': `${project.textWidthPercent}%`,
+          '--rot': `${project.rotateDeg}deg`,
+          '--cover': project.coverAspectRatio,
         } as React.CSSProperties
       }
     >
+      {/* Внешняя обёртка не режется маской — иначе clip-path съедал бы
+          контур фокуса. Фокус виден на ней, форма живёт внутри. */}
       <button
-        className="pw__frame"
-        onClick={() => onOpen(project)}
-        aria-label={`Открыть проект: ${project.title}, ${project.year}`}
-        style={{ clipPath: clip }}
+        className="wk__shot"
+        type="button"
+        onClick={open}
+        aria-label={`Смотреть: ${project.title}`}
+        style={{ transform: motionEnabled ? `translate3d(0, ${shift.toFixed(1)}px, 0)` : undefined }}
       >
-        <span className="pw__shot" style={{ clipPath: clip }} data-tone={index % 3}>
-          <MediaSlot
-            video={project.loop}
-            poster={project.poster}
-            label="Loop-превью"
-            hint={project.hint}
-            /* Пропорции берём из данных: у вертикали и fashion они свои,
-               и раньше все кадры принудительно шли 4:3. */
-            ratio={project.ratio}
-            playOnHover
-          />
+        <span
+          className="wk__paper"
+          style={{ clipPath: clip }}
+        >
+          <span
+            className="wk__inner"
+            data-fit={project.temporaryPosterFit ?? 'cover'}
+            style={{ clipPath: clip }}
+          >
+            <WorkPreview project={project} allowHoverPlay={motionEnabled} />
+          </span>
         </span>
-        {/* Выходные данные прямо по кадру — на постере подписи лежат
-            поверх картинки, а не только рядом с ней. */}
-        <span className="pw__stamp u-tech" aria-hidden="true">
-          {project.directions[0]} · {project.year}
-        </span>
-        <span className="pw__play u-label" aria-hidden="true">Смотреть</span>
       </button>
 
-      <div className="pw__text">
-        <p className="pw__kicker">
-          {project.year}
-          <sup>{String(index + 1).padStart(2, '0')}/{total}</sup>
-        </p>
-        <h3 className="pw__title u-head">
-          {project.title}
-          <Scribble
-            kind={index % 2 ? 'circle' : 'underline'}
-            className="pw__mark"
-            delay={0.2}
-            stretch
-          />
-        </h3>
-        {project.note && <p className="pw__note">{accents(project.note)}</p>}
-        <p className="pw__dirs u-tech">{project.directions.join(' · ')}</p>
+      <div className="wk__text">
+        <p className="wk__num u-cond">{project.number}</p>
+        <h3 className="wk__title u-cond">{project.title}</h3>
+        <p className="wk__cat u-label">{project.categoryLabel}</p>
+        {/* Кнопка видна всегда, а не только при наведении. */}
+        <button className="btn wk__btn" type="button" onClick={open}>
+          Смотреть
+        </button>
       </div>
     </article>
   );

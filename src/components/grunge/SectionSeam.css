@@ -1,0 +1,10 @@
+.seam {
+  position: absolute;
+  /* −1px по бокам: при дробном масштабе у самого края проступала полоска
+     нижней секции. */
+  left: -1px;
+  width: calc(100% + 2px);
+  z-index: var(--z-seam);
+  pointer-events: none;
+  display: block;
+}

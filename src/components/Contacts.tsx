@@ -1,72 +1,99 @@
-import { site } from '../content/site';
-import { SprayTag } from './grunge/SprayTag';
+import { site, type ContactChannel } from '../content/site';
+import { SectionSeam } from './grunge/SectionSeam';
 import { Reveal } from './grunge/Reveal';
-import { Logo } from './Logo';
 import './Contacts.css';
 
+/** Каналы в порядке вывода. Телефон и почта — опциональные. */
+const CHANNELS: { key: keyof typeof site.contacts; label: string }[] = [
+  { key: 'telegram', label: 'Telegram' },
+  { key: 'vk', label: 'VK' },
+];
+
 /**
- * Финальный блок с контактами.
+ * Контакты и подвал.
  *
- * По брифу это обязательная точка выхода: Telegram, VK, телефон и почта
- * должны быть заметными и доступными. Поэтому каждый способ связи —
- * отдельная крупная строка во всю ширину, а не мелкая иконка в подвале.
+ * ⚠️ Реальных Telegram/VK/телефона/почты для этого пакета не передали.
+ * Поэтому каналы показаны неактивными элементами и рядом стоит одна
+ * функциональная строка «Контакты скоро появятся». Ставить сюда
+ * `t.me/username` и `href="#"` нельзя: это нерабочие ссылки, которые
+ * выглядят рабочими. Как только значение появится в контенте — элемент
+ * сам станет ссылкой.
  */
 export function Contacts() {
-  const list = Object.values(site.contacts);
+  const { contacts, nav, brandHead, brandTail } = site;
+  const optional = ([contacts.phone, contacts.email].filter(Boolean) as ContactChannel[]);
+  const anyFilled = CHANNELS.some(({ key }) => contacts[key]) || optional.length > 0;
 
   return (
-    <section className="cts section section--ink" id="contacts">
+    <section className="section section--contacts cts" id="contacts">
+      <SectionSeam id="section-edge-05" sheet="#101013" overlap={32} fiber={4} />
+
       <div className="shell">
-        <header className="cts__head">
-          <Reveal mode="mask">
-            <h2 className="cts__title u-head">Напиши</h2>
+        <div className="cts__top">
+          <Reveal mode="rise">
+            <h2 className="cts__head u-graf">{contacts.heading}</h2>
           </Reveal>
-          <SprayTag className="cts__tag" seed={29} size={90}>
-            мне
-          </SprayTag>
-          <Reveal mode="jerk" delay={0.15}>
-            <p className="cts__sub u-label">Съёмка · монтаж · {site.city} и выезды</p>
-          </Reveal>
-        </header>
 
-        <ul className="cts__list">
-          {list.map((c, i) => (
-            <Reveal as="li" mode="jerk" delay={i * 0.06} key={c.label} className="cts__item">
-              <a
-                className="cts__link"
-                href={c.href}
-                target={c.href.startsWith('http') ? '_blank' : undefined}
-                rel={c.href.startsWith('http') ? 'noreferrer noopener' : undefined}
-              >
-                <span className="cts__label u-label">{c.label}</span>
-                <span className="cts__handle u-display">{c.handle}</span>
-                <svg className="cts__arrow" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 18L18 6M8 6h10v10" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                </svg>
-              </a>
-            </Reveal>
-          ))}
-        </ul>
-      </div>
+          <div className="cts__card">
+            <p className="cts__card-head u-cond">{contacts.actionHeading}</p>
+            <ul className="cts__list">
+              {CHANNELS.map(({ key, label }) => {
+                const channel = contacts[key] as ContactChannel | null;
+                return (
+                  <li key={key}>
+                    {channel ? (
+                      <a
+                        className="cts__link"
+                        href={channel.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span>{label}</span>
+                        <svg className="cts__ext" viewBox="0 0 16 16" aria-hidden="true">
+                          <path
+                            d="M5 11L11 5M11 5H6M11 5v5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                          />
+                        </svg>
+                      </a>
+                    ) : (
+                      <span className="cts__link cts__link--off" aria-disabled="true">
+                        {label}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
 
-      <footer className="cts__footer">
-        {/* Навигация вернулась сюда: с титульника её убрали, и со страницы
-            она пропала целиком. */}
-        <nav className="shell cts__nav" aria-label="Разделы сайта">
-          {site.nav.map((item) => (
-            <a className="cts__nav-link u-label" href={`#${item.id}`} key={item.id}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
-        <div className="shell cts__footer-inner">
-          <Logo size={26} />
-          <p className="u-label">
-            {site.role} · {site.city}
-          </p>
-          <p className="u-label cts__year">© {new Date().getFullYear()}</p>
+            {optional.length > 0 && (
+              <ul className="cts__extra">
+                {optional.map((c) => (
+                  <li key={c.href}>
+                    <a className="cts__extra-link" href={c.href}>{c.handle}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {!anyFilled && <p className="cts__note">{contacts.unavailableMessage}</p>}
+          </div>
         </div>
-      </footer>
+
+        <footer className="cts__foot">
+          <a className="cts__brand" href="#top">
+            {brandHead}
+            <b>{brandTail}</b>
+          </a>
+          <nav className="cts__nav" aria-label="Разделы страницы">
+            {nav.map((n) => (
+              <a className="cts__nav-link" key={n.id} href={`#${n.id}`}>{n.label}</a>
+            ))}
+          </nav>
+        </footer>
+      </div>
     </section>
   );
 }

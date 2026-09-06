@@ -1,43 +1,58 @@
 /**
  * Общие данные сайта.
  *
- * ⚠️ ЗАПОЛНИТЬ ПЕРЕД ПУБЛИКАЦИЕЙ: контакты сейчас заглушки.
- * Всё остальное (имя, марка, позиционирование, город) уже боевое.
+ * ⚠️ Контакты не заполнены. Реальные Telegram/VK/телефон/почта для этого
+ * пакета не переданы, поэтому здесь `null`, а не фальшивые `@username` и
+ * `hello@example.com`: неактивный элемент честнее нерабочей ссылки.
+ * Как только появится значение — элемент сам станет ссылкой.
  */
 
+export type ContactChannel = {
+  label: string;
+  /** Что показать пользователю: @ник, номер, адрес. */
+  handle: string;
+  href: string;
+};
+
 export const site = {
-  /** Имя на первом экране. */
-  name: 'ANASTASIA B.',
-  /**
-   * Марка для логотипа и вкладки браузера — совпадает с названием
-   * репозитория (anastFILMS), логотип собирается из этих двух частей.
-   */
-  brand: 'ANAST',
-  brandSuffix: 'FILMS',
+  /** Полное имя: «Anastasia B.» из метаданных убрано. */
+  name: 'Anastasia Brichko',
+  nameRu: 'Анастасия Бричко',
+  /** Марка — совпадает с названием репозитория. */
+  brand: 'anastFILMS',
+  brandHead: 'anast',
+  brandTail: 'FILMS',
 
-  /** Позиционирование из брифа — съёмка и монтаж 50/50. */
-  role: 'Videographer & Editor',
+  role: 'Видеограф и монтажёр',
   city: 'Москва',
-  tagline: 'Videographer & Editor. Москва.',
+  description:
+    'Видеограф и монтажёр из Москвы. Съёмка крупных мероприятий и медиапроектов, динамичный монтаж.',
 
-  /** Три слова, с которыми должно ассоциироваться портфолио. */
-  keywords: ['Атмосферные ролики', 'Крупные мероприятия', 'Динамичный монтаж'],
+  /** Леттеринг на первом экране. */
+  hero: {
+    firstName: 'ANASTASIA',
+    lastName: 'BRICHKO',
+    lead: ['Снимаю и динамично монтирую.', 'Крупные мероприятия и медиапроекты.'],
+    ribbon: ['Съёмка', 'Монтаж'],
+  },
 
-  /** ⚠️ ЗАГЛУШКИ — подставить реальные. */
   contacts: {
-    telegram: { label: 'Telegram', handle: '@username', href: 'https://t.me/username' },
-    vk: { label: 'VK', handle: 'vk.com/username', href: 'https://vk.com/username' },
-    phone: { label: 'Телефон', handle: '+7 (900) 000-00-00', href: 'tel:+79000000000' },
-    email: { label: 'Email', handle: 'hello@example.com', href: 'mailto:hello@example.com' },
+    heading: 'Снимем что-нибудь?',
+    actionHeading: 'Напиши мне',
+    /** Функциональная строка на время, пока каналы не заполнены. */
+    unavailableMessage: 'Контакты скоро появятся',
+    telegram: null as ContactChannel | null,
+    vk: null as ContactChannel | null,
+    /** Телефон и почта — опциональные: показываем только с реальными значениями. */
+    phone: null as ContactChannel | null,
+    email: null as ContactChannel | null,
   },
 
   nav: [
     { id: 'work', label: 'Работы' },
-    { id: 'experience', label: 'Проекты' },
+    { id: 'experience', label: 'Опыт' },
     { id: 'about', label: 'Обо мне' },
-    { id: 'skills', label: 'Навыки' },
+    { id: 'skills', label: 'Инструменты' },
     { id: 'contacts', label: 'Контакты' },
   ],
-} as const;
-
-export type Contact = (typeof site.contacts)[keyof typeof site.contacts];
+};

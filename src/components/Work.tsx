@@ -1,119 +1,47 @@
-import { useMemo, useState } from 'react';
-import { DIRECTION_LABELS, projects, type Direction, type Project } from '../content/projects';
-import { useParallaxEnabled, useScrollProgress } from '../hooks/useParallax';
+import { useState } from 'react';
+import { projects, type Project } from '../content/projects';
+import { useParallaxEnabled } from '../hooks/useParallax';
 import { WorkCard } from './WorkCard';
-import { ProjectModal } from './ProjectModal';
-import { Reveal } from './grunge/Reveal';
-import { Scribble } from './grunge/Scribble';
+import { ReelPlayer } from './ReelPlayer';
+import { SectionSeam } from './grunge/SectionSeam';
 import './Work.css';
 
 /**
- * Раздел WORK — главный на сайте.
+ * WORK — главный раздел: пять направлений съёмки и монтажа.
  *
- * Механика взята с wodniack.dev: колонки сетки едут с разной скоростью
- * относительно скролла, за счёт чего появляется глубина и многослойность.
- * Скорости заданы вручную (SPEEDS) — крайние колонки отстают, центральная
- * обгоняет, поэтому сетка «дышит», а не просто ползёт вверх.
- *
- * На узких экранах и при prefers-reduced-motion параллакс выключается:
- * там он только мешает смотреть работы.
+ * Каждое направление — самостоятельная горизонтальная композиция, стороны
+ * чередуются L/R/L/R/L. Панели фильтров здесь нет: для пяти разных рубрик
+ * она избыточна и в последнем макете не показана.
  */
-
 export function Work() {
-  const [filter, setFilter] = useState<Direction | 'ALL'>('ALL');
   const [open, setOpen] = useState<Project | null>(null);
-  const { ref, progress } = useScrollProgress<HTMLDivElement>();
-  const parallax = useParallaxEnabled();
-
-  const visible = useMemo(
-    () => (filter === 'ALL' ? projects : projects.filter((p) => p.directions.includes(filter))),
-    [filter],
-  );
-
-  /** Все направления, реально встречающиеся в проектах. */
-  const directions = useMemo(() => {
-    const set = new Set<Direction>();
-    projects.forEach((p) => p.directions.forEach((d) => set.add(d)));
-    return [...set];
-  }, []);
+  const motionEnabled = useParallaxEnabled();
 
   return (
-    <section className="work section section--ink" id="work">
+    <section className="section section--work work" id="work">
+      <SectionSeam id="section-edge-01" sheet="#101013" overlap={40} accent />
+
       <div className="shell">
-        {/* Титул раздела построен как шапка постера, а не как панель
-            навигации: крупная двухстрочная надпись, мелкие выходные данные
-            по углам и короткая врезка. Фильтр уходит вниз узкой полосой. */}
         <header className="work__masthead">
-          <span className="work__credit work__credit--l u-tech">портфолио</span>
-          <span className="work__credit work__credit--r u-tech">2023 — 2026</span>
-
-          <h2 className="work__title">
-            <span className="work__title-a u-head">Work</span>
-            <span className="work__title-b u-head">избранное</span>
-            <Scribble kind="underline" className="work__title-line" delay={0.3} stretch />
-          </h2>
-
-          <p className="work__intro">
-            Съёмка и монтаж в одних руках. Наведи на кадр — пойдёт превью,
-            нажми — откроется нарезка по проекту.
-          </p>
+          <h2 className="work__title u-cond">WORK</h2>
+          {/* «избранное» на маленькой бумажке, слегка правее и внахлёст
+              на низ букв — как в макете. */}
+          <span className="work__sub">избранное</span>
         </header>
 
-        <Reveal mode="jerk" delay={0.2}>
-          <div className="work__filter" role="group" aria-label="Фильтр по направлениям">
-            <span className="work__filter-label u-tech" aria-hidden="true">фильтр</span>
-            <FilterChip active={filter === 'ALL'} onClick={() => setFilter('ALL')}>
-              Все
-            </FilterChip>
-            {directions.map((d) => (
-              <FilterChip key={d} active={filter === d} onClick={() => setFilter(d)}>
-                {DIRECTION_LABELS[d]}
-              </FilterChip>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* Шахматный порядок «материал — информация — материал»: строки
-            чередуются сторонами, а не выстраиваются сеткой. Параллакс
-            сдвигает соседние строки навстречу друг другу. */}
-        <div className="work__rows" ref={ref}>
-          {visible.map((project, i) => (
-            <div
-              className="work__row"
+        <div className="work__rows">
+          {projects.map((project) => (
+            <WorkCard
               key={project.id}
-              style={
-                parallax
-                  ? ({ transform: `translate3d(0, ${(progress - 0.5) * (i % 2 ? 60 : -60)}px, 0)` } as React.CSSProperties)
-                  : undefined
-              }
-            >
-              <WorkCard project={project} index={i} total={visible.length} onOpen={setOpen} />
-            </div>
+              project={project}
+              onOpen={setOpen}
+              motionEnabled={motionEnabled}
+            />
           ))}
         </div>
-
-        {visible.length === 0 && (
-          <p className="work__empty u-label">В этом направлении пока нет опубликованных работ.</p>
-        )}
       </div>
 
-      <ProjectModal project={open} onClose={() => setOpen(null)} />
+      <ReelPlayer project={open} onClose={() => setOpen(null)} />
     </section>
-  );
-}
-
-function FilterChip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button className={`chip u-label ${active ? 'is-active' : ''}`} onClick={onClick} aria-pressed={active}>
-      {children}
-    </button>
   );
 }
