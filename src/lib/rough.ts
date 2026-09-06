@@ -90,41 +90,70 @@ export function tornClipPath(seed: number, teeth = 22, depth = 7): string {
  * @param bleed сторона, уходящая за край: она не рвётся
  * @param depth глубина зубцов в процентах
  */
-export function spikeClipPath(
+/**
+ * Осколок — контур кадра в разделе WORK.
+ *
+ * На постере-рефе работы не вписаны в лист: они уходят за его край, а по
+ * открытым сторонам идут длинные острые иглы, как у разбитого стекла.
+ * Поэтому контур строится не по кругу от центра (так получались кляксы) и
+ * не ровной каймой по четырём сторонам (так оставался прямоугольник):
+ * сторона выноса уходит за бокс сплошной линией, а три остальные
+ * проходятся зигзагом «впадина — остриё на самом краю».
+ *
+ * Иглы разной длины и с неровным шагом: равномерный зигзаг читается
+ * орнаментом, а не сколом.
+ *
+ * @param side  за какой край листа уходит кадр
+ * @param deep  глубина игл на рваной вертикали, % ширины
+ * @param edge  глубина игл сверху и снизу, % высоты
+ * @param inset насколько поджать весь контур внутрь, % (для кадра под кромкой)
+ */
+export function shardClipPath(
   seed: number,
-  bleed: 'left' | 'right' | 'none',
-  teeth = 13,
-  depth = 16,
+  side: 'left' | 'right',
+  { deep = 24, edge = 11, inset = 0 }: { deep?: number; edge?: number; inset?: number } = {},
 ): string {
   const rnd = seeded(seed);
-  // На рефе край не «зубчатый», а взорванный: короткая база и редкие длинные
-  // тонкие иглы. Прошлый вариант давал равномерную рябь и читался рамкой.
-  // Значение — отступ от края бокса. База сидит на глубине depth, а игла
-  // дотягивается почти до края и торчит НАРУЖУ от базы. Раньше было
-  // наоборот: база у края, иглы вглубь — они выгрызали куски кадра.
-  const spike = () => {
-    const r = rnd();
-    if (r > 0.80) return depth * 0.04;       // редкая длинная игла наружу
-    if (r > 0.52) return depth * 0.5;        // средний выступ
-    return depth * 0.95;                     // база
-  };
   const pts: string[] = [];
-  const at = (x: number, y: number) => pts.push(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
+  const put = (x: number, y: number) => pts.push(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
 
-  // Обход строго по кругу: иначе контур пересекает сам себя и середина
-  // кадра выедается.
-  for (let i = 0; i <= teeth; i++) at((i / teeth) * 100, spike());
-  if (bleed === 'left') {
-    for (let i = 1; i < teeth; i++) at(100 - spike(), (i / teeth) * 100);
-    for (let i = teeth; i >= 0; i--) at((i / teeth) * 100, 100 - spike());
-  } else if (bleed === 'right') {
-    for (let i = teeth; i >= 0; i--) at((i / teeth) * 100, 100 - spike());
-    for (let i = teeth - 1; i >= 1; i--) at(spike(), (i / teeth) * 100);
+  // За краем листа контур уводим с запасом, чтобы кромка не мелькала.
+  const out = -6;
+  const near = inset;
+  const far = 100 - inset;
+
+  /** Зигзаг вдоль стороны: впадина внутрь на случайную глубину, остриё — на краю. */
+  const jag = (
+    from: [number, number],
+    to: [number, number],
+    normal: [number, number],
+    steps: number,
+    depth: number,
+  ) => {
+    for (let i = 0; i < steps; i++) {
+      // Неровный шаг: остриё стоит не по центру сегмента.
+      const t0 = i / steps;
+      const t1 = (i + 0.22 + rnd() * 0.5) / steps;
+      const d = depth * (0.22 + rnd() * rnd() * 1.05);
+      const at = (t: number, o: number) => {
+        const x = from[0] + (to[0] - from[0]) * t + normal[0] * o;
+        const y = from[1] + (to[1] - from[1]) * t + normal[1] * o;
+        put(x, y);
+      };
+      at(t0, d); // впадина
+      at(t1, 0); // остриё
+    }
+  };
+
+  if (side === 'left') {
+    // верх слева направо, потом рваная правая вертикаль, потом низ обратно
+    jag([out, near], [far, near], [0, 1], 7, edge);
+    jag([far, near], [far, far], [-1, 0], 6, deep);
+    jag([far, far], [out, far], [0, -1], 7, edge);
   } else {
-    // Ничего не вылезает за край — рвутся все четыре стороны.
-    for (let i = 1; i < teeth; i++) at(100 - spike(), (i / teeth) * 100);
-    for (let i = teeth; i >= 0; i--) at((i / teeth) * 100, 100 - spike());
-    for (let i = teeth - 1; i >= 1; i--) at(spike(), (i / teeth) * 100);
+    jag([100 - out, near], [near, near], [0, 1], 7, edge);
+    jag([near, near], [near, far], [1, 0], 6, deep);
+    jag([near, far], [100 - out, far], [0, -1], 7, edge);
   }
 
   return `polygon(${pts.join(', ')})`;

@@ -20,7 +20,7 @@
    был обычной строкой «заголовок + счётчик» и читался панелью. */
 .work__masthead {
   position: relative;
-  padding-block: clamp(1rem, 4vh, 3rem) clamp(1.5rem, 4vh, 2.5rem);
+  padding-block: clamp(1rem, 4vh, 3rem) clamp(0.5rem, 2vh, 1.25rem);
 }
 .work__credit {
   position: absolute;
@@ -35,16 +35,17 @@
 .work__title-a,
 .work__title-b { display: block; line-height: 0.86; }
 .work__title-a {
-  font-size: clamp(3.5rem, 12vw, 11rem);
+  font-size: clamp(3.5rem, 19vw, 17rem);
   color: var(--paper);
   /* Смазанная копия под буквами — «плохая печать» с постера. */
   text-shadow: 4px 4px 0 rgba(245, 79, 27, 0.6);
 }
 /* Вторая строка мельче и со сдвигом вправо, как на рефе. */
 .work__title-b {
-  font-size: clamp(1.6rem, 5vw, 4.2rem);
-  margin-top: -0.12em;
-  margin-left: clamp(2rem, 16vw, 14rem);
+  font-size: clamp(1.6rem, 8vw, 7rem);
+  /* Вторая строка заезжает на первую — на рефе строки титула наложены. */
+  margin-top: -0.34em;
+  margin-left: clamp(2rem, 22vw, 20rem);
   color: var(--orange);
 }
 .work__title-line {
@@ -52,15 +53,15 @@
   /* Подчёркивание сидит под самим словом: на всю ширину титула второй
      штрих каракули отрывался и читался посторонним пятном. */
   left: -1%;
-  bottom: 2.2rem;
-  width: 32%;
-  height: 1.6rem;
+  bottom: 3.4rem;
+  width: 46%;
+  height: 2rem;
   color: var(--orange);
 }
 
 .work__intro {
-  max-width: 26rem;
-  margin-top: clamp(1rem, 3vh, 2rem);
+  max-width: 24rem;
+  margin-top: clamp(-2rem, -3vh, -0.5rem);
   margin-left: auto;
   text-align: right;
   font-size: 0.85rem;
@@ -80,7 +81,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: clamp(1.75rem, 5vh, 3rem);
+  align-items: center;
+  margin-bottom: clamp(1rem, 3vh, 2rem);
   padding-bottom: 1.25rem;
   border-bottom: 1px solid rgba(233, 225, 210, 0.14);
 }
@@ -93,53 +95,129 @@
   transition: transform 0.14s var(--ease-cut), background 0.14s var(--ease-cut),
               color 0.14s var(--ease-cut), border-color 0.14s var(--ease-cut);
 }
+/* Разворот у каждой наклейки свой — ровный ряд читался интерфейсом. */
+.chip:nth-child(3n)   { rotate: -1.6deg; }
+.chip:nth-child(3n+1) { rotate: 1.1deg; }
+.chip:nth-child(4n+2) { rotate: -0.7deg; translate: 0 -3px; }
 .chip:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px) rotate(-0.8deg); }
 .chip.is-active { background: var(--orange); border-color: var(--orange); color: var(--ink); }
 
 /* ================= БЛОКИ ПРОЕКТОВ =================
-   Композиция снята с постера-рефа. Каждый блок задаётся вариантом из
-   WorkCard: своя ширина кадра, своя сторона выноса, свой сдвиг текстовой
-   колонки и подъём по вертикали. Единого зеркалимого шаблона тут нет —
-   именно он делал раздел похожим на сетку. */
+   Композиция снята с постера-рефа. Там кадры не вписаны в лист: каждый
+   уходит за его край, стороны выноса чередуются, а текст стоит вплотную
+   к сколу и местами заезжает под иглы. Блоки идут внахлёст по вертикали,
+   без воздуха между ними — на постере пустого поля почти нет. */
 .work__rows { display: flex; flex-direction: column; }
 .work__row { will-change: transform; }
-.work__row + .work__row { margin-top: clamp(-6rem, -5vw, -1.5rem); }
+/* Нахлёст сильный: раньше между блоками оставалась пустая полоса
+   в пол-экрана, и раздел читался списком, а не листом. */
+.work__row + .work__row { margin-top: clamp(-7rem, -5.5vw, -2rem); }
 
 .pw {
   display: grid;
-  align-items: center;
-  gap: clamp(0.75rem, 2vw, 2.5rem);
+  align-items: start;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
   margin-top: var(--lift, 0);
 }
-/* Ширины колонок приходят из варианта, а не заданы жёстко. */
 .pw--left  { grid-template-columns: var(--media) var(--text); }
 .pw--right { grid-template-columns: var(--text) var(--media); }
+/* Обе колонки жёстко в первой строке. Без этого у блоков с выносом
+   вправо кадр (колонка 2) шёл первым по разметке, автораскладка не
+   возвращалась к колонке 1, и текст уезжал строкой ниже — под картинку
+   следующего блока. */
+.pw__frame, .pw__text { grid-row: 1; }
 
-/* ---------------- кадр ---------------- */
+/* ---------------- кадр ----------------
+   Белого паспарту как рамки тут нет. Подложка вырезана осколком с
+   длинными иглами, кадр внутри — тем же осколком, поджатым внутрь на
+   пару процентов. Белое из-за этого читается рваными треугольниками по
+   краю, а не ровной каймой вокруг картинки. */
 .pw__frame {
   position: relative;
   display: block;
-  /* Белая подложка. Кадр внутри вырезан ТЕМ ЖЕ контуром, поэтому кромка
-     идёт по тем же иглам. Раньше контуры были независимые и кромка
-     распадалась на отдельные треугольники. */
   background: var(--chalk);
-  padding: 7px;
-  /* Вертикальные пропорции из данных при большой ширине давали кадр
-     в полтора экрана — ограничиваем высоту, сохраняя разнообразие. */
+  padding: 11px;
   max-height: 62vh;
   overflow: hidden;
+  rotate: var(--rot, 0deg);
   transition: transform 0.25s var(--ease-snap);
 }
-.pw--left  .pw__frame { grid-column: 1; margin-left: calc(-1 * var(--gutter) - 2vw); rotate: -1.3deg; }
-.pw--right .pw__frame { grid-column: 2; margin-right: calc(-1 * var(--gutter) - 2vw); rotate: 1.5deg; }
-.pw:hover .pw__frame { transform: scale(1.015); }
+/* Вынос за край листа: снимаем и внутренний отступ .shell, и поле
+   центрирования контейнера. Секция режет всё лишнее по overflow. */
+.pw--left .pw__frame {
+  grid-column: 1;
+  margin-left: calc(-1 * var(--gutter) - (100vw - min(100vw, var(--maxw))) / 2);
+  /* Со стороны выноса кромки нет: иначе у самого края экрана оставалась
+     белая полоска в толщину отступа, и кадр читался обрезанным, а не
+     уходящим за лист. */
+  padding-left: 0;
+}
+.pw--right .pw__frame {
+  grid-column: 2;
+  margin-right: calc(-1 * var(--gutter) - (100vw - min(100vw, var(--maxw))) / 2);
+  padding-right: 0;
+}
+.pw__frame { align-self: center; }
+.pw:hover .pw__frame { transform: scale(1.012); }
 
-.pw__shot { display: block; }
+.pw__shot { position: relative; display: block; }
+
+/* Трафаретная печать в наши акценты. На рефе картинки не приглушены —
+   они перекрашены в два-три цвета и забиты полутоновой точкой.
+   Сила вынесена в переменную: когда придут настоящие работы, её можно
+   убавить, чтобы обработка не подменяла авторский цвет видео. */
+.pw__shot { --tone: 0.92; }
+.pw__shot::before,
+.pw__shot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.pw__shot::before {
+  background: linear-gradient(150deg, #FF2E7E, #6B21D9 46%, #1B2AC4);
+  mix-blend-mode: color;
+  opacity: var(--tone);
+}
+/* Полутоновая точка и зерно поверх — «печать на плохой бумаге». */
+.pw__shot::after {
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.6) 0 32%, transparent 34%),
+    url('/textures/paper.png');
+  background-size: 3px 3px, 220px;
+  mix-blend-mode: overlay;
+  opacity: 0.72;
+}
+/* Каждая работа своего разворота — как три блока на постере. */
+.pw__shot[data-tone='1']::before { background: linear-gradient(28deg, #E01010, var(--orange) 38%, #1B2AC4); }
+.pw__shot[data-tone='2']::before { background: linear-gradient(206deg, #2A3BF0, #B517D6 54%, var(--orange)); }
+
+.pw__shot .slot__video,
+.pw__shot .slot__img { filter: saturate(1.7) contrast(1.35); }
+
+/* Выходные данные прямо по кадру. */
+.pw__stamp {
+  position: absolute;
+  top: 7%;
+  z-index: 6;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  /* Подпись лежит прямо на кадре и местами попадает на белую кромку,
+     поэтому у неё своя тёмная плашка — как подписи на плашках у постера.
+     Одной обводкой контраст там не держался. */
+  padding: 0.22rem 0.55rem;
+  background: var(--ink-deep);
+  color: var(--chalk);
+  rotate: -1.4deg;
+}
+.pw--left  .pw__stamp { left: 6%; }
+.pw--right .pw__stamp { right: 6%; }
 
 .pw__play {
   position: absolute;
   left: 50%;
-  bottom: 11%;
+  bottom: 13%;
   z-index: 6;
   transform: translate(-50%, 10px);
   padding: 0.45rem 1rem;
@@ -153,15 +231,24 @@
 .pw:focus-within .pw__play { opacity: 1; transform: translate(-50%, 0); }
 
 /* ---------------- текст ---------------- */
-.pw__text { position: relative; max-width: 34rem; }
-/* Сдвиг колонки — на рефе текст второго блока уходит к самому краю листа. */
+.pw__text {
+  position: relative;
+  max-width: 30rem;
+  /* Текст всегда поверх кадров: блоки идут внахлёст, и без этого соседний
+     кадр перекрывал строку с форматами. */
+  z-index: 3;
+}
+/* Отрицательный pull придвигает колонку под иглы скола — на постере
+   абзац начинается прямо у рваного края. */
 .pw--left  .pw__text { grid-column: 2; margin-left: var(--pull); }
 .pw--right .pw__text { grid-column: 1; margin-right: var(--pull); }
+.pw__text { padding-top: var(--top, 0); }
 
 .pw__kicker {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.9rem;
+  letter-spacing: 0.02em;
   color: rgba(233, 225, 210, 0.55);
   margin-bottom: 0.1rem;
 }
@@ -175,18 +262,34 @@
 
 .pw__title {
   position: relative;
-  margin: 0 0 0.6rem;
-  font-size: clamp(1.9rem, 4.4vw, 3.6rem);
-  text-shadow: 2px 2px 0 rgba(245, 79, 27, 0.55);
+  margin: 0 0 1.35rem;
+  font-size: clamp(2rem, 4.8vw, 4rem);
+  line-height: 0.94;
+  /* Смазанная копия под буквами — плохой прогон краски с постера. */
+  text-shadow: 3px 3px 0 rgba(245, 79, 27, 0.6);
   transition: color 0.16s var(--ease-cut);
 }
 .pw:hover .pw__title { color: var(--orange); }
-.pw__mark { top: -0.6rem; right: -1.8rem; }
+/* Росчерк лежит под самим заголовком, а не сбоку от него. */
+.pw__mark {
+  position: absolute;
+  left: -2%;
+  bottom: -0.34em;
+  width: 58%;
+  height: 0.7em;
+  color: var(--orange);
+  pointer-events: none;
+}
 
 .pw__note {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: rgba(233, 225, 210, 0.8);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(233, 225, 210, 0.82);
+}
+/* Подсветка ключевых фраз внутри абзаца — как в тексте на постере. */
+.pw__hl {
+  font-weight: 700;
+  color: var(--chalk);
 }
 .pw__dirs {
   margin-top: 0.8rem;
@@ -205,13 +308,14 @@
 /* ---------------- адаптив ---------------- */
 @media (max-width: 800px) {
   /* На телефоне чередование сторон не читается — кадр всегда сверху,
-     и налезание блоков снимаем, иначе текст уезжает под картинку. */
+     и нахлёст снимаем, иначе текст уезжает под картинку. */
   .pw--left, .pw--right { grid-template-columns: minmax(0, 1fr); }
   .pw__frame,
   .pw--left .pw__frame,
   .pw--right .pw__frame {
     grid-column: 1;
     margin-inline: calc(-1 * var(--gutter));
+    rotate: 0deg;
   }
   .pw__text,
   .pw--left .pw__text,

@@ -1,24 +1,42 @@
+import type { ReactNode } from 'react';
 import type { Project } from '../content/projects';
 import { MediaSlot } from './grunge/MediaSlot';
-import { Sticker } from './grunge/Sticker';
-import { spikeClipPath } from '../lib/rough';
+import { Scribble } from './grunge/Scribble';
+import { shardClipPath } from '../lib/rough';
 
 /**
  * Варианты раскладки блока.
  *
- * На постере-рефе три работы устроены по-разному: разный размер, разная
- * сторона выноса, разное положение текстовой колонки. Прошлая версия
- * использовала один шаблон, зеркалимый через строку, и от этого читалась
- * регулярной сеткой, а не постером.
+ * На постере-рефе кадры не вписаны в лист: каждый уходит за его край, и
+ * стороны выноса чередуются. Текст стоит вплотную к сколу, местами
+ * заезжая под иглы. Одинакового шаблона, зеркалимого по строкам, тут нет —
+ * именно он читался сеткой.
+ *
+ * side — за какой край уходит кадр; media/text — ширины колонок;
+ * pull — насколько текстовая колонка придвинута к сколу (отрицательное
+ * значение = наезжает); lift — вертикальный сдвиг блока.
  */
 const VARIANTS = [
-  // Крупный кадр слева, текст справа — как первый блок рефа.
-  { side: 'left'  as const, media: 54, text: 42, pull: -2, lift: 0 },
-  // Кадр справа, текст уходит к левому краю листа — второй блок.
-  { side: 'right' as const, media: 46, text: 46, pull: 4, lift: -6 },
-  // Узкий высокий кадр слева, текст с отступом — третий блок.
-  { side: 'left'  as const, media: 44, text: 44, pull: 6, lift: -3 },
+  { side: 'left' as const, media: 56, text: 44, pull: -2, lift: 0, rot: -1.2, top: 4 },
+  { side: 'right' as const, media: 52, text: 48, pull: -3, lift: -3, rot: 1.4, top: 1 },
+  { side: 'left' as const, media: 50, text: 50, pull: -2, lift: -2, rot: -0.8, top: 6 },
 ];
+
+/**
+ * Внутри описания жирным выделены ключевые слова — как на постере, где
+ * в абзаце подсвечены отдельные фразы. Разметка минимальная: `**фраза**`.
+ */
+function accents(text: string): ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith('**') && part.endsWith('**') ? (
+      <b className="pw__hl" key={i}>
+        {part.slice(2, -2)}
+      </b>
+    ) : (
+      part
+    ),
+  );
+}
 
 type Props = {
   project: Project;
@@ -30,14 +48,14 @@ type Props = {
 /**
  * Блок проекта в разделе WORK.
  *
- * Кадр уходит за край листа и вырезан взорванным контуром. Белая кромка
- * рисуется ТЕМ ЖЕ контуром, что и кадр: подложка снаружи, кадр внутри с
- * отступом. Раньше это были два независимых контура, и кромка местами
- * распадалась на отдельные треугольники.
+ * Белая подложка вырезана осколком с длинными иглами, кадр внутри — тем же
+ * осколком, но поджатым внутрь. За счёт этого белое читается рваными
+ * треугольниками по краю, а не ровной рамкой вокруг картинки.
  */
 export function WorkCard({ project, onOpen, index, total }: Props) {
   const v = VARIANTS[index % VARIANTS.length];
-  const clip = spikeClipPath(index * 97 + 13, v.side === 'left' ? 'left' : 'right', 19, 7);
+  const seed = index * 97 + 13;
+  const clip = shardClipPath(seed, v.side, { deep: 26, edge: 13 });
 
   return (
     <article
@@ -49,6 +67,8 @@ export function WorkCard({ project, onOpen, index, total }: Props) {
           '--text': `${v.text}%`,
           '--pull': `${v.pull}%`,
           '--lift': `${v.lift}rem`,
+          '--rot': `${v.rot}deg`,
+          '--top': `${v.top}rem`,
         } as React.CSSProperties
       }
     >
@@ -58,7 +78,7 @@ export function WorkCard({ project, onOpen, index, total }: Props) {
         aria-label={`Открыть проект: ${project.title}, ${project.year}`}
         style={{ clipPath: clip }}
       >
-        <span className="pw__shot" style={{ clipPath: clip }}>
+        <span className="pw__shot" style={{ clipPath: clip }} data-tone={index % 3}>
           <MediaSlot
             video={project.loop}
             poster={project.poster}
@@ -70,27 +90,29 @@ export function WorkCard({ project, onOpen, index, total }: Props) {
             playOnHover
           />
         </span>
+        {/* Выходные данные прямо по кадру — на постере подписи лежат
+            поверх картинки, а не только рядом с ней. */}
+        <span className="pw__stamp u-tech" aria-hidden="true">
+          {project.directions[0]} · {project.year}
+        </span>
         <span className="pw__play u-label" aria-hidden="true">Смотреть</span>
       </button>
 
       <div className="pw__text">
         <p className="pw__kicker">
           {project.year}
-          {/* Номер работы в списке. Раньше здесь стояло количество
-              направлений — посетителю это ничего не говорило. */}
           <sup>{String(index + 1).padStart(2, '0')}/{total}</sup>
         </p>
         <h3 className="pw__title u-head">
           {project.title}
-          <Sticker
-            src={index % 2 ? 'marks/asterisk' : 'marks/star'}
-            w={36}
-            rot={index % 2 ? 12 : -11}
-            color="var(--orange)"
+          <Scribble
+            kind={index % 2 ? 'circle' : 'underline'}
             className="pw__mark"
+            delay={0.2}
+            stretch
           />
         </h3>
-        {project.note && <p className="pw__note">{project.note}</p>}
+        {project.note && <p className="pw__note">{accents(project.note)}</p>}
         <p className="pw__dirs u-tech">{project.directions.join(' · ')}</p>
       </div>
     </article>
