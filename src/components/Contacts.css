@@ -43,7 +43,7 @@
   background: linear-gradient(90deg, rgba(245, 79, 27, 0.2), transparent 70%);
 }
 
-.cts__label { color: var(--orange); font-size: 0.6rem; }
+.cts__label { color: var(--orange); font-size: 0.75rem; }
 .cts__handle {
   font-size: clamp(1.35rem, 4vw, 3rem);
   color: var(--chalk);
@@ -75,6 +75,10 @@
   border-bottom: 1px solid rgba(233, 225, 210, 0.14);
 }
 .cts__nav-link {
+  /* Ссылка была 19px в высоту — не попасть пальцем. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: rgba(233, 225, 210, 0.7);
   transition: color 0.15s var(--ease-cut);
 }

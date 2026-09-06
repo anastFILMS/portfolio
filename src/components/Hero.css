@@ -124,7 +124,7 @@
 }
 .hero__stars { color: var(--orange); letter-spacing: 0.3em; font-size: 0.8rem; }
 .hero__lead {
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   line-height: 1.75;
   letter-spacing: 0.08em;
   color: rgba(233, 225, 210, 0.88);
@@ -137,7 +137,7 @@
   bottom: clamp(3.5rem, 9vh, 6rem);
   z-index: 6;
   text-align: right;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   line-height: 1.7;
   letter-spacing: 0.1em;
   color: rgba(233, 225, 210, 0.62);

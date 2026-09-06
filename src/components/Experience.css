@@ -54,13 +54,13 @@
   padding-left: 0.75rem;
 }
 
-.exp__num { color: var(--orange); font-size: 0.68rem; }
+.exp__num { color: var(--orange); font-size: 0.75rem; }
 .exp__body { display: flex; flex-direction: column; gap: 0.2rem; }
 .exp__name { font-size: clamp(1.15rem, 2.4vw, 2rem); line-height: 1; }
-.exp__scale { font-size: 0.58rem; color: rgba(233, 225, 210, 0.45); letter-spacing: 0.12em; }
-.exp__role { font-size: 0.62rem; color: rgba(233, 225, 210, 0.65); text-align: right; }
+.exp__scale { font-size: 0.75rem; color: rgba(233, 225, 210, 0.45); letter-spacing: 0.12em; }
+.exp__role { font-size: 0.75rem; color: rgba(233, 225, 210, 0.65); text-align: right; }
 .exp__year {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--paper);
   min-width: 3.5rem;

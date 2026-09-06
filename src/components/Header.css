@@ -109,7 +109,7 @@
   animation-delay: calc(var(--i) * 0.045s);
 }
 .hdr__menu-link:hover { color: var(--orange); }
-.hdr__menu-num { font-size: 0.7rem; color: var(--orange); }
+.hdr__menu-num { font-size: 0.75rem; color: var(--orange); }
 
 @keyframes menu-in {
   from { opacity: 0; transform: translateX(-24px) skewX(6deg); }
@@ -131,7 +131,7 @@
    не прячется, а ужимается до компактной кнопки. Уходит только на самых
    узких экранах, где остаётся в бургер-меню. */
 @media (max-width: 560px) {
-  .hdr__quick { padding: 0.45rem 0.65rem; font-size: 0.58rem; }
+  .hdr__quick { padding: 0.45rem 0.65rem; font-size: 0.75rem; }
 }
 @media (max-width: 380px) {
   .hdr__quick { display: none; }

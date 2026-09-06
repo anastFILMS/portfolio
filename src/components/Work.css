@@ -52,7 +52,9 @@
   border-bottom: 1px solid rgba(233, 225, 210, 0.14);
 }
 .chip {
-  padding: 0.45rem 0.9rem;
+  /* 44px — минимальная зона нажатия; было 35px. */
+  min-height: 44px;
+  padding: 0.6rem 0.9rem;
   border: 1px solid rgba(233, 225, 210, 0.28);
   color: rgba(233, 225, 210, 0.7);
   transition: transform 0.14s var(--ease-cut), background 0.14s var(--ease-cut),
@@ -110,7 +112,7 @@
   padding: 0.2rem 0.5rem;
   background: var(--orange);
   color: var(--ink-deep);
-  font-size: 0.52rem;
+  font-size: 0.75rem;
   rotate: -2deg;
 }
 .pw__play {
@@ -122,7 +124,7 @@
   padding: 0.45rem 1rem;
   background: var(--orange);
   color: var(--ink-deep);
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   opacity: 0;
   transition: opacity 0.16s var(--ease-cut), transform 0.16s var(--ease-cut);
 }
@@ -145,7 +147,8 @@
 .pw__kicker sup,
 .pw__title sup {
   font-family: var(--font-tech);
-  font-size: 0.42em;
+  /* Не в em: от крупного заголовка 0.42em давало 6px — нечитаемо. */
+  font-size: 0.75rem;
   color: var(--orange);
   margin-left: 0.25em;
   vertical-align: super;
@@ -171,7 +174,7 @@
   margin-top: 0.8rem;
   padding-top: 0.6rem;
   border-top: 1px solid rgba(233, 225, 210, 0.2);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   color: var(--orange);
 }
 
