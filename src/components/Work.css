@@ -14,33 +14,66 @@
 /* Общая фактура секций поверх ткани лишняя — она её замыливает. */
 .section.work::before { opacity: 0.12; }
 
-/* ---------------- шапка раздела ---------------- */
-.work__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem 2rem;
-  margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+/* ---------------- титул раздела ----------------
+   Построен как шапка постера: крупная надпись в две строки со смещением,
+   мелкие выходные данные по углам, короткая врезка справа. Прошлый вариант
+   был обычной строкой «заголовок + счётчик» и читался панелью. */
+.work__masthead {
+  position: relative;
+  padding-block: clamp(1rem, 4vh, 3rem) clamp(1.5rem, 4vh, 2.5rem);
 }
-.work__title-wrap { position: relative; }
-.work__title {
-  font-size: clamp(2.6rem, 7vw, 6.5rem);
-  color: var(--chalk);
-}
-/* SVG каракули имеет viewBox 200×100, поэтому без явной высоты он растягивался
-   на весь заголовок и линия проходила поверх букв. Держим низкую полосу
-   и сажаем её под базовую линию. */
-.work__title-line {
+.work__credit {
   position: absolute;
-  left: -2%;
-  bottom: -0.85rem;
-  width: 104%;
-  /* Высоты должно хватать, чтобы два штриха каракули не слились в один. */
-  height: 2.1rem;
+  top: clamp(0.5rem, 2vh, 1.5rem);
+  font-size: 0.75rem;
+  color: rgba(233, 225, 210, 0.42);
+}
+.work__credit--l { left: 0; }
+.work__credit--r { right: 0; }
+
+.work__title { position: relative; margin: 0; }
+.work__title-a,
+.work__title-b { display: block; line-height: 0.86; }
+.work__title-a {
+  font-size: clamp(3.5rem, 12vw, 11rem);
+  color: var(--paper);
+  /* Смазанная копия под буквами — «плохая печать» с постера. */
+  text-shadow: 4px 4px 0 rgba(245, 79, 27, 0.6);
+}
+/* Вторая строка мельче и со сдвигом вправо, как на рефе. */
+.work__title-b {
+  font-size: clamp(1.6rem, 5vw, 4.2rem);
+  margin-top: -0.12em;
+  margin-left: clamp(2rem, 16vw, 14rem);
   color: var(--orange);
 }
-.work__sub { color: rgba(233, 225, 210, 0.55); }
+.work__title-line {
+  position: absolute;
+  /* Подчёркивание сидит под самим словом: на всю ширину титула второй
+     штрих каракули отрывался и читался посторонним пятном. */
+  left: -1%;
+  bottom: 2.2rem;
+  width: 32%;
+  height: 1.6rem;
+  color: var(--orange);
+}
+
+.work__intro {
+  max-width: 26rem;
+  margin-top: clamp(1rem, 3vh, 2rem);
+  margin-left: auto;
+  text-align: right;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(233, 225, 210, 0.6);
+}
+
+.work__filter-label {
+  align-self: center;
+  margin-right: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(233, 225, 210, 0.4);
+}
 
 /* ---------------- фильтр ---------------- */
 .work__filter {
@@ -64,61 +97,49 @@
 .chip.is-active { background: var(--orange); border-color: var(--orange); color: var(--ink); }
 
 /* ================= БЛОКИ ПРОЕКТОВ =================
-   Строение скопировано с присланного постера: кадры уходят за края,
-   налезают друг на друга, у каждого белая рваная кромка. Раздел
-   намеренно выбивается из остального сайта — так на рефе. */
+   Композиция снята с постера-рефа. Каждый блок задаётся вариантом из
+   WorkCard: своя ширина кадра, своя сторона выноса, свой сдвиг текстовой
+   колонки и подъём по вертикали. Единого зеркалимого шаблона тут нет —
+   именно он делал раздел похожим на сетку. */
 .work__rows { display: flex; flex-direction: column; }
 .work__row { will-change: transform; }
-/* Блоки заходят друг на друга: на постере между ними нет воздуха. */
-.work__row + .work__row { margin-top: clamp(-5rem, -4vw, -1.5rem); }
+.work__row + .work__row { margin-top: clamp(-6rem, -5vw, -1.5rem); }
 
 .pw {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   align-items: center;
-  gap: clamp(0.75rem, 2vw, 2rem);
+  gap: clamp(0.75rem, 2vw, 2.5rem);
+  margin-top: var(--lift, 0);
 }
-.pw--flip { direction: rtl; }
-.pw--flip > * { direction: ltr; }
+/* Ширины колонок приходят из варианта, а не заданы жёстко. */
+.pw--left  { grid-template-columns: var(--media) var(--text); }
+.pw--right { grid-template-columns: var(--text) var(--media); }
 
 /* ---------------- кадр ---------------- */
 .pw__frame {
   position: relative;
   display: block;
-  padding: 0;
-  /* Белая подложка: она видна по краю там, где контур кадра уходит внутрь. */
+  /* Белая подложка. Кадр внутри вырезан ТЕМ ЖЕ контуром, поэтому кромка
+     идёт по тем же иглам. Раньше контуры были независимые и кромка
+     распадалась на отдельные треугольники. */
   background: var(--chalk);
-  /* Кадр вылезает за габарит секции — на постере его режет край листа. */
-  margin-left: calc(-1 * var(--gutter) - 2vw);
-  width: calc(100% + var(--gutter) + 2vw);
-  rotate: -1.4deg;
+  padding: 7px;
+  /* Вертикальные пропорции из данных при большой ширине давали кадр
+     в полтора экрана — ограничиваем высоту, сохраняя разнообразие. */
+  max-height: 62vh;
+  overflow: hidden;
   transition: transform 0.25s var(--ease-snap);
 }
-.pw--flip .pw__frame {
-  margin-left: 0;
-  margin-right: calc(-1 * var(--gutter) - 2vw);
-  rotate: 1.6deg;
-}
+.pw--left  .pw__frame { grid-column: 1; margin-left: calc(-1 * var(--gutter) - 2vw); rotate: -1.3deg; }
+.pw--right .pw__frame { grid-column: 2; margin-right: calc(-1 * var(--gutter) - 2vw); rotate: 1.5deg; }
 .pw:hover .pw__frame { transform: scale(1.015); }
 
 .pw__shot { display: block; }
 
-/* Мелкая подпись на самом кадре — как ярлыки на постере. */
-.pw__tag {
-  position: absolute;
-  top: 8%;
-  left: 8%;
-  z-index: 6;
-  padding: 0.2rem 0.5rem;
-  background: var(--orange);
-  color: var(--ink-deep);
-  font-size: 0.75rem;
-  rotate: -2deg;
-}
 .pw__play {
   position: absolute;
   left: 50%;
-  bottom: 12%;
+  bottom: 11%;
   z-index: 6;
   transform: translate(-50%, 10px);
   padding: 0.45rem 1rem;
@@ -132,25 +153,23 @@
 .pw:focus-within .pw__play { opacity: 1; transform: translate(-50%, 0); }
 
 /* ---------------- текст ---------------- */
-.pw__text { position: relative; max-width: 32rem; }
-.pw--flip .pw__text { margin-left: auto; }
+.pw__text { position: relative; max-width: 34rem; }
+/* Сдвиг колонки — на рефе текст второго блока уходит к самому краю листа. */
+.pw--left  .pw__text { grid-column: 2; margin-left: var(--pull); }
+.pw--right .pw__text { grid-column: 1; margin-right: var(--pull); }
 
 .pw__kicker {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.9rem;
-  letter-spacing: 0.02em;
   color: rgba(233, 225, 210, 0.55);
   margin-bottom: 0.1rem;
 }
-/* Надстрочные номера у заголовков — деталь с постера. */
-.pw__kicker sup,
-.pw__title sup {
+.pw__kicker sup {
   font-family: var(--font-tech);
-  /* Не в em: от крупного заголовка 0.42em давало 6px — нечитаемо. */
   font-size: 0.75rem;
   color: var(--orange);
-  margin-left: 0.25em;
+  margin-left: 0.35em;
   vertical-align: super;
 }
 
@@ -158,7 +177,6 @@
   position: relative;
   margin: 0 0 0.6rem;
   font-size: clamp(1.9rem, 4.4vw, 3.6rem);
-  /* Смазанная копия под буквами — «плохая печать» с постера. */
   text-shadow: 2px 2px 0 rgba(245, 79, 27, 0.55);
   transition: color 0.16s var(--ease-cut);
 }
@@ -188,13 +206,17 @@
 @media (max-width: 800px) {
   /* На телефоне чередование сторон не читается — кадр всегда сверху,
      и налезание блоков снимаем, иначе текст уезжает под картинку. */
-  .pw, .pw--flip { grid-template-columns: minmax(0, 1fr); direction: ltr; }
+  .pw--left, .pw--right { grid-template-columns: minmax(0, 1fr); }
   .pw__frame,
-  .pw--flip .pw__frame {
+  .pw--left .pw__frame,
+  .pw--right .pw__frame {
+    grid-column: 1;
     margin-inline: calc(-1 * var(--gutter));
-    width: calc(100% + var(--gutter) * 2);
   }
-  .pw__text, .pw--flip .pw__text { max-width: none; margin-left: 0; }
+  .pw__text,
+  .pw--left .pw__text,
+  .pw--right .pw__text { grid-column: 1; max-width: none; margin-inline: 0; }
+  .pw { margin-top: 0; }
   .pw__mark { display: none; }
   .work__row + .work__row { margin-top: 2.5rem; }
   .work__row { transform: none !important; }

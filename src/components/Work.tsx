@@ -40,26 +40,28 @@ export function Work() {
   return (
     <section className="work section section--ink" id="work">
       <div className="shell">
-        <header className="work__head">
-          {/* Каракуля лежит ПОД заголовком и не может находиться внутри
-              Reveal mode="mask": маска работает через overflow: hidden и
-              срезала всё, что выходит за базовую линию текста. */}
-          <div className="work__title-wrap">
-            <Reveal mode="mask">
-              <h2 className="work__title u-head">Work</h2>
-            </Reveal>
-            <Scribble kind="underline" className="work__title-line" delay={0.35} stretch />
-          </div>
-          <Reveal mode="jerk" delay={0.15}>
-            <p className="work__sub u-label">
-              {visible.length} {plural(visible.length, 'проект', 'проекта', 'проектов')} · наведи, чтобы
-              посмотреть превью
-            </p>
-          </Reveal>
+        {/* Титул раздела построен как шапка постера, а не как панель
+            навигации: крупная двухстрочная надпись, мелкие выходные данные
+            по углам и короткая врезка. Фильтр уходит вниз узкой полосой. */}
+        <header className="work__masthead">
+          <span className="work__credit work__credit--l u-tech">портфолио</span>
+          <span className="work__credit work__credit--r u-tech">2023 — 2026</span>
+
+          <h2 className="work__title">
+            <span className="work__title-a u-head">Work</span>
+            <span className="work__title-b u-head">избранное</span>
+            <Scribble kind="underline" className="work__title-line" delay={0.3} stretch />
+          </h2>
+
+          <p className="work__intro">
+            Съёмка и монтаж в одних руках. Наведи на кадр — пойдёт превью,
+            нажми — откроется нарезка по проекту.
+          </p>
         </header>
 
         <Reveal mode="jerk" delay={0.2}>
           <div className="work__filter" role="group" aria-label="Фильтр по направлениям">
+            <span className="work__filter-label u-tech" aria-hidden="true">фильтр</span>
             <FilterChip active={filter === 'ALL'} onClick={() => setFilter('ALL')}>
               Все
             </FilterChip>
@@ -85,7 +87,7 @@ export function Work() {
                   : undefined
               }
             >
-              <WorkCard project={project} index={i} onOpen={setOpen} />
+              <WorkCard project={project} index={i} total={visible.length} onOpen={setOpen} />
             </div>
           ))}
         </div>
@@ -114,13 +116,4 @@ function FilterChip({
       {children}
     </button>
   );
-}
-
-/** Русские окончания для счётчика проектов. */
-function plural(n: number, one: string, few: string, many: string) {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod10 === 1 && mod100 !== 11) return one;
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
-  return many;
 }
