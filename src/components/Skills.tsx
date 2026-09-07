@@ -16,7 +16,7 @@ import './Skills.css';
 export function Skills() {
   return (
     <section className="section section--skills sk" id="skills">
-      <SectionSeam id="section-edge-04" sheet="#191A20" overlap={44} fiber={5} accent />
+      <SectionSeam id="section-edge-04" sheet="#191A20" overlap={62} fiber={6} accent />
 
       <div className="shell sk__shell">
         <Reveal mode="rise">

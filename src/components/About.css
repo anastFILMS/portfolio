@@ -40,11 +40,25 @@
 .ph--center-main .ph__tape { left: auto; right: 14%; }
 .ph--front-small .ph__tape { top: -10px; left: 8%; }
 
+/* Контекст наложения: потёки с z-index: -1 должны уйти за буквы,
+   а не за фон всей секции. */
+.about__text { position: relative; z-index: 0; }
 .about__head {
+  position: relative;
   margin: 0 0 1.25rem;
   font-size: clamp(3.25rem, 7vw, 6.5rem);
   color: var(--orange);
   line-height: 0.88;
+}
+.about__drips {
+  position: absolute;
+  z-index: -1;
+  left: 2%;
+  top: 66%;
+  width: 84%;
+  height: clamp(2.5rem, 5vw, 4.5rem);
+  overflow: visible;
+  pointer-events: none;
 }
 .about__name {
   font-family: var(--font-body);

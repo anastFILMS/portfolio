@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { SEAM_PATHS, type SeamId } from '../../lib/seamPaths';
 import './SectionSeam.css';
 
@@ -21,21 +22,26 @@ type Props = {
  * Бумажный стык секций.
  *
  * Каждая следующая секция — новый лист, слегка наезжающий на предыдущий.
- * Слоёв три: снизу иногда кусочек оранжевой подложки, затем светлое
- * волокно среза, поверх — сам тёмный лист. Профиль у трёх слоёв ОДИН,
- * просто сдвинут по вертикали: так это читается срезом бумаги, а не
- * тремя разными зубчатыми полосами.
+ * Слоёв четыре: иногда кусочек оранжевой подложки, светлое волокно среза,
+ * локальная тень и сам тёмный лист. Профиль у всех ОДИН, просто сдвинут по
+ * вертикали — так это читается срезом бумаги, а не тремя разными полосами.
  *
- * Раньше на каждом стыке стоял TornEdge со сплошной оранжевой заливкой
- * высотой 58–62 px — пять одинаковых ярких заборов.
+ * Сам профиль — ломаная, и ровные грани выдавали в ней вектор. Поэтому он
+ * прогоняется через `feTurbulence` + `feDisplacementMap`: шум расталкивает
+ * точки края, и получается волокнистый обрыв. Seed привязан к профилю,
+ * форма между рендерами не меняется.
  *
  * Слой декоративный: не ловит указатель и не читается скринридером.
  */
-export function SectionSeam({ id, sheet, overlap = 40, fiber = 5, accent = false }: Props) {
+export function SectionSeam({ id, sheet, overlap = 56, fiber = 6, accent = false }: Props) {
   const d = SEAM_PATHS[id];
+  // Фрагментные id должны быть уникальны на страницу: одинаковые ломают
+  // ссылку filter="url(#…)" у второго и следующих стыков.
+  const fid = `seam-${useId().replace(/:/g, '')}`;
   // Лист выступает вверх на overlap, а ниже кромки идёт сплошная заливка,
-  // которая продолжает фон секции. Запас 20 px закрывает стык без щели.
-  const height = overlap + 20;
+  // которая продолжает фон секции. Запас 24 px закрывает стык без щели.
+  const height = overlap + 24;
+  const seed = 3 + Number(id.slice(-2)) * 7;
 
   return (
     <svg
@@ -46,14 +52,21 @@ export function SectionSeam({ id, sheet, overlap = 40, fiber = 5, accent = false
       aria-hidden="true"
       focusable="false"
     >
-      {accent && (
-        <path d={d} fill="var(--orange)" transform={`translate(0 ${-fiber * 2.6})`} opacity="0.9" />
-      )}
-      {/* Светлое волокно среза — тонкая полоска из-под листа. */}
-      <path d={d} fill="var(--paper)" transform={`translate(0 ${-fiber})`} opacity="0.85" />
-      {/* Локальная тень под кромкой: лист должен читаться поднятым. */}
-      <path d={d} fill="rgb(0 0 0 / 34%)" transform={`translate(0 ${fiber * 0.8})`} />
-      <path d={d} fill={sheet} />
+      <filter id={fid} x="-10%" y="-40%" width="120%" height="180%" colorInterpolationFilters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.006 0.05" numOctaves="5" seed={seed} result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+
+      <g filter={`url(#${fid})`}>
+        {accent && (
+          <path d={d} fill="var(--orange)" transform={`translate(0 ${-fiber * 3.2})`} opacity="0.92" />
+        )}
+        {/* Светлое волокно среза — полоска из-под листа. */}
+        <path d={d} fill="var(--paper)" transform={`translate(0 ${-fiber})`} />
+        {/* Локальная тень под кромкой: лист должен читаться поднятым. */}
+        <path d={d} fill="rgb(0 0 0 / 42%)" transform={`translate(0 ${fiber * 0.9})`} />
+        <path d={d} fill={sheet} />
+      </g>
     </svg>
   );
 }

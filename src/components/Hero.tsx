@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { site } from '../content/site';
 import { asset } from '../lib/asset';
 import { Sticker } from './grunge/Sticker';
-import { tornClipPath } from '../lib/rough';
+import { tornMaskImage } from '../lib/rough';
 import './Hero.css';
 
 /**
@@ -107,7 +107,7 @@ export function Hero() {
           отдельным контейнером, а текст и кнопки идут после неё потоком. */}
       <div className="hero__art">
         <div className="hero__slip hero__slip--first" style={wordStyle(5)} aria-hidden="true">
-          <span className="hero__paper" style={{ clipPath: tornClipPath(21, 24, 8) }} />
+          <span className="hero__paper" style={{ maskImage: tornMaskImage(21, 24, 8), WebkitMaskImage: tornMaskImage(21, 24, 8) }} />
           <img className="hero__word" src={asset('media/titles/anastasia.png')} alt="" />
           <Sticker src="tape/tape-1" className="stk--photo hero__tape" w={120} rot={-16} opacity={0.9}
                    style={{ top: '-22%', left: '-7%' }} />
@@ -122,10 +122,10 @@ export function Hero() {
         />
 
         <div className="hero__slip hero__slip--last" style={wordStyle(5)} aria-hidden="true">
-          <span className="hero__paper hero__paper--orange" style={{ clipPath: tornClipPath(58, 24, 10) }} />
+          <span className="hero__paper hero__paper--orange" style={{ maskImage: tornMaskImage(58, 24, 10), WebkitMaskImage: tornMaskImage(58, 24, 10) }} />
           <img className="hero__word" src={asset('media/titles/brichko.png')} alt="" />
           <Sticker src="tape/tape-5" className="stk--photo hero__tape" w={112} rot={14} opacity={0.85}
-                   style={{ bottom: '-12%', right: '-2%' }} />
+                   style={{ bottom: '4%', right: '3%' }} />
         </div>
       </div>
 

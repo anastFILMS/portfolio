@@ -5,37 +5,56 @@
 .work {
   overflow: visible; /* бумажный стык наезжает вверх — резать его нельзя */
 }
-.section.work::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url('/textures/bg/cloth.jpg');
-  background-size: 1100px;
-  background-position: center;
-  mix-blend-mode: soft-light;
-  opacity: 0.35;
-}
+/* В WORK складки крупнее и глубже, чем в остальных секциях: это самый
+   тёмный и самый длинный раздел, и на макете бумага там мятая сильнее. */
+.section.work::before { background-size: 1080px; opacity: 0.78; }
 
 /* ---------------- шапка раздела ----------------
    WORK по центру, «избранное» на маленькой бумажке чуть правее и внахлёст
    на низ букв. Прежние выходные данные по углам, правая врезка и панель
    фильтров из этого места убраны. */
+/* Контекст наложения нужен, чтобы потёки с z-index: -1 ушли за буквы,
+   а не за фон всей секции. */
 .work__masthead {
   position: relative;
+  z-index: 0;
   display: flex;
   justify-content: center;
   padding-block: clamp(1rem, 3vh, 2.5rem) clamp(3.5rem, 7vh, 6rem);
 }
 .work__title {
+  position: relative;
   margin: 0;
   font-size: clamp(4.5rem, 14vw, 13rem);
   line-height: 0.84;
-  color: var(--orange);
   letter-spacing: 0.02em;
   /* Плохой прогон краски: тёмная копия со сдвигом под буквами. */
   text-shadow: 5px 6px 0 rgb(0 0 0 / 45%);
+
+  color: var(--orange);
+
+  /* Фактуру внутрь букв не заводим: и multiply, и overlay серой картой
+     уводят оранжевый в бурый, а через background-clip: text сквозь буквы
+     начинают просвечивать потёки. Неровность даёт только выеденный край. */
+  mask-image: url('/textures/erode.png');
+  mask-size: 700px;
+  -webkit-mask-image: url('/textures/erode.png');
+  -webkit-mask-size: 700px;
+}
+/* Потёки свисают ИЗ-ПОД букв: отрицательный z-index уводит их за
+   собственный фон заголовка, а фон заголовка — это и есть буквы. Поверх
+   них краска читалась приклеенной сверху полосой. */
+.work__drips {
+  position: absolute;
+  z-index: -1;
+  /* Начинаются ВНУТРИ букв, иначе краска висит в воздухе отдельной
+     полоской и не читается стёкшей с надписи. */
+  left: 1%;
+  top: 74%;
+  width: 98%;
+  height: clamp(5rem, 11vw, 10rem);
+  overflow: visible;
+  pointer-events: none;
 }
 .work__sub {
   position: absolute;
@@ -88,6 +107,9 @@
   display: block;
   padding: 0;
   will-change: transform;
+  /* Тень на обёртке, а не на самой подложке: filter применяется ДО маски,
+     и на подложке он обвёл бы исходный прямоугольник. */
+  filter: drop-shadow(0 16px 24px rgb(0 0 0 / 46%));
 }
 /* Край изображения выходит за поля контейнера — но только изображение,
    не текст и не кнопки. */
@@ -95,32 +117,37 @@
 .wk--right .wk__shot { margin-right: clamp(-3.5rem, -2.6vw, -1.5rem); }
 
 /* Бумажная подложка: её видно в надрывах как светлую волокнистую кромку.
-   Толщину кромки задаёт padding — 8–14 px на широком экране, 4–7 px на
-   телефоне. Контур у подложки и у кадра один, поэтому кромка идёт ровно
-   по надрывам и нигде не распадается на треугольники. */
+   Ширину кромки задаёт разница раздутия и поджатия в маске (см.
+   lib/workShapes.ts), а не padding: у настоящего обрыва она неровная. */
 .wk__paper {
   position: relative;
   display: block;
   width: 100%;
-  padding: clamp(5px, 0.8vw, 13px);
   /* Пропорции внешнего кадра приходят из данных переменной, а не инлайном:
      на телефоне их надо переопределить, иначе кадр выходит слишком низким. */
   aspect-ratio: var(--cover, 1.95 / 1);
-  background: var(--paper);
-  background-image: url('/textures/paper.png');
-  background-size: 380px;
+  background-color: var(--paper);
+  background-image: url('/textures/paper-mul.png');
+  background-size: 300px;
+  background-blend-mode: multiply;
   rotate: var(--rot, 0deg);
-  filter: drop-shadow(0 14px 22px rgb(0 0 0 / 42%));
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
   transition: transform var(--motion-quick) var(--ease-cut);
 }
 .wk__shot:hover .wk__paper { transform: scale(1.015); }
 
 .wk__inner {
-  position: relative;
+  position: absolute;
+  inset: 0;
   display: block;
-  width: 100%;
-  height: 100%;
   background: #05050a;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
 }
 /* Временная обложка-вырезка вписывается целиком, и вокруг неё остаётся
    пустота. Даём ей мягкую подложку, чтобы слот читался подготовленным
@@ -140,13 +167,18 @@
 .wp__video { position: absolute; inset: 0; opacity: 0; }
 .wk:hover .wp__video,
 .wk:focus-within .wp__video { opacity: 1; }
-/* Кадра ещё нет — нейтральная бумажная композиция, без ложных подписей. */
+/* Кадра ещё нет — нейтральная бумажная композиция, без ложных подписей
+   и без имитации проигрывания. Тон бумажный, а не почти чёрный: тёмный
+   прямоугольник читался сломанным кадром, а не подготовленным местом. */
 .wp__blank {
   position: absolute;
   inset: 0;
-  background:
-    repeating-linear-gradient(114deg, rgb(230 224 215 / 6%) 0 3px, transparent 3px 9px),
-    linear-gradient(150deg, var(--coal), var(--navy-soft) 62%, var(--ink));
+  background-color: var(--paper-warm);
+  background-image:
+    linear-gradient(148deg, rgb(0 0 0 / 12%), rgb(0 0 0 / 0%) 45%, rgb(0 0 0 / 22%)),
+    url('/textures/bg/crumple.png');
+  background-size: auto, 520px;
+  background-blend-mode: normal, multiply;
 }
 
 /* ---------------- текст работы ----------------

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Project } from '../content/projects';
-import { maskClipPath } from '../lib/workShapes';
+import { maskImage } from '../lib/workShapes';
 import { WorkPreview } from './WorkPreview';
 
 type Props = {
@@ -52,9 +52,11 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
     };
   }, [motionEnabled]);
 
-  // Подложка и кадр режутся ОДНИМ контуром: подложка крупнее ровно на свой
-  // padding, за счёт этого светлая кромка ровная по толщине.
-  const clip = maskClipPath(project.maskId);
+  // Один контур и один шум на два слоя: подложка раздута, кадр поджат.
+  // Кромка из-за этого идёт по надрывам, но гуляет по ширине — как рвань,
+  // а не как ровная обводка вокруг многоугольника.
+  const paperMask = maskImage(project.maskId, 7);
+  const shotMask = maskImage(project.maskId, -4);
   const open = () => onOpen(project);
 
   return (
@@ -80,14 +82,11 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
         aria-label={`Смотреть: ${project.title}`}
         style={{ transform: motionEnabled ? `translate3d(0, ${shift.toFixed(1)}px, 0)` : undefined }}
       >
-        <span
-          className="wk__paper"
-          style={{ clipPath: clip }}
-        >
+        <span className="wk__paper" style={{ maskImage: paperMask, WebkitMaskImage: paperMask }}>
           <span
             className="wk__inner"
             data-fit={project.temporaryPosterFit ?? 'cover'}
-            style={{ clipPath: clip }}
+            style={{ maskImage: shotMask, WebkitMaskImage: shotMask }}
           >
             <WorkPreview project={project} allowHoverPlay={motionEnabled} />
           </span>

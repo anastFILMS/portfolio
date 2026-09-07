@@ -8,12 +8,26 @@
   padding-bottom: clamp(2.5rem, 6vh, 4.5rem);
 }
 
+/* Контекст наложения для потёков — как в «Обо мне». */
+.cts__top { position: relative; z-index: 0; }
 .cts__head {
+  position: relative;
   margin: 0;
   max-width: 12ch;
   font-size: clamp(2.75rem, 7vw, 6.5rem);
   color: var(--orange);
   line-height: 0.9;
+}
+
+.cts__drips {
+  position: absolute;
+  z-index: -1;
+  left: 1%;
+  top: 72%;
+  width: 76%;
+  height: clamp(2.5rem, 5vw, 4.5rem);
+  overflow: visible;
+  pointer-events: none;
 }
 
 .cts__card {

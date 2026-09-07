@@ -4,6 +4,7 @@ import { useParallaxEnabled } from '../hooks/useParallax';
 import { WorkCard } from './WorkCard';
 import { ReelPlayer } from './ReelPlayer';
 import { SectionSeam } from './grunge/SectionSeam';
+import { PaintDrips } from './grunge/PaintDrips';
 import './Work.css';
 
 /**
@@ -19,11 +20,16 @@ export function Work() {
 
   return (
     <section className="section section--work work" id="work">
-      <SectionSeam id="section-edge-01" sheet="#101013" overlap={40} accent />
+      <SectionSeam id="section-edge-01" sheet="#101013" overlap={54} accent />
 
       <div className="shell">
         <header className="work__masthead">
-          <h2 className="work__title u-cond">WORK</h2>
+          <h2 className="work__title u-cond">
+            WORK
+            {/* Краска стекает с букв — на макете это главная примета
+                заголовка раздела. */}
+            <PaintDrips seed={41} count={11} className="work__drips" />
+          </h2>
           {/* «избранное» на маленькой бумажке, слегка правее и внахлёст
               на низ букв — как в макете. */}
           <span className="work__sub">избранное</span>

@@ -3,6 +3,7 @@ import { asset } from '../lib/asset';
 import { SectionSeam } from './grunge/SectionSeam';
 import { Reveal } from './grunge/Reveal';
 import { Tape } from './grunge/Tape';
+import { PaintDrips } from './grunge/PaintDrips';
 import './About.css';
 
 /**
@@ -18,7 +19,7 @@ import './About.css';
 export function About() {
   return (
     <section className="section section--about about" id="about">
-      <SectionSeam id="section-edge-03" sheet="#101013" overlap={36} fiber={4} />
+      <SectionSeam id="section-edge-03" sheet="#101013" overlap={52} fiber={6} />
 
       <div className="shell about__shell">
         {/* Коллаж: высоту задаёт контейнер, чтобы абсолютные фото не
@@ -42,7 +43,10 @@ export function About() {
 
         <div className="about__text">
           <Reveal mode="rise">
-            <h2 className="about__head u-graf">{about.heading}</h2>
+            <h2 className="about__head u-graf">
+              {about.heading}
+              <PaintDrips seed={17} count={7} className="about__drips" />
+            </h2>
           </Reveal>
           <Reveal mode="rise" delay={0.06}>
             <p className="about__name">{about.name}</p>

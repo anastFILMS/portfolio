@@ -12,8 +12,20 @@
   overflow: hidden;
   background: var(--bg-hero);
 }
-/* Фактура — один слой под содержимым, приглушённый. */
+/* Два слоя под содержимым: мятая бумага и распыл у краёв.
+   Прежние spray на 0.9 в hard-light, зерно 0.5 и строчки VHS 0.3 сняты. */
 .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/textures/bg/crumple.png');
+  background-size: 900px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+.hero::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -23,18 +35,7 @@
   background-size: cover;
   background-position: center;
   mix-blend-mode: soft-light;
-  opacity: 0.28;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url('/textures/paper.png');
-  background-size: 320px;
-  mix-blend-mode: overlay;
-  opacity: var(--grain-opacity);
+  opacity: 0.3;
 }
 
 /* ======================= АРТ-КОМПОЗИЦИЯ =======================
@@ -62,6 +63,10 @@
   background-image: url('/textures/paper-mul.png');
   background-blend-mode: multiply;
   background-size: 260px;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
 }
 .hero__paper--orange { background-color: var(--orange); }
 .hero__tape { z-index: 2; }

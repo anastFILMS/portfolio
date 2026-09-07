@@ -80,10 +80,7 @@ const SHAPES: Record<MaskId, Shape> = {
  *
  * Исходная геометрия задана в диапазоне 0–100 по обеим осям, и на широком
  * кадре её зубцы уходят вглубь на треть высоты — силуэт читается круглым
- * «взрывом», а ТЗ требует длинных неравномерных надрывов вытянутой формы.
- * Поэтому каждая точка подтягивается к ближайшему краю: рисунок надрывов
- * сохраняется, амплитуда падает. Все пять силуэтов остаются разными —
- * это уточнение формы, а не подмена её генератором.
+ * «взрывом», а на макете это длинные неровные надрывы вытянутой формы.
  */
 const PULL_X = 0.5;
 const PULL_Y = 0.62;
@@ -93,20 +90,54 @@ function toEdge(v: number, k: number): number {
   return v < 50 ? v * k : 100 - (100 - v) * k;
 }
 
-function pointsOf(id: MaskId): string[] {
-  return SHAPES[id].points.map(
-    ([x, y]) => `${toEdge(x, PULL_X).toFixed(2)}% ${toEdge(y, PULL_Y).toFixed(2)}%`,
+/** Контур в системе viewBox 1000×500. */
+function pathOf(id: MaskId): string {
+  const pts = SHAPES[id].points.map(
+    ([x, y]) => `${(toEdge(x, PULL_X) * 10).toFixed(1)},${(toEdge(y, PULL_Y) * 5).toFixed(1)}`,
   );
+  return `M${pts.join('L')}Z`;
 }
 
 /**
- * `clip-path` для кадра WORK.
+ * Маска кадра WORK — рваная бумага, а не многоугольник.
  *
- * Один и тот же контур режет и бумажную подложку, и кадр внутри неё.
- * Подложка при этом крупнее ровно на свой padding, поэтому светлая кромка
- * получается равномерной по толщине и идёт по самим надрывам. Отдельный,
- * независимо построенный внутренний контур разваливал её на треугольники.
+ * Ломаная из точек сама по себе читается вектором: ровные прямые грани,
+ * острые математические углы. На макете край бумаги другой — мохнатый,
+ * с волокном и мелкими заусенцами по всей длине.
+ *
+ * Поэтому контур не режется через `clip-path`, а рисуется в SVG и
+ * прогоняется через шум: `feTurbulence` даёт поле смещений, а
+ * `feDisplacementMap` расталкивает по нему каждую точку края. Прямых
+ * граней после этого не остаётся, а рисунок детерминированный — seed
+ * фиксирован, форма не пляшет между рендерами.
+ *
+ * `feMorphology` перед смещением раздувает или поджимает силуэт. За счёт
+ * этого светлая подложка и кадр внутри строятся из ОДНОГО контура с одним
+ * шумом: кромка идёт ровно по надрывам, но её ширина гуляет, как у
+ * настоящего обрыва бумаги.
+ *
+ * Возвращает data-URI для `mask-image`: белое — видимая часть.
+ *
+ * @param grow >0 раздуть силуэт (подложка), <0 поджать (кадр внутри)
  */
-export function maskClipPath(id: MaskId): string {
-  return `polygon(${pointsOf(id).join(', ')})`;
+export function maskImage(id: MaskId, grow = 0): string {
+  const morph =
+    grow === 0
+      ? ''
+      : `<feMorphology operator="${grow > 0 ? 'dilate' : 'erode'}" radius="${Math.abs(grow)}" in="SourceGraphic" result="m"/>`;
+  const displaceIn = grow === 0 ? 'SourceGraphic' : 'm';
+  // seed от id: у каждой из пяти работ своя рванина, но всегда одна и та же
+  const seed = 11 + Number(id.slice(-2));
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" preserveAspectRatio="none">` +
+    `<filter id="t" x="-15%" y="-25%" width="130%" height="150%" color-interpolation-filters="sRGB">` +
+    `<feTurbulence type="fractalNoise" baseFrequency="0.009 0.022" numOctaves="5" seed="${seed}" result="n"/>` +
+    morph +
+    `<feDisplacementMap in="${displaceIn}" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G"/>` +
+    `</filter>` +
+    `<path filter="url(#t)" fill="#fff" d="${pathOf(id)}"/>` +
+    `</svg>`;
+
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }

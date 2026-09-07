@@ -44,3 +44,36 @@ export function tornClipPath(seed: number, teeth = 22, depth = 7): string {
 
   return `polygon(${[...top, ...bottom].join(', ')})`;
 }
+
+/**
+ * Маска рваной бумажки — для клочков первого экрана.
+ *
+ * `tornClipPath` даёт ломаную с ровными гранями, и рядом с кадрами WORK,
+ * где край прогнан через шум, она читалась вектором. Здесь тот же контур
+ * рисуется в SVG и расталкивается `feDisplacementMap`, поэтому обрыв
+ * получается волокнистым. Форма детерминированная: seed фиксирован.
+ *
+ * Возвращает data-URI для `mask-image`: белое — видимая часть.
+ */
+export function tornMaskImage(seed: number, teeth = 22, depth = 7): string {
+  const rnd = seeded(seed);
+  const top: string[] = [];
+  const bottom: string[] = [];
+  for (let i = 0; i <= teeth; i++) {
+    const x = ((i / teeth) * 1000).toFixed(1);
+    top.push(`${x},${(rnd() * depth * 5).toFixed(1)}`);
+    bottom.unshift(`${x},${(500 - rnd() * depth * 5).toFixed(1)}`);
+  }
+  const d = `M${[...top, ...bottom].join('L')}Z`;
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" preserveAspectRatio="none">` +
+    `<filter id="t" x="-10%" y="-25%" width="120%" height="150%" color-interpolation-filters="sRGB">` +
+    `<feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="5" seed="${seed}" result="n"/>` +
+    `<feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G"/>` +
+    `</filter>` +
+    `<path filter="url(#t)" fill="#fff" d="${d}"/>` +
+    `</svg>`;
+
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}

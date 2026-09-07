@@ -76,16 +76,32 @@ body.is-locked { overflow: hidden; }
 .section--skills     { background: var(--bg-skills); }
 .section--contacts   { background: var(--bg-contacts); }
 
+/* Мятая бумага под содержимым. Карта серая со средним 128, поэтому в
+   режиме overlay она не меняет тон фона, а только добавляет заломы:
+   светлая сторона складки подсвечивается, тёмная топится.
+   Размер крупный — складки должны читаться как складки, а не как шум. */
 .section::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url('/textures/paper.png');
-  background-size: 320px;
+  background-image: url('/textures/bg/crumple.png');
+  background-size: 860px;
   mix-blend-mode: overlay;
   opacity: var(--texture-opacity);
+}
+/* Мелкое зерно поверх складок — отдельным слоем и совсем слабое. */
+.section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/textures/paper.png');
+  background-size: 300px;
+  mix-blend-mode: overlay;
+  opacity: var(--grain-opacity);
 }
 /* Поднимаем над фактурой только контентную обёртку. Правило вида
    `.section > *` перебивало position: absolute у бумажных стыков — они
