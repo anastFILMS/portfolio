@@ -67,7 +67,7 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
           '--text': `${project.textWidthPercent}%`,
           '--rot': `${project.rotateDeg}deg`,
           '--cover': project.coverAspectRatio,
-          '--paper-mask': `url("${asset(`design/paper/work-${paperId}-mask.svg`)}")`,
+          '--paper-mask': `url("${asset(`design/paper-v2/work-${paperId}-mask.svg`)}")`,
         } as React.CSSProperties
       }
     >
@@ -89,7 +89,7 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
           >
             <WorkPreview project={project} allowHoverPlay={motionEnabled} />
           </span>
-          <img className="wk__fiber" src={asset(`design/paper/work-${paperId}-frame.svg`)} alt="" aria-hidden="true" />
+          <img className="wk__fiber" src={asset(`design/paper-v2/work-${paperId}-frame.svg`)} alt="" aria-hidden="true" />
         </span>
       </button>
 

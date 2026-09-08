@@ -1,15 +1,16 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 // Baked design assets: no random geometry or filter work during scrolling.
-const dir = new URL('../public/design/paper/', import.meta.url);
+const dir = new URL('../public/design/paper-v2/', import.meta.url);
 mkdirSync(dir, { recursive: true });
 const random = seed => () => {
   seed = (seed * 1664525 + 1013904223) >>> 0;
   return seed / 4294967296;
 };
-function rough(points, seed, step = 5, depth = 3) {
+function rough(points, seed, step = 5, depth = 3, closed = true) {
   const rnd = random(seed), out = [];
   points.forEach((a, i) => {
+    if (!closed && i === points.length - 1) return;
     const b = points[(i + 1) % points.length];
     const dx = b[0]-a[0], dy = b[1]-a[1], len = Math.hypot(dx,dy);
     const count = Math.max(1, Math.floor(len / step));
@@ -18,6 +19,7 @@ function rough(points, seed, step = 5, depth = 3) {
       out.push([a[0]+dx*t-dy/len*n,a[1]+dy*t+dx/len*n]);
     }
   });
+  if (!closed) out.push(points[points.length - 1]);
   return out;
 }
 const path = points => 'M'+points.map(p=>p.map(n=>n.toFixed(2)).join(',')).join('L')+'Z';
@@ -37,16 +39,16 @@ contours.forEach((points,i)=>{
   const inner=rough(points.map(([x,y])=>[500+(x-500)*.988,180+(y-180)*.970]),950+i,3.5,1.2);
   const d=path(outer), inside=path(inner);
   save(`work-${i+1}-mask.svg`,1000,360,`<path d="${inside}" fill="white"/>`);
-  save(`work-${i+1}-frame.svg`,1000,360,`<defs><linearGradient id="p" x2=".3" y2="1"><stop stop-color="#eee8db"/><stop offset=".55" stop-color="#d7cbb8"/><stop offset="1" stop-color="#e8e1d5"/></linearGradient><mask id="m"><path d="${d}" fill="white"/><path d="${inside}" fill="black"/></mask><filter id="grain"><feTurbulence baseFrequency=".48" numOctaves="3" seed="${i+8}"/><feColorMatrix type="saturate" values="0"/><feBlend in="SourceGraphic" mode="soft-light"/></filter></defs><g mask="url(#m)"><rect width="1000" height="360" fill="url(#p)"/><rect width="1000" height="360" fill="#cdc1ad" filter="url(#grain)" opacity=".20"/><path d="${d}" fill="none" stroke="#f7efe2" stroke-width="1.2"/></g>`);
+  save(`work-${i+1}-frame.svg`,1000,360,`<defs><linearGradient id="p" x2=".3" y2="1"><stop stop-color="#eee8db"/><stop offset=".55" stop-color="#d7cbb8"/><stop offset="1" stop-color="#e8e1d5"/></linearGradient><mask id="m"><path d="${d}" fill="white"/><path d="${inside}" fill="black"/></mask><pattern id="grain" width="7" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="3" r=".6" fill="#655b48"/><path d="M4 7l2-1" stroke="#887c66" stroke-width=".5"/></pattern></defs><g mask="url(#m)"><rect width="1000" height="360" fill="url(#p)"/><rect width="1000" height="360" fill="url(#grain)" opacity=".20"/><path d="${d}" fill="none" stroke="#f7efe2" stroke-width="1.2"/></g>`);
 });
 for(let i=0;i<5;i++){
  const rnd=random(240+i), top=[];
  for(let x=-10;x<=1610;x+=40) top.push([x,38+Math.sin(x/143+i*3)*22+rnd()*20]);
- const d=path(rough([...top,[1610,170],[-10,170]],86+i,3,2.8));
- const fib=path(rough([...top.map(([x,y])=>[x,y-3-rnd()*10]),[1610,170],[-10,170]],281+i,2.8,2));
+ const d=path([...rough(top,86+i,3,2.8,false),[1610,180],[-10,180]]);
+ const fib=path([...rough(top.map(([x,y])=>[x,y-3-rnd()*10]),281+i,2.8,2,false),[1610,180],[-10,180]]);
  // Separate edge mask lets the new section continue underneath without a solid SVG band.
  save(`seam-${i+1}-mask.svg`,1600,170,`<path d="${d}" fill="white"/>`);
- save(`seam-${i+1}-fiber.svg`,1600,170,`<defs><mask id="m"><path d="${fib}" fill="white"/><path d="${d}" fill="black"/></mask><filter id="g"><feTurbulence baseFrequency=".38" numOctaves="2" seed="${i+2}"/><feColorMatrix type="saturate" values="0"/><feBlend in="SourceGraphic" mode="soft-light"/></filter></defs><g mask="url(#m)"><rect width="1600" height="170" fill="#e2d9c8"/><rect width="1600" height="170" fill="#d3c7b6" filter="url(#g)" opacity=".22"/></g>`);
+ save(`seam-${i+1}-fiber.svg`,1600,170,`<defs><mask id="m"><path d="${fib}" fill="white"/><path d="${d}" fill="black"/></mask><pattern id="g" width="8" height="7" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r=".7" fill="#635849"/></pattern></defs><g mask="url(#m)"><rect width="1600" height="170" fill="#e2d9c8"/><rect width="1600" height="170" fill="url(#g)" opacity=".22"/></g>`);
 }
 const scrap=rough([[3,8],[90,3],[182,7],[298,3],[296,93],[177,97],[93,92],[2,97]],78,3,1.6);
 save('scrap-mask.svg',300,100,`<path d="${path(scrap)}" fill="white"/>`);

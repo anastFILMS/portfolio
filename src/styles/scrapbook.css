@@ -46,7 +46,7 @@
   background: var(--orange) url('/textures/paper-mul.png') center / 270px;
   background-blend-mode: multiply;
   clip-path: none;
-  mask: url('/design/paper/scrap-mask.svg') center / 100% 100% no-repeat;
+  mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
 }
 .btn:hover::before { background-color: #fa703e; }
 .btn--ghost::before { inset: 0; mask: none; background: transparent; clip-path: none; box-shadow: inset 0 0 0 1.5px var(--orange); }
@@ -69,7 +69,7 @@
 .hero__paper {
   inset: -3% -3% 10%;
   clip-path: none !important;
-  mask: url('/design/paper/scrap-mask.svg') center / 100% 100% no-repeat;
+  mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
   background-color: var(--paper);
   background-image: linear-gradient(108deg, #fff2, transparent 24%, #82725a20 49%, #fff2 51%, transparent 65%), url('/textures/paper-mul.png');
   background-size: cover, 450px;
@@ -90,7 +90,7 @@
   padding-block: 15px; margin-bottom: 4px;
   background: var(--orange) url('/textures/paper-mul.png') center / 300px;
   background-blend-mode: multiply;
-  clip-path: none; mask: url('/design/paper/scrap-mask.svg') center / 100% 100% no-repeat;
+  clip-path: none; mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
   letter-spacing: .1em;
 }
 
@@ -98,7 +98,7 @@
 .work { padding-top: 36px; padding-bottom: 76px; }
 .work > .shell { max-width: 1600px; padding-inline: 3.5%; }
 .work__masthead { padding-block: 0 54px; }
-.work__title { position: relative; font-size: clamp(110px, 15vw, 212px); text-shadow: none; letter-spacing: -.025em; color: var(--orange); background: none; -webkit-text-fill-color: var(--orange); mask-image: url('/textures/erode.png'); mask-size: 700px; }
+.work__title { position: relative; font-size: clamp(110px, 15vw, 212px); text-shadow: none; letter-spacing: -.025em; color: var(--orange); background: none; -webkit-text-fill-color: var(--orange); mask-image: url('/textures/erode.png'); mask-size: 330px; mask-mode: luminance; }
 .work__title::after {
   content: ''; position: absolute; left: 11%; right: 11%; top: 84%; height: 38px;
   background: var(--orange);
@@ -108,7 +108,7 @@
 .wk { column-gap: 7%; }
 .wk--left { grid-template-columns: 63% 30%; }
 .wk--right { grid-template-columns: 30% 63%; }
-.wk:first-child { margin-top: -20px; }
+.wk:first-child { margin-top: -65px; }
 .wk--left .wk__shot { margin-left: -6.5vw; }
 .wk--right .wk__shot { margin-right: -6.5vw; }
 .wk__paper {
@@ -167,7 +167,7 @@
 .sk { padding-block: 48px 65px; }
 .sk__shell { grid-template-columns: 43% 1fr; gap: 6%; }
 .sk__programs { flex-wrap: nowrap; justify-content: space-between; gap: 16px; }
-.sk__prog { mask: url('/design/paper/scrap-mask.svg') center / 100% 100% no-repeat; flex: 1; flex-direction: column; justify-content: center; padding: 14px 10px; min-height: 105px; background: var(--paper) url('/textures/paper-mul.png') center / 400px; background-blend-mode: multiply; }
+.sk__prog { mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat; flex: 1; flex-direction: column; justify-content: center; padding: 14px 10px; min-height: 105px; background: var(--paper) url('/textures/paper-mul.png') center / 400px; background-blend-mode: multiply; }
 .sk__mark { display: grid; place-items: center; width: 50px; height: 50px; font-family: var(--font-body); font-size: 28px; color: #bca4f3; background: #1f1741; }
 .sk__name { font-size: 13px; text-align: center; }
 .sk__items { text-transform: none; letter-spacing: .01em; line-height: 2; }
@@ -242,7 +242,7 @@
  .exp__formats { grid-template-columns: 1fr 1fr; gap: 0 20px; }
  .exp__format { font-size: 14px; }
  .sk__programs { gap: 10px; }
- .sk__prog { mask: url('/design/paper/scrap-mask.svg') center / 100% 100% no-repeat; flex: 1; padding: 12px 4px; min-width: 0; }
+ .sk__prog { mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat; flex: 1; padding: 12px 4px; min-width: 0; }
  .sk__name { font-size: 13px; }
  .sk__items { margin-top: 20px; }
  .cts { padding-block: 40px 22px; }
@@ -255,4 +255,23 @@
 @media(prefers-reduced-motion: reduce) {
  .hero__cam, .hero__slip { transform: none !important; animation: none; }
  .btn:hover { transform: none; }
+}
+
+/* The hero ribbon itself is the first torn section transition. */
+.work > .seam { display: none; }
+.hero__ribbon { padding-block: 10px; margin-bottom: -2px; }
+/* Keep the paint strokes separate from the letter mask. */
+.work__title { mask: none; overflow: visible; }
+.work__title > span { display: block; mask: url('/textures/erode.png') 10% 40% / 330px; mask-mode: luminance; }
+.work__title::after { display: none; }
+.work__paint-drips { position: absolute; top: 80%; left: 0; width: 100%; height: 65px; z-index: -1; }
+.ph { isolation: isolate; background: none; box-shadow: none; filter: drop-shadow(3px 6px 5px #0007); }
+.ph::before { content: ''; position: absolute; inset: -2px; z-index: -1; background: var(--paper) url('/textures/paper-mul.png') center / 350px; background-blend-mode: multiply; mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat; }
+.about__head { margin-bottom: 0; }
+.sk__programs { justify-content: center; gap: clamp(16px, 3.2vw, 50px); }
+.sk__prog { flex: 0 1 135px; }
+@media(max-width:767px) {
+ .work__paint-drips { height: 42px; }
+ .sk__programs { gap: 14px; }
+ .sk__prog { flex: 1; }
 }

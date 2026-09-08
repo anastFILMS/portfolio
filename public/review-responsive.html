@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>anastFILMS — проверка адаптива</title>
+<style>body{margin:0;padding:20px;background:#25262b;color:#fff;font:14px system-ui}nav{display:flex;gap:12px;margin-bottom:15px}button{padding:10px 16px;cursor:pointer}main{display:flex;gap:24px;align-items:flex-start}iframe{background:#101013;border:1px solid #555;flex-shrink:0;height:820px}p{margin:0 0 8px}</style>
+<nav aria-label="Проверяемый раздел"><button data-section="top">Первый экран</button><button data-section="work">WORK</button><button data-section="about">Обо мне</button><button data-section="contacts">Контакты</button></nav>
+<main><div><p>390 px</p><iframe title="Телефон 390 px" width="390" src="./#top"></iframe></div><div><p>768 px</p><iframe title="Планшет 768 px" width="768" src="./#top"></iframe></div></main>
+<script>document.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>document.querySelectorAll('iframe').forEach(f=>{f.src='./#'+b.dataset.section})))</script></html>
