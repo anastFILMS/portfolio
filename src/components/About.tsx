@@ -42,7 +42,7 @@ export function About() {
 
         <div className="about__text">
           <Reveal mode="rise">
-            <h2 className="about__head"><span className="sr-only">{about.heading}</span><img src={asset('media/titles/about-paint.webp')} alt="" aria-hidden="true" width="1983" height="793" /></h2>
+            <h2 className="about__head"><span className="sr-only">{about.heading}</span><img src={asset('media/titles/about-brush-v2.webp')} alt="" aria-hidden="true" width="1200" height="400" /></h2>
           </Reveal>
           <Reveal mode="rise" delay={0.06}>
             <p className="about__name">{about.name}</p>

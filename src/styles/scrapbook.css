@@ -6,22 +6,24 @@
   --chalk: #f0ece4;
   --gutter: clamp(22px, 4.7vw, 76px);
   --section-y: clamp(80px, 7.5vw, 122px);
-  --work-gap: clamp(100px, 8.4vw, 136px);
+  --work-gap: clamp(24px, 2.5vw, 42px);
   --paper-surface: url('/textures/bg/scrapbook-paper.webp');
 }
 .hero, .section { isolation: isolate; }
 .section { background: #11151d; }
+.page { background: #0c1017; }
 .section--work { background: #0c1017; --seam-bg: #0c1017; }
 .section--experience { background: #181e2b; --seam-bg: #181e2b; }
 .section--about { background: #11151d; --seam-bg: #11151d; }
 .section--skills { background: #171c28; --seam-bg: #171c28; }
 .section--contacts { background: #10141c; --seam-bg: #10141c; }
-.section::before {
+.section::before, .section.work::before {
   background-image: var(--paper-surface);
-  background-size: 1100px auto;
+  background-size: cover;
+  background-repeat: no-repeat;
   background-position: 40% 0;
   mix-blend-mode: luminosity;
-  opacity: .63;
+  opacity: .45;
 }
 .section.work::after {
   background: radial-gradient(ellipse at 84% 20%, #25345055, transparent 48%), linear-gradient(90deg, #080b1155, transparent 70%);
@@ -34,7 +36,8 @@
 .section--contacts::before { background-position: 70% 80%; opacity: .6; }
 .seam__sheet::after {
   content: ''; position: absolute; inset: 0;
-  background-image: var(--paper-surface); background-size: 1100px auto;
+  background-image: var(--paper-surface); background-size: cover;
+  background-repeat: no-repeat;
   mix-blend-mode: luminosity; opacity: .55;
 }
 .btn { isolation: isolate; letter-spacing: .025em; }
@@ -50,7 +53,7 @@
 .btn--ghost:hover::before { background: #ed582a18; }
 
 /* Hero scene measured in a shared responsive box, not competing vh offsets. */
-.hero { min-height: 0; height: clamp(720px, 57vw, 890px); background: #131923; }
+.hero { min-height: 0; height: clamp(610px, 46vw, 780px); background: #131923; }
 .hero::before {
   background-image: var(--paper-surface); background-size: cover;
   mix-blend-mode: luminosity; opacity: .87;
@@ -83,6 +86,7 @@
 .hero__cta .btn--ghost { min-width: 165px; }
 .hero__deco .stk { opacity: .65; }
 .hero__ribbon {
+  z-index: 12;
   padding-block: 15px; margin-bottom: 4px;
   background: var(--orange) url('/textures/paper-mul.png') center / 300px;
   background-blend-mode: multiply;
@@ -91,21 +95,26 @@
 }
 
 /* Media tears are baked masks with a separate fibrous edge, not polygon strokes. */
-.work { padding-top: 45px; padding-bottom: 125px; }
-.work__masthead { padding-block: 16px 80px; }
-.work__title { position: relative; font-size: clamp(110px, 15vw, 212px); text-shadow: none; letter-spacing: -.025em; background: var(--orange) url('/textures/bg/spray.jpg') center / cover; background-blend-mode: multiply; background-clip: text; -webkit-text-fill-color: transparent; }
+.work { padding-top: 36px; padding-bottom: 76px; }
+.work > .shell { max-width: 1600px; padding-inline: 3.5%; }
+.work__masthead { padding-block: 0 54px; }
+.work__title { position: relative; font-size: clamp(110px, 15vw, 212px); text-shadow: none; letter-spacing: -.025em; color: var(--orange); background: none; -webkit-text-fill-color: var(--orange); mask-image: url('/textures/erode.png'); mask-size: 700px; }
 .work__title::after {
   content: ''; position: absolute; left: 11%; right: 11%; top: 84%; height: 38px;
   background: var(--orange);
   clip-path: polygon(0 0, 4% 0, 4% 72%, 3% 80%, 2% 74%, 2% 0, 22% 0, 23% 100%, 24% 96%, 25% 0, 43% 0, 44% 65%, 45% 60%, 46% 0, 67% 0, 68% 85%, 69% 90%, 70% 0, 94% 0, 95% 52%, 96% 55%, 97% 0);
 }
-.work__sub { bottom: 52px; font-size: clamp(24px, 3vw, 40px); padding: 7px 20px; rotate: -2deg; background: var(--paper) url('/textures/paper-mul.png') center / 400px; background-blend-mode: multiply; }
+.work__sub { bottom: 14px; font-size: clamp(24px, 3vw, 40px); padding: 7px 20px; rotate: -2deg; background: var(--paper) url('/textures/paper-mul.png') center / 400px; background-blend-mode: multiply; }
 .wk { column-gap: 7%; }
-.wk--left .wk__shot { margin-left: calc(var(--gutter) * -.8); }
-.wk--right .wk__shot { margin-right: calc(var(--gutter) * -.8); }
+.wk--left { grid-template-columns: 63% 30%; }
+.wk--right { grid-template-columns: 30% 63%; }
+.wk:first-child { margin-top: -20px; }
+.wk--left .wk__shot { margin-left: -6.5vw; }
+.wk--right .wk__shot { margin-right: -6.5vw; }
 .wk__paper {
+  mask: none;
   padding: 0; aspect-ratio: var(--cover); background: none;
-  filter: drop-shadow(0 6px 5px #0009);
+  filter: drop-shadow(0 5px 3px #0007);
 }
 .wk__inner { position: absolute; inset: 0; mask: var(--paper-mask) center / 100% 100% no-repeat; background: #141923; }
 .wk__fiber { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -113,7 +122,12 @@
 .wk__num { font-size: clamp(24px, 2.5vw, 36px); font-weight: 400; margin-bottom: 8px; }
 .wk__cat { color: var(--chalk); font-size: 13px; letter-spacing: .20em; margin-bottom: 30px; }
 .wk__btn { min-width: 205px; }
-.wp__img { filter: saturate(.76) contrast(1.04); }
+.wp__img { filter: saturate(.86) contrast(1.06); }
+.wp__collage { position: absolute; inset: -4% -2%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.3%; background: var(--paper); rotate: -3deg; }
+.wp__collage img { width: 100%; height: 100%; min-width: 0; object-fit: cover; }
+.wp__collage img:first-child { filter: grayscale(1); object-position: 58% center; }
+.wp__collage img:nth-child(2) { object-position: 65% center; }
+.wk:nth-child(5) .wk__paper::before { content: ''; position: absolute; inset: -8px; background: var(--orange); rotate: 3deg; mask: var(--paper-mask) center / 100% 100% no-repeat; opacity: .75; }
 .wk:hover .wp__video, .wk:focus-within .wp__video { opacity: 0; }
 .wk .wp__video[data-playing='true'] { opacity: 1; }
 .wk:nth-child(3) .wp__img { filter: grayscale(1) contrast(1.06); }
@@ -130,28 +144,30 @@
 }
 
 /* Overlapping portrait crops; tape is outside the photo clipping surface. */
-.about { padding-block: 90px 100px; }
-.about__collage { aspect-ratio: 1.04; }
+.about { padding-block: 45px 56px; }
+.about__shell { grid-template-columns: 50% 44%; gap: 6%; }
+.about__collage { aspect-ratio: 1.28; }
 .ph { padding: 8px; background: var(--paper) url('/textures/paper-mul.png') center / 380px; background-blend-mode: multiply; box-shadow: 3px 9px 12px #0008; }
-.ph--left-back { left: 0; top: 8%; width: 54%; aspect-ratio: .79; rotate: -7deg; }
-.ph--center-main { left: 43%; top: 4%; width: 52%; aspect-ratio: .77; rotate: 4deg; }
-.ph--front-small { left: 66%; top: 61%; width: 35%; aspect-ratio: .98; rotate: -9deg; }
-.ph--center-main .ph__img { object-position: 58% 36% !important; }
+.ph--left-back { left: 0; top: 8%; width: 57%; aspect-ratio: .98; rotate: -7deg; }
+.ph--center-main { left: 46%; top: 7%; width: 51%; aspect-ratio: .84; rotate: 4deg; }
+.ph--front-small { left: 63%; top: 60%; width: 34%; aspect-ratio: 1.04; rotate: -9deg; }
+.ph__img { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); }
+.ph--center-main .ph__img { object-position: 58% 27% !important; }
 .ph__tape { display: block; top: -12px; left: 8%; width: 88px; height: 28px; background-color: #d6c9a9a6; background-image: url('/textures/paper-mul.png'); background-blend-mode: multiply; opacity: .86; }
 .ph--left-back::after { content: ''; position: absolute; bottom: 0; right: -12px; width: 74px; height: 26px; background: #c9bd9fa8; transform: rotate(-32deg); }
-.about__head { margin: 0 0 6px; width: 105%; max-width: none; }
+.about__head { margin: 0 0 16px; width: 100%; max-width: none; }
 .about__head img { width: 100%; height: auto; }
 .about__name { font-size: clamp(20px, 1.7vw, 26px); }
-.about__body { max-width: 30ch; line-height: 1.6; }
-.about__role { margin-bottom: 22px; }
-.exp { padding-block: 78px 100px; }
+.about__body { max-width: 35ch; line-height: 1.6; }
+.about__role { margin-bottom: 16px; }
+.exp { padding-block: 58px 70px; }
 .exp__shell { grid-template-columns: 43% 1fr; gap: 6%; align-items: center; }
 .exp__title { font-size: clamp(42px, 5.7vw, 82px); }
 .exp__rule, .sk__rule { height: 9px; width: 75%; rotate: -.5deg; clip-path: polygon(0 45%, 89% 0, 100% 40%, 28% 60%, 95% 85%, 0 70%); }
-.sk { padding-block: 68px 90px; }
+.sk { padding-block: 48px 65px; }
 .sk__shell { grid-template-columns: 43% 1fr; gap: 6%; }
 .sk__programs { flex-wrap: nowrap; justify-content: space-between; gap: 16px; }
-.sk__prog { flex: 1; flex-direction: column; justify-content: center; padding: 14px 10px; min-height: 105px; background: var(--paper) url('/textures/paper-mul.png') center / 400px; background-blend-mode: multiply; }
+.sk__prog { mask: url('/design/paper/scrap-mask.svg') center / 100% 100% no-repeat; flex: 1; flex-direction: column; justify-content: center; padding: 14px 10px; min-height: 105px; background: var(--paper) url('/textures/paper-mul.png') center / 400px; background-blend-mode: multiply; }
 .sk__mark { display: grid; place-items: center; width: 50px; height: 50px; font-family: var(--font-body); font-size: 28px; color: #bca4f3; background: #1f1741; }
 .sk__name { font-size: 13px; text-align: center; }
 .sk__items { text-transform: none; letter-spacing: .01em; line-height: 2; }
@@ -197,7 +213,10 @@
  .work__masthead { padding-block: 20px 66px; }
  .work__title { font-size: clamp(106px, 28vw, 172px); }
  .work__title::after { height: 25px; }
+ .work > .shell { padding-inline: var(--gutter); }
  .work__sub { bottom: 38px; font-size: 24px; }
+ .wk--left, .wk--right { grid-template-columns: minmax(0, 1fr); }
+ .wk:first-child { margin-top: 0; }
  .wk { gap: 23px; }
  .wk--left .wk__shot, .wk--right .wk__shot { margin-inline: -14px; }
  .wk__paper { aspect-ratio: 1.5; rotate: 0deg; }
@@ -210,6 +229,7 @@
  .about__shell { grid-template-columns: 1fr; gap: 28px; }
  .about__collage { aspect-ratio: 1.02; margin: 0 10px 5px 4px; }
  .ph { padding: 5px; }
+ .ph__img { inset: 5px; width: calc(100% - 10px); height: calc(100% - 10px); }
  .ph__tape { display: block; width: 62px; height: 20px; }
  .about__head { width: 95%; }
  .about__name { font-size: 22px; }
@@ -222,7 +242,7 @@
  .exp__formats { grid-template-columns: 1fr 1fr; gap: 0 20px; }
  .exp__format { font-size: 14px; }
  .sk__programs { gap: 10px; }
- .sk__prog { flex: 1; padding: 12px 4px; min-width: 0; }
+ .sk__prog { mask: url('/design/paper/scrap-mask.svg') center / 100% 100% no-repeat; flex: 1; padding: 12px 4px; min-width: 0; }
  .sk__name { font-size: 13px; }
  .sk__items { margin-top: 20px; }
  .cts { padding-block: 40px 22px; }

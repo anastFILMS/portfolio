@@ -126,7 +126,12 @@ export function WorkPreview({ project, allowHoverPlay }: Props) {
 
       {/* Кадра ещё нет — вместо него нейтральная бумажная композиция.
           Ложного «проигрывания» и выдуманных подписей тут не будет. */}
-      {!hasPoster && <span className="wp__blank" aria-hidden="true" />}
+      {!hasPoster && project.temporaryCollage && (
+        <span className="wp__collage" aria-hidden="true">
+          {project.temporaryCollage.map((src) => <img key={src} src={asset(src)} alt="" loading="lazy" />)}
+        </span>
+      )}
+      {!hasPoster && !project.temporaryCollage && <span className="wp__blank" aria-hidden="true" />}
     </div>
   );
 }

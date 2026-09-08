@@ -67,6 +67,7 @@ export type Project = {
   temporaryPoster?: string;
   temporaryPosterFit?: 'cover' | 'contain';
   temporaryPosterPosition?: string;
+  temporaryCollage?: string[];
 };
 
 export const projects: Project[] = [
@@ -84,8 +85,8 @@ export const projects: Project[] = [
     mediaWidthPercent: 58,
     textWidthPercent: 31,
     status: 'placeholder',
-    temporaryPoster: 'media/camera.webp',
-    temporaryPosterFit: 'contain',
+    temporaryPoster: 'media/projects/illustrative-lens.webp',
+    temporaryPosterFit: 'cover',
     temporaryPosterPosition: '50% 50%',
   },
   {
@@ -102,7 +103,7 @@ export const projects: Project[] = [
     mediaWidthPercent: 58,
     textWidthPercent: 31,
     status: 'placeholder',
-    temporaryPoster: 'media/about/reserve-event-hall.webp',
+    temporaryPoster: 'media/projects/illustrative-concert.webp',
     temporaryPosterFit: 'cover',
     temporaryPosterPosition: '50% 65%',
   },
@@ -158,7 +159,6 @@ export const projects: Project[] = [
     mediaWidthPercent: 54,
     textWidthPercent: 31,
     status: 'placeholder',
-    /* Подходящего постера под вертикаль/motion пока нет — слот остаётся
-       нейтральной бумажной композицией. */
+    temporaryCollage: ['media/about/reserve-shooting-brick.webp', 'media/about/about-shooting-bubbles.webp', 'media/about/reserve-interview-studio.webp'],
   },
 ];

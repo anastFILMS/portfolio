@@ -23,3 +23,10 @@ white text, no words, people, objects or orange. Full bleed 3:2 texture.
 Рамки в public/design/paper — нативная SVG-геометрия. Маска внутреннего
 кадра и волокнистая кромка хранятся отдельно. Генератор запускается при
 разработке, на странице геометрия не пересчитывается.
+# Reference correction — September 2026
+
+`about-brush-v2.png`, `illustrative-lens.png`, `illustrative-concert.png` were generated with the built-in imagegen tool against the approved FINAL-PROTOTYPE / WORK reference. WebP copies are in `public/media/titles/` and `public/media/projects/`.
+
+The lens and concert images are illustrative temporary category covers, not Anastasia's client work. They remain `status: 'placeholder'` and must be replaced by her actual showreel posters. The third and fourth covers and fifth collage use the supplied photos.
+
+Prompts: (1) exact Cyrillic “ОБО МНЕ”, one line, dry brush/spray handwriting matching the reference, orange, true alpha, tight margins; (2) 2.4:1 extreme close-up cinema lens with amber reflection and blurred fashion crowd, dark navy, no text or frame; (3) 2.4:1 concert audience silhouettes with raised hands and amber beams, navy shadows, no identifiable performer, text or frame.
