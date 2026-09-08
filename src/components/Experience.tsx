@@ -25,7 +25,7 @@ export function Experience() {
 
   return (
     <section className="section section--experience exp" id="experience">
-      <SectionSeam id="section-edge-02" sheet="#171C2A" overlap={72} fiber={7} />
+      <SectionSeam id="section-edge-02" />
 
       <div className="shell exp__shell">
         <Reveal>

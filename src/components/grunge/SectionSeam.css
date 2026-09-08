@@ -1,10 +1,7 @@
-.seam {
-  position: absolute;
-  /* −1px по бокам: при дробном масштабе у самого края проступала полоска
-     нижней секции. */
-  left: -1px;
-  width: calc(100% + 2px);
-  z-index: var(--z-seam);
-  pointer-events: none;
-  display: block;
-}
+.seam { position: absolute; top: -61px; left: -2px; width: calc(100% + 4px); height: 100px; z-index: var(--z-seam); pointer-events: none; }
+.seam__sheet, .seam__fiber, .seam__accent { position: absolute; inset: 0; }
+.seam__sheet { background: var(--seam-bg, var(--bg-work)); mask: var(--edge-mask) center / 100% 100% no-repeat; }
+.seam__fiber { background: var(--edge-fiber) center / 100% 100% no-repeat; }
+.seam__accent { display: none; }
+.seam--accent .seam__accent { display: block; top: -5px; background: linear-gradient(105deg, transparent 12%, #b84525 13% 27%, transparent 28% 76%, #d46036 77% 89%, transparent 90%); mask: var(--edge-mask) center / 100% 100% no-repeat; }
+@media(max-width: 767px) { .seam { height: 70px; top: -42px; } }

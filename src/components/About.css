@@ -21,7 +21,7 @@
   background: var(--paper);
   box-shadow: var(--photo-shadow);
   /* Тонкие неровные поля вместо ровной рамки. */
-  clip-path: polygon(0.6% 1%, 99.4% 0, 100% 99%, 1.2% 100%);
+  border-radius: 1px;
 }
 .ph__img {
   width: 100%;

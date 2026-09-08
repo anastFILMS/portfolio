@@ -1,7 +1,7 @@
+import { asset } from '../lib/asset';
 import { site, type ContactChannel } from '../content/site';
 import { SectionSeam } from './grunge/SectionSeam';
 import { Reveal } from './grunge/Reveal';
-import { PaintDrips } from './grunge/PaintDrips';
 import './Contacts.css';
 
 /** Каналы в порядке вывода. Телефон и почта — опциональные. */
@@ -27,15 +27,12 @@ export function Contacts() {
 
   return (
     <section className="section section--contacts cts" id="contacts">
-      <SectionSeam id="section-edge-05" sheet="#101013" overlap={48} fiber={5} />
+      <SectionSeam id="section-edge-05" />
 
       <div className="shell">
         <div className="cts__top">
           <Reveal mode="rise">
-            <h2 className="cts__head u-graf">
-              {contacts.heading}
-              <PaintDrips seed={29} count={8} className="cts__drips" />
-            </h2>
+            <h2 className="cts__head"><span className="sr-only">{contacts.heading}</span><img src={asset('media/titles/contact-paint.webp')} alt="" aria-hidden="true" /></h2>
           </Reveal>
 
           <div className="cts__card">

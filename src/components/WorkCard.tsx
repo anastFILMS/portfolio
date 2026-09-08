@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Project } from '../content/projects';
-import { maskImage } from '../lib/workShapes';
+import { asset } from '../lib/asset';
 import { WorkPreview } from './WorkPreview';
 
 type Props = {
@@ -52,11 +52,8 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
     };
   }, [motionEnabled]);
 
-  // Один контур и один шум на два слоя: подложка раздута, кадр поджат.
-  // Кромка из-за этого идёт по надрывам, но гуляет по ширине — как рвань,
-  // а не как ровная обводка вокруг многоугольника.
-  const paperMask = maskImage(project.maskId, 7);
-  const shotMask = maskImage(project.maskId, -4);
+  // Each stable direction uses a baked media mask and its own fibrous border.
+  const paperId = Number(project.number);
   const open = () => onOpen(project);
 
   return (
@@ -70,6 +67,7 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
           '--text': `${project.textWidthPercent}%`,
           '--rot': `${project.rotateDeg}deg`,
           '--cover': project.coverAspectRatio,
+          '--paper-mask': `url("${asset(`design/paper/work-${paperId}-mask.svg`)}")`,
         } as React.CSSProperties
       }
     >
@@ -82,14 +80,16 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
         aria-label={`Смотреть: ${project.title}`}
         style={{ transform: motionEnabled ? `translate3d(0, ${shift.toFixed(1)}px, 0)` : undefined }}
       >
-        <span className="wk__paper" style={{ maskImage: paperMask, WebkitMaskImage: paperMask }}>
+        <span
+          className="wk__paper"
+        >
           <span
             className="wk__inner"
             data-fit={project.temporaryPosterFit ?? 'cover'}
-            style={{ maskImage: shotMask, WebkitMaskImage: shotMask }}
           >
             <WorkPreview project={project} allowHoverPlay={motionEnabled} />
           </span>
+          <img className="wk__fiber" src={asset(`design/paper/work-${paperId}-frame.svg`)} alt="" aria-hidden="true" />
         </span>
       </button>
 

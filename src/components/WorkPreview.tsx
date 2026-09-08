@@ -24,6 +24,8 @@ export function WorkPreview({ project, allowHoverPlay }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [posterFailed, setPosterFailed] = useState(false);
   const [inView, setInView] = useState(false);
+  const [loopFailed, setLoopFailed] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   const posterPath = project.poster ?? project.temporaryPoster;
   const posterSrc = asset(posterPath);
@@ -32,7 +34,9 @@ export function WorkPreview({ project, allowHoverPlay }: Props) {
   const hasPoster = Boolean(posterSrc) && !posterFailed;
   // Loop подключаем только когда кадр рядом с экраном: пять роликов
   // не должны грузиться при открытии страницы.
-  const hasLoop = Boolean(loopSrc) && allowHoverPlay && inView;
+  const hasLoop = Boolean(loopSrc) && allowHoverPlay && inView && !loopFailed;
+
+  useEffect(() => { setPosterFailed(false); setLoopFailed(false); setPlaying(false); }, [posterSrc, loopSrc]);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -84,8 +88,8 @@ export function WorkPreview({ project, allowHoverPlay }: Props) {
     };
   }, [hasLoop, play, stop]);
 
-  const fit = project.temporaryPosterFit ?? 'cover';
-  const position = project.temporaryPosterPosition ?? '50% 50%';
+  const fit = project.poster ? 'cover' : project.temporaryPosterFit ?? 'cover';
+  const position = project.poster ? '50% 50%' : project.temporaryPosterPosition ?? '50% 50%';
 
   return (
     <div className="wp" ref={wrapRef}>
@@ -105,6 +109,7 @@ export function WorkPreview({ project, allowHoverPlay }: Props) {
         <video
           ref={videoRef}
           className="wp__video"
+          data-playing={playing}
           src={loopSrc}
           poster={posterSrc}
           muted
@@ -113,6 +118,9 @@ export function WorkPreview({ project, allowHoverPlay }: Props) {
           preload="none"
           tabIndex={-1}
           aria-hidden="true"
+          onPlaying={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onError={() => { setLoopFailed(true); setPlaying(false); }}
         />
       )}
 
