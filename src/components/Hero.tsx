@@ -90,7 +90,7 @@ export function Hero() {
   });
 
   return (
-    <section className="section--hero hero hero--balanced" id="top">
+    <section className="section--hero hero" id="top">
       <h1 className="sr-only">
         {site.name} — {site.role.toLowerCase()}, {site.city}
       </h1>
