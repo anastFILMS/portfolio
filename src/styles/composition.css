@@ -1,0 +1,127 @@
+/* A single bounded hero canvas: all percentages share the same coordinate space. */
+.hero.hero--balanced { height: auto; min-height: 0; padding: 0; display: block; background: #0c1017; }
+.hero--balanced::before { opacity: .51; }
+.hero--balanced::after { background: radial-gradient(ellipse at 10% 52%, #a545242a, transparent 40%), radial-gradient(ellipse at 90% 20%, #23304b44, transparent 50%); }
+.hero--balanced .hero__art { position: relative; inset: auto; width: 100%; max-width: 1600px; height: auto; min-height: 0; max-height: none; aspect-ratio: 2.12; margin: 0 auto; }
+.hero--balanced .hero__slip--first { top: 6%; left: 5%; width: 55%; rotate: -4deg; }
+.hero--balanced .hero__cam { top: 27%; left: 35%; width: 35%; margin: 0; }
+.hero--balanced .hero__slip--last { top: auto; bottom: 7%; right: 5%; width: 44%; rotate: -2deg; }
+.hero--balanced .hero__corner { position: absolute; left: max(5%, calc((100% - 1440px) / 2)); bottom: 15%; width: 30%; max-width: 365px; margin: 0; gap: 16px; text-align: left; }
+.hero--balanced .hero__lead { font-size: clamp(14px, 1.15vw, 17px); text-align: left; }
+.hero--balanced .hero__cta { gap: 12px; }
+.hero--balanced .hero__cta .btn { font-size: 13px; min-width: 195px; min-height: 44px; padding: 13px 20px; }
+.hero--balanced .hero__cta .btn--ghost { min-width: 145px; }
+.hero--balanced .hero__ribbon { position: relative; margin: -7px 0 0; padding-block: 12px; rotate: -.45deg; width: 102%; left: -1%; }
+.hero--balanced .hero__deco { max-width: 1700px; margin: auto; }
+.hero--balanced .hero__deco .stk:first-child { width: 38% !important; top: 10% !important; right: 0 !important; rotate: -10deg; }
+.hero--balanced .hero__deco .stk:last-child { width: 37% !important; top: 23% !important; opacity: .4; }
+
+/* WORK is a sequence of differently composed spreads on one dark sheet. */
+.work.work--collage { padding: 70px 0 120px; background: #080b10; }
+.section.work--collage::before { opacity: .32; background-position: center; }
+.section.work--collage::after { background: radial-gradient(ellipse at 88% 33%, #202c443f, transparent 38%), radial-gradient(ellipse at 8% 80%, #78331822, transparent 27%); }
+.work--collage > .shell { max-width: 1440px; padding-inline: 6%; }
+.work--collage .work__masthead { justify-content: flex-start; width: 50%; padding: 0 0 42px; z-index: 2; rotate: -5deg; }
+.work--collage .work__title { font-size: clamp(120px, 17vw, 245px); font-family: 'Rubik Wet Paint', var(--font-cond); letter-spacing: -.045em; line-height: 1; color: #d86438; -webkit-text-fill-color: #d86438; }
+.work--collage .work__title > span { mask-size: 470px; }
+.work--collage .work__sub { bottom: 18px; left: 28%; transform: rotate(2deg); rotate: 0deg; font-size: 28px; padding: 5px 18px; }
+.work--collage .work__rows { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 90px 4%; }
+.work--collage .wk { display: block; min-width: 0; margin: 0; }
+.work--collage .wk__shot { margin: 0; width: 100%; position: relative; filter: drop-shadow(4px 12px 10px #0008); }
+.work--collage .wk__paper { aspect-ratio: 1.65; max-height: none; rotate: -3deg; }
+.work--collage .wk__paper::before { content: ''; position: absolute; inset: 0; background: var(--paper) url('/textures/paper-mul.png') center / 320px; background-blend-mode: multiply; mask: var(--paper-outer) center / 100% 100% no-repeat; rotate: 2.5deg; opacity: 1; transform: translate(-9px,8px); }
+.work--collage .wk__paper::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, #11141b00 55%, #15111028); mask: var(--paper-mask) center / 100% 100% no-repeat; pointer-events: none; }
+.work--collage .wk__inner { mask: var(--paper-mask) center / 100% 100% no-repeat; }
+.work--collage .wk__fiber { opacity: 1; }
+.work--collage .wk__tape { position: absolute; width: 16%; height: 8%; top: -1%; left: 7%; rotate: -20deg; background: #c8b99bd9 url('/textures/paper-mul.png') center / 220px; background-blend-mode: multiply; mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat; }
+.work--collage .wk__text { z-index: 3; width: fit-content; max-width: 100%; }
+.work--collage .wk__num { font-size: 20px; letter-spacing: .03em; margin: 0 0 6px; }
+.work--collage .wk__text .wk__title { font-size: clamp(38px, 4.3vw, 68px); line-height: 1.06; margin-bottom: 12px; }
+.work--collage .wk__cat { font-size: 11px; letter-spacing: .18em; margin-bottom: 22px; }
+.work--collage .wk__btn { min-width: 160px; min-height: 43px; padding: 12px 23px; font-size: 12px; }
+/* Opening: title and caption form a left spine, the photograph leans into it. */
+.work--collage .wk--fashion { grid-column: 1 / -1; display: grid; grid-template-columns: 30% 1fr; align-items: end; gap: 4%; margin-top: -185px; }
+.work--collage .wk--fashion .wk__shot { grid-column: 2; grid-row: 1; }
+.work--collage .wk--fashion .wk__text { grid-column: 1; grid-row: 1; padding-bottom: 15px; }
+.work--collage .wk--fashion .wk__paper { aspect-ratio: 1.6; rotate: 4deg; }
+.work--collage .wk--fashion .wk__paper::before { rotate: -5deg; background-color: #a34a2b; transform: translate(8px,15px); }
+.work--collage .wk--fashion .wk__tape { left: 75%; rotate: 15deg; }
+/* The concert is the wide beat in the sequence. Caption sits on its dark corner. */
+.work--collage .wk--events { grid-column: 1 / -1; margin-inline: -5%; }
+.work--collage .wk--events .wk__paper { aspect-ratio: 2.45; rotate: -2deg; }
+.work--collage .wk--events .wk__inner::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,#080b10dd,transparent 65%); }
+.work--collage .wk--events .wk__text { position: absolute; left: 8%; bottom: 14%; }
+.work--collage .wk--events .wk__title { font-size: clamp(56px,7.8vw,112px); }
+.work--collage .wk--events .wk__tape { left: 84%; rotate: 18deg; }
+/* Quiet paired spread: a tall reportage crop and an offset interview print. */
+.work--collage .wk--reportage { grid-column: 1 / 6; }
+.work--collage .wk--reportage .wk__paper { aspect-ratio: .98; rotate: -4deg; }
+.work--collage .wk--reportage .wk__text { margin: -38px 0 0 15%; padding: 18px 22px 0; background: #0b0e13; rotate: -2deg; }
+.work--collage .wk--interview { grid-column: 7 / -1; margin-top: 145px; }
+.work--collage .wk--interview .wk__paper { aspect-ratio: 1.45; rotate: 4deg; }
+.work--collage .wk--interview .wk__text { margin: 22px 0 0 8%; }
+.work--collage .wk--interview .wk__tape { left: 74%; rotate: 20deg; }
+/* Three individually torn vertical prints, not a single jagged container. */
+.work--collage .wk--vertical-motion { grid-column: 1 / -1; display: grid; grid-template-columns: 62% 1fr; align-items: center; gap: 7%; margin-top: 30px; }
+.work--collage .wk--vertical-motion .wk__shot { grid-column: 1; grid-row: 1; }
+.work--collage .wk--vertical-motion .wk__text { grid-column: 2; grid-row: 1; rotate: -3deg; }
+.work--collage .wk--vertical-motion .wk__paper { aspect-ratio: 1.6; rotate: 0deg; }
+.work--collage .wk--vertical-motion .wk__paper::before { inset: 20% -6% 10%; rotate: -9deg; background-color: #a74527; }
+.work--collage .wk--vertical-motion .wk__inner { mask: none; background: none; overflow: visible; }
+.work--collage .wk--vertical-motion .wk__fiber, .work--collage .wk--vertical-motion .wk__tape, .work--collage .wk--vertical-motion .wk__paper::after { display: none; }
+.work--collage .wp__collage { inset: 0; gap: 0; background: none; rotate: 0deg; align-items: center; }
+.work--collage .wp__collage img { height: 86%; padding: 8px 7px 18px; background: var(--paper) url('/textures/paper-mul.png') center / 240px; mask: url('/design/paper-v2/photo-mask.svg') center / 100% 100% no-repeat; rotate: -9deg; }
+.work--collage .wp__collage img:nth-child(2) { height: 96%; rotate: 4deg; transform: translateY(-12px); z-index: 1; }
+.work--collage .wp__collage img:nth-child(3) { rotate: 11deg; transform: translateY(16px); }
+@media (min-width:768px) and (max-width:1100px) {
+ .hero--balanced .hero__art { aspect-ratio: 1.65; }
+ .hero--balanced .hero__slip--first { width: 62%; }
+ .hero--balanced .hero__cam { top: 28%; left: 40%; width: 40%; }
+ .hero--balanced .hero__slip--last { width: 48%; bottom: 9%; }
+ .hero--balanced .hero__corner { bottom: 13%; width: 35%; }
+ .work--collage .work__rows { row-gap: 70px; }
+ .work--collage .wk--fashion { margin-top: -105px; grid-template-columns: 32% 1fr; }
+ .work--collage .wk--fashion .wk__text { padding-bottom: 0; }
+ .work--collage .wk__text .wk__title { font-size: 38px; }
+ .work--collage .wk--events .wk__title { font-size: 64px; }
+ .work--collage .wk--interview { margin-top: 105px; }
+ .work--collage .wk__btn { min-width: 140px; }
+}
+@media (max-width:767px) {
+ .hero--balanced .hero__art { aspect-ratio: 1; }
+ .hero--balanced .hero__slip--first { top: 8%; left: 5%; width: 88%; }
+ .hero--balanced .hero__cam { top: 32%; left: 23%; width: 58%; }
+ .hero--balanced .hero__slip--last { bottom: 1%; right: 5%; width: 70%; }
+ .hero--balanced .hero__corner { position: relative; left: auto; bottom: auto; width: auto; max-width: none; margin: 20px 24px 30px; align-items: stretch; }
+ .hero--balanced .hero__lead { text-align: center; font-size: 15px; }
+ .hero--balanced .hero__cta { display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px; }
+ .hero--balanced .hero__cta .btn, .hero--balanced .hero__cta .btn--ghost { width: 100%; min-width: 0; font-size: 11px; padding-inline: 8px; }
+ .hero--balanced .hero__ribbon { margin-top: 0; }
+ .work.work--collage { padding: 42px 0 80px; }
+ .work--collage > .shell { padding-inline: 25px; }
+ .work--collage .work__masthead { width: 100%; padding-bottom: 42px; }
+ .work--collage .work__title { font-size: clamp(105px,29vw,180px); }
+ .work--collage .work__sub { left: 25%; bottom: 23px; font-size: 23px; }
+ .work--collage .work__rows { display: flex; gap: 60px; }
+ .work--collage .wk--fashion, .work--collage .wk--vertical-motion { display: block; margin: 0; }
+ .work--collage .wk__text .wk__title { font-size: 39px; }
+ .work--collage .wk__paper, .work--collage .wk--fashion .wk__paper { aspect-ratio: 1.38; }
+ .work--collage .wk__shot { margin: 0; }
+ .work--collage .wk__text { margin: 18px 0 0 7%; padding: 0; rotate: 0deg; }
+ .work--collage .wk__cat { margin-bottom: 17px; }
+ .work--collage .wk__btn { width: auto; min-width: 155px; }
+ .work--collage .wk--events { margin-inline: -12px; }
+ .work--collage .wk--events .wk__paper { aspect-ratio: 1.08; }
+ .work--collage .wk--events .wk__text { position: absolute; left: 7%; bottom: 12%; margin: 0; }
+ .work--collage .wk--events .wk__title { font-size: 58px; }
+ .work--collage .wk--reportage { width: 88%; }
+ .work--collage .wk--reportage .wk__paper { aspect-ratio: .9; }
+ .work--collage .wk--reportage .wk__text { margin: -30px -18px 0 12%; padding: 14px 18px 0; }
+ .work--collage .wk--interview { width: 91%; margin: 0 0 0 9%; }
+ .work--collage .wk--interview .wk__paper { aspect-ratio: 1.25; }
+ .work--collage .wk--interview .wk__text { margin: 20px 0 0; }
+ .work--collage .wk--vertical-motion .wk__paper { aspect-ratio: 1.22; }
+ .work--collage .wk--vertical-motion .wk__text { margin-top: 28px; }
+ .work--collage .wp__collage img { padding: 5px 4px 12px; }
+}
+@media (prefers-reduced-motion:reduce) { .work--collage .wk__paper { transition: none; } }

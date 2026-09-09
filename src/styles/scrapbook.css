@@ -266,7 +266,7 @@
 .work__title::after { display: none; }
 .work__paint-drips { position: absolute; top: 80%; left: 0; width: 100%; height: 65px; z-index: -1; }
 .ph { isolation: isolate; background: none; box-shadow: none; filter: drop-shadow(3px 6px 5px #0007); }
-.ph::before { content: ''; position: absolute; inset: -2px; z-index: -1; background: var(--paper) url('/textures/paper-mul.png') center / 350px; background-blend-mode: multiply; mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat; }
+.ph::before { content: ''; position: absolute; inset: -2px; z-index: -1; background: var(--paper) url('/textures/paper-mul.png') center / 350px; background-blend-mode: multiply; mask: url('/design/paper-v2/photo-mask.svg') center / 100% 100% no-repeat; }
 .about__head { margin-bottom: 0; }
 .sk__programs { justify-content: center; gap: clamp(16px, 3.2vw, 50px); }
 .sk__prog { flex: 0 1 135px; }

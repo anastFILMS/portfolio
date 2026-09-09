@@ -16,10 +16,12 @@
 
 Проверено в этой доработке: production build, серверный рендер React,
 5 направлений / 5 кнопок / 3 фотографии, пути ресурсов с `/portfolio/`,
-якоря и синтаксис SVG. Новая визуальная проверка в браузере **не выполнена**:
-предпросмотр заблокирован инфраструктурой (`ERR_BLOCKED_BY_CLIENT`).
-Прежние заявления ниже о браузерных проверках относятся к ветке Claude,
-а не к этой визуальной доработке. Состояние публикации проверяется в Actions
+якоря и синтаксис SVG. После замечаний по скриншотам выполнен отдельный
+проход по утверждённому референсу: исправлены плитка фона, линии стыков,
+маски, леттеринг и фотоколлаж. Публичная версия проверена в Chrome на
+десктопе и во фреймах шириной 390 и 768 px; проверено открытие заглушки
+шоурила и закрытие клавишей Escape. Локальный предпросмотр остаётся
+заблокирован инфраструктурой. Состояние публикации проверяется в Actions
 по workflow `Deploy to GitHub Pages` для последнего коммита `main`.
 
 **Адрес:** https://anastfilms.github.io/portfolio/
@@ -170,3 +172,13 @@ assets-source/photos/ оригиналы фотографий (в сборку �
 - Параллакс выключен на экранах уже 900 px
 - Основной текст не мельче 16 px, подписи не мельче 13 px, зоны нажатия
   не меньше 44 px
+
+
+### Composition revision — 2026-09-09
+
+Hero proportions now share one bounded 1600px canvas. WORK uses an opening
+composition, full-width concert, offset reportage/interview pair, and three
+individual vertical prints. `src/styles/composition.css` owns these layouts.
+Paper masks are generated with `node scripts/make-collage-assets.mjs` into
+`public/design/paper-v3/`. Posters remain temporary and reels/contacts are
+not yet supplied. Build passes; live visual QA is recorded separately.

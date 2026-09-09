@@ -52,4 +52,6 @@ for(let i=0;i<5;i++){
 }
 const scrap=rough([[3,8],[90,3],[182,7],[298,3],[296,93],[177,97],[93,92],[2,97]],78,3,1.6);
 save('scrap-mask.svg',300,100,`<path d="${path(scrap)}" fill="white"/>`);
+const photo=rough([[1,2],[86,1],[172,3],[299,1],[298,132],[300,260],[298,399],[180,398],[95,400],[1,398],[2,261],[0,138]],119,3,1.1);
+save('photo-mask.svg',300,400,`<path d="${path(photo)}" fill="white"/>`);
 console.log('Paper masks and fiber borders written.');

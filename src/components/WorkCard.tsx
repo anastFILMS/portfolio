@@ -10,16 +10,7 @@ type Props = {
   motionEnabled: boolean;
 };
 
-/**
- * Одна работа в разделе WORK.
- *
- * Композиция горизонтальная: кадр и его собственный текст на одной
- * горизонтали, следующая работа начинается ниже с противоположной стороны.
- * Двух разных работ в одном ряду нет.
- *
- * Форма кадра — одна из пяти фиксированных масок, привязанная к `id`
- * направления, а не к seed или индексу в массиве.
- */
+/** Shared accessible controls and media; direction classes own the composition. */
 export function WorkCard({ project, onOpen, motionEnabled }: Props) {
   const rowRef = useRef<HTMLElement>(null);
   const [shift, setShift] = useState(0);
@@ -58,7 +49,7 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
 
   return (
     <article
-      className={`wk wk--${project.side}`}
+      className={`wk wk--${project.side} wk--${project.id}`}
       ref={rowRef}
       data-hover-media
       style={
@@ -67,7 +58,8 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
           '--text': `${project.textWidthPercent}%`,
           '--rot': `${project.rotateDeg}deg`,
           '--cover': project.coverAspectRatio,
-          '--paper-mask': `url("${asset(`design/paper-v2/work-${paperId}-mask.svg`)}")`,
+          '--paper-mask': `url("${asset(`design/paper-v3/work-${paperId}-mask.svg`)}")`,
+          '--paper-outer': `url("${asset(`design/paper-v3/work-${paperId}-outer.svg`)}")`,
         } as React.CSSProperties
       }
     >
@@ -89,7 +81,8 @@ export function WorkCard({ project, onOpen, motionEnabled }: Props) {
           >
             <WorkPreview project={project} allowHoverPlay={motionEnabled} />
           </span>
-          <img className="wk__fiber" src={asset(`design/paper-v2/work-${paperId}-frame.svg`)} alt="" aria-hidden="true" />
+          <img className="wk__fiber" src={asset(`design/paper-v3/work-${paperId}-frame.svg`)} alt="" aria-hidden="true" />
+          <span className="wk__tape" aria-hidden="true" />
         </span>
       </button>
 
