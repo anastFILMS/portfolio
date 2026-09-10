@@ -84,9 +84,9 @@
   position: absolute;
   z-index: 1;
   inset-block: 0;
-  left: 50%;
-  width: min(100%, 1536px);
-  translate: -50% 0;
+  left: 0;
+  width: 100%;
+  translate: none;
   pointer-events: none;
   background: #080b10 url('/textures/generated/work-material-v2.webp') center / 100% 100% no-repeat;
   filter: saturate(.92) contrast(1.04);
@@ -99,9 +99,8 @@
   position: absolute;
   z-index: 2;
   inset: 0;
-  left: 50%;
-  width: min(100%, 1536px);
-  translate: -50% 0;
+  width: 100%;
+  translate: none;
   overflow: hidden;
   pointer-events: none;
 }
