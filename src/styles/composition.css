@@ -86,8 +86,8 @@
   pointer-events: none;
   background: #d8d0c1 url('/textures/paper-mul.png') center / 420px;
   background-blend-mode: multiply;
-  mask: url('/design/work-rift-outer.svg') center / 100% 100% no-repeat;
-  -webkit-mask: url('/design/work-rift-outer.svg') center / 100% 100% no-repeat;
+  mask: url('/design/work-rift-outer.svg?v=2') center / 100% 100% no-repeat;
+  -webkit-mask: url('/design/work-rift-outer.svg?v=2') center / 100% 100% no-repeat;
   filter: drop-shadow(4px 8px 10px #0009);
   opacity: .92;
 }
@@ -98,8 +98,8 @@
     linear-gradient(100deg, #a73a20, #e45b2e 47%, #b73e21),
     url('/textures/paper-mul.png') center / 370px;
   background-blend-mode: multiply;
-  mask: url('/design/work-rift-inner.svg') center / 100% 100% no-repeat;
-  -webkit-mask: url('/design/work-rift-inner.svg') center / 100% 100% no-repeat;
+  mask: url('/design/work-rift-inner.svg?v=2') center / 100% 100% no-repeat;
+  -webkit-mask: url('/design/work-rift-inner.svg?v=2') center / 100% 100% no-repeat;
 }
 
 .work--rift .work__masthead {
