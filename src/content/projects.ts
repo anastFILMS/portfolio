@@ -139,9 +139,11 @@ export const projects: Project[] = [
     mediaWidthPercent: 59,
     textWidthPercent: 31,
     status: 'placeholder',
-    temporaryPoster: 'media/about/reserve-interview-studio.webp',
-    temporaryPosterFit: 'cover',
-    temporaryPosterPosition: '50% 60%',
+    temporaryCollage: [
+      'media/about/reserve-interview-studio.webp',
+      'media/about/reserve-interview-guest.webp',
+      'media/about/about-speaking.webp',
+    ],
   },
   {
     id: 'vertical-motion',
