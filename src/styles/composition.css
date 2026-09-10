@@ -52,18 +52,21 @@
   position: relative;
   overflow: hidden;
   padding: 34px 0 clamp(130px, 10vw, 190px);
-  background: #080b10;
+  background: #05080d;
 }
 .section.work--rift::before {
+  /* A second, fixed-scale grain keeps the generated plate tactile even
+     when the tall artwork has to stretch on narrow screens. */
+  background-image: url('/textures/bg/crumple.png');
   background-position: center top;
-  background-size: 1180px;
-  opacity: .43;
+  background-size: 920px;
+  opacity: .16;
+  mix-blend-mode: soft-light;
 }
 .section.work--rift::after {
   background:
-    radial-gradient(ellipse at 88% 18%, #26334d4d, transparent 38%),
-    radial-gradient(ellipse at 8% 72%, #6c2c171f, transparent 28%),
-    linear-gradient(90deg, #05070a55, transparent 48%, #05070a4d);
+    radial-gradient(ellipse at 50% 22%, transparent 42%, #02040942 100%),
+    linear-gradient(90deg, #02040970, transparent 18% 82%, #02040970);
   opacity: 1;
   mix-blend-mode: normal;
 }
@@ -74,32 +77,88 @@
   padding-inline: clamp(28px, 5vw, 76px);
 }
 
-/* Pale fibre edge + orange inner paper: one uninterrupted diagonal route. */
+/* The approved reference gets its depth from actual material layers, not
+   from a flat orange polygon with a uniform cream outline. This text-free
+   plate contains the complete torn route, fibres, creases and overlaps. */
 .work__rift {
   position: absolute;
   z-index: 1;
-  top: 150px;
-  bottom: 10px;
+  inset-block: 0;
   left: 50%;
-  width: min(100%, 1440px);
+  width: min(100%, 1536px);
   translate: -50% 0;
   pointer-events: none;
-  background: #d8d0c1 url('/textures/paper-mul.png') center / 420px;
-  background-blend-mode: multiply;
-  mask: url('/design/work-rift-outer.svg?v=2') center / 100% 100% no-repeat;
-  -webkit-mask: url('/design/work-rift-outer.svg?v=2') center / 100% 100% no-repeat;
-  filter: drop-shadow(4px 8px 10px #0009);
-  opacity: .92;
+  background: #080b10 url('/textures/generated/work-material-v2.webp') center / 100% 100% no-repeat;
+  filter: saturate(.92) contrast(1.04);
+  opacity: .98;
 }
-.work__rift > span {
+
+/* Small live layers keep the plate from reading like one flattened image.
+   These are deliberately wordless: only tape, fibres, ink and paper. */
+.work__scraps {
   position: absolute;
+  z-index: 2;
   inset: 0;
-  background:
-    linear-gradient(100deg, #a73a20, #e45b2e 47%, #b73e21),
-    url('/textures/paper-mul.png') center / 370px;
+  left: 50%;
+  width: min(100%, 1536px);
+  translate: -50% 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.work__scrap {
+  position: absolute;
+  display: block;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(2px 5px 4px #000b);
+}
+.work__scrap--1 {
+  top: 5.5%; right: 4.5%; width: 150px; aspect-ratio: 1;
+  background-image: url('/textures/marks/star-spray.png');
+  filter: invert(40%) sepia(92%) saturate(1450%) hue-rotate(342deg) brightness(98%) drop-shadow(2px 5px 4px #0009);
+  rotate: 14deg;
+  opacity: .68;
+}
+.work__scrap--2 {
+  top: 18%; left: 3%; width: 195px; aspect-ratio: 431 / 125;
+  background-image: url('/textures/tape/tape-1.png');
+  rotate: -19deg;
+  opacity: .78;
+}
+.work__scrap--3 {
+  top: 34%; right: -2%; width: 210px; aspect-ratio: 452 / 92;
+  background-image: url('/textures/tape/tape-5.png');
+  rotate: 68deg;
+  opacity: .66;
+}
+.work__scrap--4 {
+  top: 48%; left: -3%; width: 170px; height: 64px;
+  background: #d4512b url('/textures/paper-mul.png') center / 260px;
   background-blend-mode: multiply;
-  mask: url('/design/work-rift-inner.svg?v=2') center / 100% 100% no-repeat;
-  -webkit-mask: url('/design/work-rift-inner.svg?v=2') center / 100% 100% no-repeat;
+  mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
+  -webkit-mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
+  rotate: 11deg;
+  opacity: .72;
+}
+.work__scrap--5 {
+  top: 64%; right: 5%; width: 150px; aspect-ratio: 338 / 65;
+  background-image: url('/textures/tape/tape-8.png');
+  rotate: -13deg;
+  opacity: .72;
+}
+.work__scrap--6 {
+  top: 80%; left: 5%; width: 118px; aspect-ratio: 1;
+  background-image: url('/textures/marks/star-spray.png');
+  filter: invert(87%) sepia(10%) saturate(345%) brightness(104%) drop-shadow(2px 5px 4px #0009);
+  rotate: -18deg;
+  opacity: .52;
+}
+.work__scrap--7 {
+  top: 93%; right: 1%; width: 185px; aspect-ratio: 443 / 86;
+  background-image: url('/textures/tape/tape-6.png');
+  rotate: 22deg;
+  opacity: .7;
 }
 
 .work--rift .work__masthead {
@@ -146,57 +205,122 @@
   margin: 0;
   gap: 4%;
 }
+.work--rift .wk::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  width: clamp(90px, 11vw, 158px);
+  aspect-ratio: 1.35;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #e6dcc7 0 1.8px, transparent 2.2px);
+  background-size: 11px 11px;
+  opacity: .32;
+  rotate: -7deg;
+  mask: linear-gradient(115deg, #000, transparent 78%);
+  -webkit-mask: linear-gradient(115deg, #000, transparent 78%);
+}
+.work--rift .wk:nth-child(odd)::before { right: 1%; top: -4%; }
+.work--rift .wk:nth-child(even)::before { left: 4%; bottom: -4%; rotate: 9deg; }
 .work--rift .wk__shot {
+  position: relative;
+  isolation: isolate;
   width: 100%;
   margin: 0;
   padding: 0;
-  filter: drop-shadow(5px 12px 12px #000b);
+  filter:
+    drop-shadow(1px 2px 0 #eee1d0aa)
+    drop-shadow(5px 14px 11px #000c);
+}
+.work--rift .wk__shot::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: -1.3%;
+  background: #171b21 url('/textures/paper-mul.png') center / 310px;
+  background-blend-mode: multiply;
+  mask: var(--paper-outer) center / 100% 100% no-repeat;
+  -webkit-mask: var(--paper-outer) center / 100% 100% no-repeat;
+  transform: translate(13px, 15px) rotate(1.6deg);
+  opacity: .96;
 }
 .work--rift .wk__paper {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-height: none;
   margin: 0;
   padding: 0;
-  background: #ded5c5 url('/textures/paper-mul.png') center / 320px;
-  background-blend-mode: multiply;
+  background: none;
   mask: none;
   -webkit-mask: none;
+}
+.work--rift .wk__paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: #ded5c5 url('/textures/paper-mul.png') center / 320px;
+  background-blend-mode: multiply;
+  mask: var(--paper-outer) center / 100% 100% no-repeat;
+  -webkit-mask: var(--paper-outer) center / 100% 100% no-repeat;
 }
 .work--rift .wk__paper::before {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: -1;
-  background: #d9cfbd url('/textures/paper-mul.png') center / 300px;
-  background-blend-mode: multiply;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(145deg, #fff3 0 16%, transparent 39% 67%, #0003),
+    url('/textures/bg/crumple.png') center / 620px;
+  background-blend-mode: soft-light, multiply;
+  mix-blend-mode: multiply;
   mask: var(--paper-outer) center / 100% 100% no-repeat;
   -webkit-mask: var(--paper-outer) center / 100% 100% no-repeat;
-  transform: translate(8px, 9px) rotate(-1deg);
+  opacity: .34;
 }
 .work--rift .wk__inner {
   inset: 0;
+  z-index: 1;
   mask: var(--paper-mask) center / 100% 100% no-repeat;
   -webkit-mask: var(--paper-mask) center / 100% 100% no-repeat;
 }
-.work--rift .wk__fiber { inset: 0; opacity: 1; }
+.work--rift .wk__fiber {
+  z-index: 3;
+  inset: 0;
+  opacity: .92;
+  filter: contrast(1.08) drop-shadow(0 2px 1px #0007);
+}
 .work--rift .wk__tape {
   position: absolute;
-  z-index: 4;
+  z-index: 5;
   top: -2%;
   left: 8%;
   width: 15%;
   height: 9%;
   rotate: -17deg;
-  background: #c9baa0d9 url('/textures/paper-mul.png') center / 220px;
-  background-blend-mode: multiply;
-  mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
-  -webkit-mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
+  background: url('/textures/tape/tape-8.png') center / 100% 100% no-repeat;
+  filter: sepia(.24) saturate(.72) drop-shadow(1px 3px 2px #0008);
+  opacity: .82;
 }
 .work--rift .wk__text {
   position: relative;
   z-index: 6;
   width: fit-content;
   max-width: 100%;
+}
+.work--rift .wk__text::after {
+  content: '';
+  position: absolute;
+  top: 53%;
+  right: -23px;
+  width: 25px;
+  height: 15px;
+  border-block: 2px solid #b8afa0;
+  rotate: 82deg;
+  filter: drop-shadow(1px 2px 1px #000b);
+  opacity: .68;
 }
 .work--rift .wk__num {
   margin: 0 0 -8px;
@@ -219,7 +343,9 @@
   rotate: -1.5deg;
   mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
   -webkit-mask: url('/design/paper-v2/scrap-mask.svg') center / 100% 100% no-repeat;
-  filter: drop-shadow(3px 5px 3px #0008);
+  filter:
+    drop-shadow(1px 2px 0 #fff2)
+    drop-shadow(3px 6px 4px #000a);
 }
 .work--rift .wk__cat {
   margin: 0 0 22px;
@@ -250,7 +376,10 @@
 .work--rift .wk--fashion .wk__text { grid-column: 1; grid-row: 1; }
 .work--rift .wk--fashion .wk__shot { grid-column: 2; grid-row: 1; }
 .work--rift .wk--fashion .wk__paper { aspect-ratio: 1.75; rotate: 3deg; }
-.work--rift .wk--fashion .wk__paper::before { background-color: #bd4b29; transform: translate(-13px, 15px) rotate(-4deg); }
+.work--rift .wk--fashion .wk__shot::before {
+  background-color: #a94127;
+  transform: translate(-14px, 18px) rotate(-3.5deg);
+}
 .work--rift .wk--fashion .wk__tape { left: 77%; rotate: 15deg; }
 
 /* 02 — one cinematic panorama cutting across the page. */
@@ -303,12 +432,33 @@
 }
 .work--rift .wk--interview .wk__text { grid-column: 1; grid-row: 1; }
 .work--rift .wk--interview .wk__shot { grid-column: 2; grid-row: 1; }
-.work--rift .wk--interview .wk__paper { aspect-ratio: 1.55; rotate: 1deg; background: none; overflow: visible; }
+.work--rift .wk--interview .wk__paper {
+  aspect-ratio: 1.55;
+  rotate: 1deg;
+  background: none;
+  overflow: visible;
+  mask: none;
+  -webkit-mask: none;
+}
 .work--rift .wk--interview .wk__paper::before,
+.work--rift .wk--interview .wk__paper::after,
 .work--rift .wk--interview .wk__fiber,
 .work--rift .wk--interview .wk__tape { display: none; }
 .work--rift .wk--interview .wk__inner { overflow: visible; background: none; mask: none; -webkit-mask: none; }
 .work--rift .wk--interview .wp__collage { inset: 2% 0; display: block; background: none; rotate: 0deg; overflow: visible; }
+.work--rift .wk--interview .wp__collage::before,
+.work--rift .wk--interview .wp__collage::after {
+  content: '';
+  position: absolute;
+  z-index: 5;
+  width: 21%;
+  aspect-ratio: 431 / 125;
+  background: url('/textures/tape/tape-1.png') center / 100% 100% no-repeat;
+  filter: sepia(.25) saturate(.7) drop-shadow(1px 3px 2px #0009);
+  opacity: .86;
+}
+.work--rift .wk--interview .wp__collage::before { left: 7%; top: 2%; rotate: -17deg; }
+.work--rift .wk--interview .wp__collage::after { right: 1%; bottom: 7%; rotate: -76deg; }
 .work--rift .wk--interview .wp__collage img {
   position: absolute;
   width: 76%;
@@ -322,7 +472,7 @@
   mask: url('/design/paper-v2/photo-mask.svg') center / 100% 100% no-repeat;
   -webkit-mask: url('/design/paper-v2/photo-mask.svg') center / 100% 100% no-repeat;
   rotate: -4deg;
-  filter: none;
+  filter: drop-shadow(2px 9px 6px #000b) saturate(.84) contrast(1.05);
   box-shadow: none;
 }
 .work--rift .wk--interview .wp__collage img:nth-child(2) { width: 34%; height: 43%; left: auto; right: -1%; top: 0; rotate: 7deg; z-index: 2; }
@@ -339,12 +489,33 @@
 }
 .work--rift .wk--vertical-motion .wk__shot { grid-column: 1; grid-row: 1; }
 .work--rift .wk--vertical-motion .wk__text { grid-column: 2; grid-row: 1; rotate: -2deg; }
-.work--rift .wk--vertical-motion .wk__paper { aspect-ratio: 1.65; rotate: 0deg; background: none; overflow: visible; }
+.work--rift .wk--vertical-motion .wk__paper {
+  aspect-ratio: 1.65;
+  rotate: 0deg;
+  background: none;
+  overflow: visible;
+  mask: none;
+  -webkit-mask: none;
+}
 .work--rift .wk--vertical-motion .wk__paper::before,
+.work--rift .wk--vertical-motion .wk__paper::after,
 .work--rift .wk--vertical-motion .wk__fiber,
 .work--rift .wk--vertical-motion .wk__tape { display: none; }
 .work--rift .wk--vertical-motion .wk__inner { overflow: visible; background: none; mask: none; -webkit-mask: none; }
 .work--rift .wk--vertical-motion .wp__collage { inset: 1% 0; display: flex; align-items: center; gap: 0; background: none; rotate: 0deg; overflow: visible; }
+.work--rift .wk--vertical-motion .wp__collage::before,
+.work--rift .wk--vertical-motion .wp__collage::after {
+  content: '';
+  position: absolute;
+  z-index: 5;
+  width: 19%;
+  aspect-ratio: 443 / 83;
+  background: url('/textures/tape/tape-7.png') center / 100% 100% no-repeat;
+  filter: sepia(.2) saturate(.75) drop-shadow(1px 3px 2px #0008);
+  opacity: .8;
+}
+.work--rift .wk--vertical-motion .wp__collage::before { left: 5%; top: 8%; rotate: -23deg; }
+.work--rift .wk--vertical-motion .wp__collage::after { right: 11%; bottom: 5%; rotate: 17deg; }
 .work--rift .wk--vertical-motion .wp__collage img {
   width: 34%;
   height: 86%;
@@ -356,10 +527,10 @@
   mask: url('/design/paper-v2/photo-mask.svg') center / 100% 100% no-repeat;
   -webkit-mask: url('/design/paper-v2/photo-mask.svg') center / 100% 100% no-repeat;
   rotate: -9deg;
-  filter: grayscale(1) contrast(1.03);
+  filter: grayscale(1) contrast(1.03) drop-shadow(2px 10px 6px #000b);
 }
-.work--rift .wk--vertical-motion .wp__collage img:nth-child(2) { height: 96%; rotate: 3deg; translate: -5% -3%; z-index: 2; filter: saturate(.78) contrast(1.08); }
-.work--rift .wk--vertical-motion .wp__collage img:nth-child(3) { rotate: 9deg; translate: -10% 4%; filter: saturate(.8) contrast(1.08); }
+.work--rift .wk--vertical-motion .wp__collage img:nth-child(2) { height: 96%; rotate: 3deg; translate: -5% -3%; z-index: 2; filter: saturate(.78) contrast(1.08) drop-shadow(2px 10px 6px #000b); }
+.work--rift .wk--vertical-motion .wp__collage img:nth-child(3) { rotate: 9deg; translate: -10% 4%; filter: saturate(.8) contrast(1.08) drop-shadow(2px 10px 6px #000b); }
 
 @media (min-width: 768px) and (max-width: 1100px) {
   .hero { height: 650px; }
@@ -388,7 +559,19 @@
 
   .work.work--rift { padding: 28px 0 105px; }
   .work--rift > .shell { padding-inline: 24px; }
-  .work__rift { top: 185px; bottom: 0; width: 155%; opacity: .78; }
+  .work__rift {
+    inset-block: 0;
+    width: 100%;
+    background-size: 100% 100%;
+    opacity: 1;
+  }
+  .work__scrap--1 { right: -7%; width: 96px; }
+  .work__scrap--2 { left: -14%; width: 128px; }
+  .work__scrap--3 { right: -18%; width: 135px; }
+  .work__scrap--4 { left: -12%; width: 110px; height: 44px; }
+  .work__scrap--5 { right: -12%; width: 112px; }
+  .work__scrap--6 { left: -7%; width: 86px; }
+  .work__scrap--7 { right: -14%; width: 118px; }
   .work--rift .work__masthead { width: 100%; padding: 12px 0 80px; }
   .work--rift .work__title { font-size: clamp(108px, 31vw, 168px); }
   .work--rift .work__sub { left: 31%; bottom: 54px; font-size: 24px; }
@@ -424,6 +607,8 @@
   }
   .work--rift .wk__text { order: 1; padding-left: 3px; }
   .work--rift .wk__shot { order: 2; }
+  .work--rift .wk::before { width: 82px; opacity: .25; }
+  .work--rift .wk__text::after { right: 5px; }
   .work--rift .wk__num { font-size: 72px; }
   .work--rift .wk__text .wk__title { font-size: clamp(38px, 11vw, 52px); }
   .work--rift .wk__btn { width: min(100%, 220px); }

@@ -6,9 +6,9 @@ import { ReelPlayer } from './ReelPlayer';
 import { SectionSeam } from './grunge/SectionSeam';
 import './Work.css';
 
-/** Five directions tied together by one continuous torn orange rift.
- * Every direction has its own silhouette, while DOM order remains the
- * natural reading and keyboard order. */
+/** Five directions tied together by one continuous physical paper collage.
+ * The background owns the rift and material depth; every direction stays
+ * live HTML/media with a natural reading and keyboard order. */
 export function Work() {
   const [open, setOpen] = useState<Project | null>(null);
   const motionEnabled = useParallaxEnabled();
@@ -17,9 +17,23 @@ export function Work() {
     <section className="section section--work work work--rift" id="work">
       <SectionSeam id="section-edge-01" accent />
 
-      {/* One visual route through the whole section. The pale outer mask is
-          the fibrous torn edge; the inner layer is the orange paper. */}
-      <div className="work__rift" aria-hidden="true"><span /></div>
+      {/* A text-free material plate: crumpled navy paper, exposed orange
+          underlayer, torn fibres and pasted seams. It replaces the flat CSS
+          stripe while all meaningful content stays selectable and live. */}
+      <div className="work__rift" aria-hidden="true" />
+
+      {/* Loose fragments sit between the material plate and the projects.
+          Their only job is to make the photographs feel physically pasted
+          into one scrapbook spread rather than arranged as clean cards. */}
+      <div className="work__scraps" aria-hidden="true">
+        <i className="work__scrap work__scrap--1" />
+        <i className="work__scrap work__scrap--2" />
+        <i className="work__scrap work__scrap--3" />
+        <i className="work__scrap work__scrap--4" />
+        <i className="work__scrap work__scrap--5" />
+        <i className="work__scrap work__scrap--6" />
+        <i className="work__scrap work__scrap--7" />
+      </div>
 
       <div className="shell">
         <header className="work__masthead">
