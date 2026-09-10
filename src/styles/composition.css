@@ -88,9 +88,18 @@
   width: 100%;
   translate: none;
   pointer-events: none;
-  background: #080b10 url('/textures/generated/work-material-v2.webp') center / 100% 100% no-repeat;
+  background: #080b10 url('/textures/generated/work-material-v2.webp') center / cover no-repeat;
   filter: saturate(.92) contrast(1.04);
   opacity: .98;
+}
+
+/* The wide canvas is a separately composed 9:16 plate, not a stretched
+   copy of the narrow artwork. At the real 1920 × ~3430 WORK geometry its
+   aspect ratio is effectively identical, so `cover` only trims a few pixels. */
+@media (min-width: 1537px) {
+  .work__rift {
+    background-image: url('/textures/generated/work-material-wide-v3.webp');
+  }
 }
 
 /* Small live layers keep the plate from reading like one flattened image.
@@ -561,7 +570,7 @@
   .work__rift {
     inset-block: 0;
     width: 100%;
-    background-size: 100% 100%;
+    background-size: cover;
     opacity: 1;
   }
   .work__scrap--1 { right: -7%; width: 96px; }
