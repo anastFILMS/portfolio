@@ -1,160 +1,212 @@
-/* ================= РАЗДЕЛ WORK =================
-   Чёрная поверхность с еле заметным синим, как в макете. Мятая ткань из
-   рефа оставлена как фактура под градиентом, а не как сплошная заливка:
-   раньше она забивала весь раздел серым шумом. */
+/* ================= WORK / editorial collage ================= */
 .work {
-  overflow: visible; /* бумажный стык наезжает вверх — резать его нельзя */
+  position: relative;
+  overflow: visible;
+  isolation: isolate;
 }
-/* В WORK складки крупнее и глубже, чем в остальных секциях: это самый
-   тёмный и самый длинный раздел, и на макете бумага там мятая сильнее. */
-.section.work::before { background-size: 1080px; opacity: 0.78; }
+.section.work::before { background-size: 1080px; opacity: .78; }
 
-/* ---------------- шапка раздела ----------------
-   WORK по центру, «избранное» на маленькой бумажке чуть правее и внахлёст
-   на низ букв. Прежние выходные данные по углам, правая врезка и панель
-   фильтров из этого места убраны. */
-/* Контекст наложения нужен, чтобы потёки с z-index: -1 ушли за буквы,
-   а не за фон всей секции. */
+/* ---------- masthead ---------- */
 .work__masthead {
   position: relative;
-  z-index: 0;
+  z-index: 3;
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  padding: clamp(1rem, 3vh, 2.5rem) 0 clamp(3rem, 7vh, 6rem);
   display: flex;
-  justify-content: center;
-  padding-block: clamp(1rem, 3vh, 2.5rem) clamp(3.5rem, 7vh, 6rem);
+  justify-content: flex-start;
+  align-items: flex-end;
 }
 .work__title {
   position: relative;
   margin: 0;
-  font-size: clamp(4.5rem, 14vw, 13rem);
-  line-height: 0.84;
-  letter-spacing: 0.02em;
-  /* Плохой прогон краски: тёмная копия со сдвигом под буквами. */
-  text-shadow: 5px 6px 0 rgb(0 0 0 / 45%);
-
   color: var(--orange);
-
-  /* Фактуру внутрь букв не заводим: и multiply, и overlay серой картой
-     уводят оранжевый в бурый, а через background-clip: text сквозь буквы
-     начинают просвечивать потёки. Неровность даёт только выеденный край. */
+  font-size: clamp(5rem, 13vw, 12rem);
+  line-height: .78;
+  letter-spacing: .015em;
+  text-shadow: 5px 6px 0 rgb(0 0 0 / 45%);
   mask-image: url('/textures/erode.png');
   mask-size: 700px;
   -webkit-mask-image: url('/textures/erode.png');
   -webkit-mask-size: 700px;
 }
-/* Потёки свисают ИЗ-ПОД букв: отрицательный z-index уводит их за
-   собственный фон заголовка, а фон заголовка — это и есть буквы. Поверх
-   них краска читалась приклеенной сверху полосой. */
-.work__drips {
+.work__title::after {
+  content: 'stories / people / motion';
   position: absolute;
-  z-index: -1;
-  /* Начинаются ВНУТРИ букв, иначе краска висит в воздухе отдельной
-     полоской и не читается стёкшей с надписи. */
-  left: 1%;
-  top: 74%;
-  width: 98%;
-  height: clamp(5rem, 11vw, 10rem);
-  overflow: visible;
-  pointer-events: none;
+  left: .08em;
+  top: calc(100% + 1.15rem);
+  color: rgb(234 229 240 / 42%);
+  font-family: var(--font-main);
+  font-size: clamp(.55rem, .7vw, .72rem);
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: none;
+  mask: none;
+  -webkit-mask: none;
 }
 .work__sub {
   position: absolute;
-  left: 50%;
-  bottom: clamp(2.2rem, 5vh, 4.4rem);
-  transform: translateX(-6%) rotate(-1.6deg);
-  padding: 0.3rem 1.1rem;
+  left: clamp(11rem, 32vw, 31rem);
+  bottom: clamp(2.4rem, 5.2vh, 4.8rem);
+  transform: rotate(-2.2deg);
+  padding: .34rem 1.15rem .3rem;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-cond);
+  font-size: clamp(1.15rem, 2.1vw, 2.4rem);
   font-weight: 700;
-  font-size: clamp(1.375rem, 2.4vw, 2.75rem);
-  line-height: 1.15;
+  line-height: 1;
   box-shadow: var(--paper-shadow);
-  /* Края бумажки неровные, но без зубцов — это маленький обрывок. */
-  clip-path: polygon(1% 6%, 99% 0, 100% 92%, 2% 100%);
+  clip-path: polygon(1% 7%, 97% 0, 100% 91%, 3% 100%);
 }
 
-/* ---------------- ряды работ ----------------
-   Каждая работа — своя горизонтальная композиция. Между работами
-   положительный промежуток: прежние отрицательные margin-top и --lift
-   заставляли разные работы налезать друг на друга. */
+/* ---------- composition ---------- */
 .work__rows {
-  display: flex;
-  flex-direction: column;
-  gap: var(--work-gap);
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1.2rem, 2.3vw, 2.6rem);
+  row-gap: clamp(2.8rem, 5.4vw, 6rem);
+  align-items: start;
+  padding: clamp(1rem, 2vw, 2rem) 0 clamp(3rem, 7vw, 7rem);
+}
+.work__rows::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 47%;
+  top: -3%;
+  width: 42%;
+  height: 34%;
+  background: radial-gradient(ellipse, rgb(91 58 155 / 20%), transparent 68%);
+  filter: blur(40px);
+  transform: rotate(-10deg);
+  pointer-events: none;
+}
+.work__rows::after {
+  content: 'REAL STORIES / REAL TIME';
+  position: absolute;
+  z-index: 7;
+  right: 1.6%;
+  top: 3.4%;
+  color: rgb(225 218 235 / 36%);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  writing-mode: vertical-rl;
+  pointer-events: none;
 }
 
 .wk {
+  --card-rot: 0deg;
   position: relative;
-  display: grid;
-  align-items: center;
-  gap: clamp(1.5rem, 6vw, 5rem);
+  display: block;
+  min-width: 0;
+  transform: rotate(var(--card-rot));
+  transition: transform .38s var(--ease-cut), filter .38s ease;
 }
-/* Обе колонки жёстко в первой строке. Без этого у правых композиций кадр
-   (колонка 2) шёл первым по разметке, автораскладка грида не возвращалась
-   к колонке 1, и текст уезжал строкой ниже. */
-.wk__shot, .wk__text { grid-row: 1; }
-.wk--left  { grid-template-columns: var(--media) var(--text); }
-.wk--right { grid-template-columns: var(--text) var(--media); }
-.wk--left  .wk__shot { grid-column: 1; }
-.wk--left  .wk__text { grid-column: 2; }
-.wk--right .wk__shot { grid-column: 2; }
-.wk--right .wk__text { grid-column: 1; }
+.wk:nth-child(1) { grid-column: 1 / span 7; --card-rot: -.55deg; }
+.wk:nth-child(2) { grid-column: 9 / span 4; --card-rot: .8deg; margin-top: clamp(3rem, 6vw, 6.4rem); }
+.wk:nth-child(3) { grid-column: 2 / span 5; --card-rot: .45deg; margin-top: clamp(-1rem, -1vw, -.3rem); }
+.wk:nth-child(4) { grid-column: 7 / span 6; --card-rot: -.4deg; margin-top: clamp(1.2rem, 3vw, 3.2rem); }
+.wk:nth-child(5) { grid-column: 3 / span 7; --card-rot: .35deg; margin-top: clamp(-.5rem, -1vw, 0rem); }
+.wk:hover,
+.wk:focus-within {
+  transform: translateY(-8px) rotate(var(--card-rot));
+  filter: drop-shadow(0 26px 34px rgb(0 0 0 / 20%));
+}
 
-/* ---------------- кадр ----------------
-   Внешняя кнопка НЕ режется маской: clip-path на ней срезал бы контур
-   фокуса. Форма живёт на внутренней подложке. */
+/* ---------- physical photo ---------- */
 .wk__shot {
+  position: relative;
+  z-index: 2;
+  width: 100%;
   display: block;
   padding: 0;
+  margin: 0 !important;
+  overflow: visible;
+  filter: drop-shadow(0 20px 26px rgb(0 0 0 / 48%));
   will-change: transform;
-  /* Тень на обёртке, а не на самой подложке: filter применяется ДО маски,
-     и на подложке он обвёл бы исходный прямоугольник. */
-  filter: drop-shadow(0 16px 24px rgb(0 0 0 / 46%));
 }
-/* Край изображения выходит за поля контейнера — но только изображение,
-   не текст и не кнопки. */
-.wk--left  .wk__shot { margin-left: clamp(-3.5rem, -2.6vw, -1.5rem); }
-.wk--right .wk__shot { margin-right: clamp(-3.5rem, -2.6vw, -1.5rem); }
-
-/* Бумажная подложка: её видно в надрывах как светлую волокнистую кромку.
-   Ширину кромки задаёт разница раздутия и поджатия в маске (см.
-   lib/workShapes.ts), а не padding: у настоящего обрыва она неровная. */
 .wk__paper {
   position: relative;
   display: block;
   width: 100%;
-  /* Пропорции внешнего кадра приходят из данных переменной, а не инлайном:
-     на телефоне их надо переопределить, иначе кадр выходит слишком низким. */
-  aspect-ratio: var(--cover, 1.95 / 1);
+  aspect-ratio: var(--cover, 1.85 / 1);
+  overflow: hidden;
+  rotate: 0deg;
   background-color: var(--paper);
   background-image: url('/textures/paper-mul.png');
   background-size: 300px;
   background-blend-mode: multiply;
-  rotate: var(--rot, 0deg);
+  mask-image: var(--paper-outer);
   mask-size: 100% 100%;
   mask-repeat: no-repeat;
+  -webkit-mask-image: var(--paper-outer);
   -webkit-mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
-  transition: transform var(--motion-quick) var(--ease-cut);
+  transition: transform .55s var(--ease-cut);
 }
-.wk__shot:hover .wk__paper { transform: scale(1.015); }
+.wk:nth-child(1) .wk__paper { aspect-ratio: 1.78 / 1; }
+.wk:nth-child(2) .wk__paper { aspect-ratio: .92 / 1.13; }
+.wk:nth-child(3) .wk__paper { aspect-ratio: 1.36 / 1; }
+.wk:nth-child(4) .wk__paper { aspect-ratio: 1.7 / 1; }
+.wk:nth-child(5) .wk__paper { aspect-ratio: 1.9 / 1; }
+.wk__shot:hover .wk__paper { transform: scale(1.018); }
+
+.wk__paper::before {
+  content: '';
+  position: absolute;
+  z-index: 8;
+  width: clamp(3.8rem, 6vw, 6.6rem);
+  height: clamp(.95rem, 1.4vw, 1.35rem);
+  left: 8%;
+  top: .15rem;
+  background:
+    linear-gradient(90deg, rgb(218 211 196 / 54%), rgb(245 239 225 / 72%), rgb(212 204 190 / 48%));
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 16%), 0 3px 9px rgb(0 0 0 / 25%);
+  transform: translateY(-45%) rotate(-5deg);
+  opacity: .82;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.wk:nth-child(2) .wk__paper::before { left: auto; right: 10%; transform: translateY(-45%) rotate(6deg); }
+.wk:nth-child(3) .wk__paper::before { left: 43%; transform: translateY(-45%) rotate(2deg); }
+.wk:nth-child(4) .wk__paper::before { left: 6%; transform: translateY(-45%) rotate(-3deg); }
+.wk:nth-child(5) .wk__paper::before { left: auto; right: 17%; transform: translateY(-45%) rotate(4deg); }
 
 .wk__inner {
   position: absolute;
   inset: 0;
   display: block;
+  overflow: hidden;
   background: #05050a;
+  mask-image: var(--paper-mask);
   mask-size: 100% 100%;
   mask-repeat: no-repeat;
+  -webkit-mask-image: var(--paper-mask);
   -webkit-mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
 }
-/* Временная обложка-вырезка вписывается целиком, и вокруг неё остаётся
-   пустота. Даём ей мягкую подложку, чтобы слот читался подготовленным
-   местом под кадр, а не дырой. */
-.wk__inner[data-fit='contain'] {
-  background: radial-gradient(70% 70% at 50% 45%, #23252E, #0D0E13 78%);
+.wk__inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(5 4 10 / 0%) 42%, rgb(5 4 10 / 28%) 66%, rgb(5 4 10 / 82%) 100%),
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 1%) 0 1px, transparent 1px 4px);
+  box-shadow: inset 0 0 70px rgb(0 0 0 / 28%);
 }
+.wk__inner[data-fit='contain'] {
+  background: radial-gradient(70% 70% at 50% 45%, #23252e, #0d0e13 78%);
+}
+.wk__fiber { position: absolute; inset: 0; z-index: 6; width: 100%; height: 100%; pointer-events: none; }
+.wk__tape { display: none; }
 
 .wp { position: absolute; inset: 0; }
 .wp__img,
@@ -162,85 +214,191 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: saturate(.72) contrast(1.07) brightness(.9);
+  transition: transform .7s var(--ease-cut), filter .5s ease;
 }
-/* Видео появляется поверх постера только когда играет. */
+.wk:hover .wp__img,
+.wk:focus-within .wp__img { transform: scale(1.035); filter: saturate(.9) contrast(1.04) brightness(.95); }
 .wp__video { position: absolute; inset: 0; opacity: 0; }
 .wk:hover .wp__video,
 .wk:focus-within .wp__video { opacity: 1; }
-/* Кадра ещё нет — нейтральная бумажная композиция, без ложных подписей
-   и без имитации проигрывания. Тон бумажный, а не почти чёрный: тёмный
-   прямоугольник читался сломанным кадром, а не подготовленным местом. */
 .wp__blank {
   position: absolute;
   inset: 0;
   background-color: var(--paper-warm);
   background-image:
-    linear-gradient(148deg, rgb(0 0 0 / 12%), rgb(0 0 0 / 0%) 45%, rgb(0 0 0 / 22%)),
+    linear-gradient(148deg, rgb(0 0 0 / 12%), transparent 45%, rgb(0 0 0 / 22%)),
     url('/textures/bg/crumple.png');
   background-size: auto, 520px;
   background-blend-mode: normal, multiply;
 }
 
-/* ---------------- текст работы ----------------
-   Только номер, название, категория и кнопка. Годов, длинных описаний,
-   счётчиков «01/8» и английских комментариев здесь нет. */
-.wk__text { position: relative; }
-.wk__num {
-  margin: 0 0 0.15rem;
-  font-size: clamp(1.375rem, 1.9vw, 1.75rem);
-  color: var(--orange);
-  letter-spacing: 0.06em;
+/* ---------- editorial caption, sits on the photograph ---------- */
+.wk__text {
+  position: absolute;
+  z-index: 9;
+  left: clamp(1.2rem, 2.5vw, 2.5rem);
+  right: clamp(1.2rem, 2.5vw, 2.5rem);
+  bottom: clamp(1.15rem, 2.3vw, 2.35rem);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'num cat btn'
+    'num title btn';
+  column-gap: clamp(.7rem, 1.3vw, 1.2rem);
+  align-items: end;
+  pointer-events: none;
+  text-shadow: 0 2px 18px rgb(0 0 0 / 72%);
 }
-/* Селектор из двух классов нужен, чтобы перебить line-height: 0.92 из
-   .u-cond — там одинаковая специфичность, и побеждал порядок подключения.
-   Плотная строка нужна крупным титулам, а у названия работы при увеличении
-   текста до 200% выносные элементы букв вылезали за строку. */
+.wk__num {
+  grid-area: num;
+  margin: 0 0 .12rem;
+  color: #caa5ff;
+  font-size: clamp(.72rem, .9vw, .92rem);
+  line-height: 1;
+  letter-spacing: .12em;
+}
 .wk__text .wk__title {
-  margin: 0 0 0.5rem;
-  font-size: clamp(2rem, 3.6vw, 4rem);
-  line-height: 1.2;
-  color: var(--chalk);
+  grid-area: title;
+  margin: .18rem 0 0;
+  max-width: 100%;
+  color: #f2edf5;
+  font-size: clamp(1.65rem, 3.2vw, 3.45rem);
+  line-height: .92;
+  letter-spacing: -.025em;
 }
 .wk__cat {
-  margin: 0 0 1.5rem;
-  color: var(--chalk-dim);
-  letter-spacing: 0.18em;
+  grid-area: cat;
+  width: fit-content;
+  margin: 0;
+  padding: .32rem .5rem .28rem;
+  color: #dad3e0;
+  border: 1px solid rgb(230 218 245 / 20%);
+  background: rgb(8 7 15 / 58%);
+  backdrop-filter: blur(7px);
+  font-size: clamp(.48rem, .58vw, .62rem);
+  line-height: 1;
+  letter-spacing: .12em;
 }
-.wk__btn { min-width: 13rem; }
+.wk__btn {
+  grid-area: btn;
+  min-width: 0;
+  width: clamp(2.8rem, 3.5vw, 3.5rem);
+  height: clamp(2.8rem, 3.5vw, 3.5rem);
+  padding: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  border-color: rgb(232 220 248 / 38%);
+  color: transparent;
+  background: rgb(8 7 15 / 26%);
+  backdrop-filter: blur(6px);
+  pointer-events: auto;
+}
+.wk__btn::after {
+  content: '→';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #eee8f4;
+  font-family: var(--font-main);
+  font-size: 1.05rem;
+}
+.wk:nth-child(2) .wk__text {
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'num cat'
+    'title title'
+    'btn btn';
+  row-gap: .45rem;
+}
+.wk:nth-child(2) .wk__btn { justify-self: end; margin-top: .2rem; }
+.wk:nth-child(2) .wk__text .wk__title { font-size: clamp(1.8rem, 3vw, 3rem); }
 
-/* ---------------- адаптив ---------------- */
+/* ---------- small physical notes ---------- */
+.wk:nth-child(1)::after,
+.wk:nth-child(3)::after,
+.wk:nth-child(4)::after {
+  position: absolute;
+  z-index: 10;
+  padding: .5rem .65rem;
+  background: #cfc3ac;
+  color: #2a2530;
+  font-family: var(--font-cond);
+  font-size: clamp(.48rem, .62vw, .62rem);
+  line-height: 1.38;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  box-shadow: 0 7px 18px rgb(0 0 0 / 23%);
+  pointer-events: none;
+}
+.wk:nth-child(1)::after { content: 'MOVE\A LOOK\A FEEL'; white-space: pre; right: -1.1rem; top: 17%; transform: rotate(2.5deg); }
+.wk:nth-child(3)::after { content: 'PEOPLE\A MOMENT\A REAL'; white-space: pre; left: -1.3rem; top: 18%; transform: rotate(-2deg); }
+.wk:nth-child(4)::after { content: 'VOICE\A FACE\A STORY'; white-space: pre; right: -1rem; top: 12%; transform: rotate(1.6deg); }
+
+/* ---------- responsive ---------- */
 @media (max-width: 1023px) {
-  .wk { gap: clamp(1.25rem, 4vw, 2.5rem); }
-  .wk--left  { grid-template-columns: 56% 1fr; }
-  .wk--right { grid-template-columns: 1fr 56%; }
+  .work__rows { column-gap: 1.25rem; row-gap: 3.5rem; }
+  .wk:nth-child(1) { grid-column: 1 / span 7; }
+  .wk:nth-child(2) { grid-column: 8 / span 5; margin-top: 4rem; }
+  .wk:nth-child(3) { grid-column: 1 / span 5; }
+  .wk:nth-child(4) { grid-column: 6 / span 7; }
+  .wk:nth-child(5) { grid-column: 2 / span 9; }
+  .wk__text { left: 1.1rem; right: 1.1rem; bottom: 1.05rem; }
+  .wk__text .wk__title { font-size: clamp(1.55rem, 4vw, 2.5rem); }
+  .wk:nth-child(1)::after,
+  .wk:nth-child(3)::after,
+  .wk:nth-child(4)::after { display: none; }
 }
 
 @media (max-width: 767px) {
-  /* Телефон: кадр, потом номер/название/категория, потом кнопка.
-     Чередование сторон в одну колонку не читается. */
-  .wk--left, .wk--right { grid-template-columns: minmax(0, 1fr); }
-  .wk__shot,
-  .wk--left .wk__shot,
-  .wk--right .wk__shot {
-    grid-row: 1;
-    grid-column: 1;
-    margin-inline: 0;
+  .work__masthead { padding-bottom: 3.5rem; }
+  .work__title { font-size: clamp(4.8rem, 24vw, 8rem); }
+  .work__title::after { top: calc(100% + .75rem); font-size: .5rem; letter-spacing: .15em; }
+  .work__sub { left: auto; right: 3%; bottom: 2.7rem; font-size: clamp(1.05rem, 6vw, 1.65rem); }
+  .work__rows {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+    padding-top: .5rem;
   }
+  .work__rows::after { display: none; }
+  .wk,
+  .wk:nth-child(n) {
+    grid-column: 1;
+    margin-top: 0;
+    --card-rot: 0deg;
+  }
+  .wk:hover,
+  .wk:focus-within { transform: translateY(-4px); }
+  .wk__shot { transform: none !important; }
+  .wk__paper,
+  .wk:nth-child(n) .wk__paper { aspect-ratio: 1.35 / 1; }
+  .wk:nth-child(2) .wk__paper { aspect-ratio: 1.02 / 1; }
+  .wk:nth-child(5) .wk__paper { aspect-ratio: 1.3 / 1; }
   .wk__text,
-  .wk--left .wk__text,
-  .wk--right .wk__text { grid-row: 2; grid-column: 1; }
-  .wk { gap: clamp(1.25rem, 5vw, 1.75rem); }
-  /* На узком экране 1.95–2.2:1 даёт кадр в 165 px высотой — мало, чтобы
-     что-то разглядеть. Ориентир по ТЗ 200–300 px. */
-  .wk__paper { rotate: 0deg; --cover: 1.5 / 1; }
-  .wk__cat { margin-bottom: 1.1rem; }
-  .wk__btn { width: 100%; }
-
-  .work__masthead { padding-bottom: clamp(2.5rem, 6vh, 3.5rem); }
-  .work__sub { bottom: clamp(1.2rem, 3vh, 2rem); }
+  .wk:nth-child(2) .wk__text {
+    left: .9rem;
+    right: .9rem;
+    bottom: .9rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      'num cat btn'
+      'num title btn';
+    row-gap: 0;
+    column-gap: .65rem;
+  }
+  .wk__text .wk__title,
+  .wk:nth-child(2) .wk__text .wk__title { font-size: clamp(1.7rem, 8vw, 2.55rem); }
+  .wk__cat { font-size: .48rem; }
+  .wk__btn { width: 2.7rem; height: 2.7rem; margin: 0 !important; }
+  .wk__paper::before { width: 3.7rem; height: .9rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wk__shot { transform: none !important; }
-  .wk__shot:hover .wk__paper { transform: none; }
+  .wk,
+  .wk__shot,
+  .wk__paper,
+  .wp__img { transition: none !important; transform: none !important; }
 }
