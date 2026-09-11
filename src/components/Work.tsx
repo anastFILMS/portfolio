@@ -1,126 +1,98 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { projects, type Project } from '../content/projects';
 import { useParallaxEnabled } from '../hooks/useParallax';
-import { WorkCard } from './WorkCard';
+import { asset } from '../lib/asset';
 import { ReelPlayer } from './ReelPlayer';
-import { SectionSeam } from './grunge/SectionSeam';
+import { WorkPreview } from './WorkPreview';
 import './Work.css';
 
-/** Five directions tied together by one continuous physical paper collage.
- * The background owns the rift and material depth; every direction stays
- * live HTML/media with a natural reading and keyboard order. */
+const slots = ['feature', 'portrait', 'lower-left', 'lower-right', 'strip'] as const;
+
 export function Work() {
   const [open, setOpen] = useState<Project | null>(null);
   const motionEnabled = useParallaxEnabled();
-  const sectionRef = useRef<HTMLElement>(null);
-
-  /* WORK is a real stack of paper planes now. The section writes pixel
-     offsets straight to CSS variables instead of re-rendering five videos
-     on every scroll tick. Movement stays deliberately small: it should read
-     as material depth, not as floating UI. */
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const properties = [
-      '--work-base-y',
-      '--work-rift-x',
-      '--work-rift-y',
-      '--work-rift-echo-x',
-      '--work-rift-echo-y',
-      '--work-detail-x',
-      '--work-detail-y',
-    ];
-    const reset = () => properties.forEach((property) => section.style.setProperty(property, '0px'));
-
-    if (!motionEnabled) {
-      reset();
-      return;
-    }
-
-    let frame = 0;
-    const measure = () => {
-      frame = 0;
-      const rect = section.getBoundingClientRect();
-      const viewport = window.innerHeight;
-      if (rect.bottom < -viewport || rect.top > viewport * 2) return;
-
-      const progress = Math.min(1, Math.max(0, (viewport - rect.top) / (viewport + rect.height)));
-      const phase = (progress - 0.5) * 2;
-      const px = (range: number) => `${(phase * range).toFixed(2)}px`;
-
-      section.style.setProperty('--work-base-y', px(18));
-      section.style.setProperty('--work-rift-x', px(7));
-      section.style.setProperty('--work-rift-y', px(42));
-      section.style.setProperty('--work-rift-echo-x', px(-4.5));
-      section.style.setProperty('--work-rift-echo-y', px(31));
-      section.style.setProperty('--work-detail-x', px(-5));
-      section.style.setProperty('--work-detail-y', px(64));
-    };
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(measure);
-    };
-
-    measure();
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
-    return () => {
-      if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
-      reset();
-    };
-  }, [motionEnabled]);
 
   return (
-    <section
-      className="section section--work work work--rift"
-      id="work"
-      ref={sectionRef}
-      data-paper-motion={motionEnabled ? 'on' : 'off'}
-    >
-      <SectionSeam id="section-edge-01" accent />
+    <section className="section section--work work work--editorial" id="work">
+      <div className="work__grain" aria-hidden="true" />
+      <div className="work__glow work__glow--a" aria-hidden="true" />
+      <div className="work__glow work__glow--b" aria-hidden="true" />
 
-      {/* Separate raster planes replace the old flattened background. The
-          second rift is only used on taller/narrower desktop canvases, where
-          two uncropped fragments cover the route without stretching pixels. */}
-      <div className="work__material" aria-hidden="true">
-        <i className="work__layer work__layer--base" />
-        <i className="work__layer work__layer--rift" />
-        <i className="work__layer work__layer--rift-echo" />
-      </div>
+      <div className="shell work__spread">
+        <aside className="work__intro">
+          <span className="work__index u-label">02</span>
+          <h2 className="work__heading">WORK</h2>
+          <p className="work__lead">Живые моменты. Реальные люди.<br />Истории, которые остаются.</p>
+          <p className="work__desc">Съёмка, репортаж, интервью, мультикам и монтаж — как единая визуальная история.</p>
+          <span className="work__handnote">Больше, чем видео</span>
+          <div className="work__legend u-label" aria-hidden="true">
+            <span>FASHION</span><span>EVENTS</span><span>REPORTAGE</span><span>INTERVIEW</span>
+          </div>
+        </aside>
 
-      {/* Loose fragments sit between the material plate and the projects.
-          Their only job is to make the photographs feel physically pasted
-          into one scrapbook spread rather than arranged as clean cards. */}
-      <div className="work__scraps" aria-hidden="true">
-        <i className="work__scrap work__scrap--1" />
-        <i className="work__scrap work__scrap--2" />
-        <i className="work__scrap work__scrap--3" />
-        <i className="work__scrap work__scrap--4" />
-        <i className="work__scrap work__scrap--5" />
-        <i className="work__scrap work__scrap--6" />
-        <i className="work__scrap work__scrap--7" />
-      </div>
+        <div className="work__gallery">
+          {projects.map((project, index) => {
+            const slot = slots[index] ?? 'strip';
+            const paperId = Number(project.number);
+            const vars = {
+              '--paper-mask': `url("${asset(`design/paper-v3/work-${paperId}-mask.svg`)}")`,
+              '--paper-outer': `url("${asset(`design/paper-v3/work-${paperId}-outer.svg`)}")`,
+            } as CSSProperties;
 
-      <div className="shell">
-        <header className="work__masthead">
-          <h2 className="work__title u-cond"><span>WORK</span></h2>
-          {/* «избранное» на маленькой бумажке, слегка правее и внахлёст
-              на низ букв — как в макете. */}
-          <span className="work__sub">избранное</span>
-        </header>
+            return (
+              <article
+                className={`work-project work-project--${slot}`}
+                key={project.id}
+                data-hover-media
+                style={vars}
+              >
+                <button
+                  className="work-project__media"
+                  type="button"
+                  onClick={() => setOpen(project)}
+                  aria-label={`Смотреть: ${project.title}`}
+                >
+                  <span className="work-project__paper">
+                    <span className="work-project__picture" data-fit={project.temporaryPosterFit ?? 'cover'}>
+                      <WorkPreview project={project} allowHoverPlay={motionEnabled} />
+                    </span>
+                    <img
+                      className="work-project__fiber"
+                      src={asset(`design/paper-v3/work-${paperId}-frame.svg`)}
+                      alt=""
+                      aria-hidden="true"
+                    />
+                  </span>
+                </button>
 
-        <div className="work__rows">
-          {projects.map((project) => (
-            <WorkCard
-              key={project.id}
-              project={project}
-              onOpen={setOpen}
-              motionEnabled={motionEnabled}
-            />
-          ))}
+                <div className="work-project__copy">
+                  <span className="work-project__num u-label">{project.number}</span>
+                  <span className="work-project__tag u-label">{project.categoryLabel}</span>
+                  <h3>{project.title}</h3>
+                  <button
+                    className="work-project__open"
+                    type="button"
+                    onClick={() => setOpen(project)}
+                    aria-label={`Открыть ${project.title}`}
+                  >
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+
+                <span className="work-project__tape" aria-hidden="true" />
+                <span className="work-project__scribble" aria-hidden="true">
+                  {index === 0 ? 'moment / movement / frame' : index === 1 ? 'people / sound / light' : index === 2 ? 'observe / catch / keep' : index === 3 ? 'voice / face / story' : 'short / bold / alive'}
+                </span>
+              </article>
+            );
+          })}
         </div>
+
+        <div className="work__pager u-label" aria-hidden="true">
+          <span>01</span><span className="is-active">02</span><span>03</span><span>04</span>
+        </div>
+
+        <div className="work__footer-note u-label" aria-hidden="true">FILM / PEOPLE / POSSIBILITY</div>
       </div>
 
       <ReelPlayer project={open} onClose={() => setOpen(null)} />
