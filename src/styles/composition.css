@@ -53,10 +53,16 @@
   overflow: hidden;
   padding: 34px 0 clamp(130px, 10vw, 190px);
   background: #05080d;
+  --work-base-y: 0px;
+  --work-rift-x: 0px;
+  --work-rift-y: 0px;
+  --work-rift-echo-x: 0px;
+  --work-rift-echo-y: 0px;
+  --work-detail-x: 0px;
+  --work-detail-y: 0px;
 }
 .section.work--rift::before {
-  /* A second, fixed-scale grain keeps the generated plate tactile even
-     when the tall artwork has to stretch on narrow screens. */
+  /* A fixed-scale grain ties the independently moving sheets together. */
   background-image: url('/textures/bg/crumple.png');
   background-position: center top;
   background-size: 920px;
@@ -77,29 +83,67 @@
   padding-inline: clamp(28px, 5vw, 76px);
 }
 
-/* The approved reference gets its depth from actual material layers, not
-   from a flat orange polygon with a uniform cream outline. This text-free
-   plate contains the complete torn route, fibres, creases and overlaps. */
-.work__rift {
+/* The material is no longer one flattened poster. Every plane has generous
+   vertical bleed, so its parallax offset can never expose an empty edge. */
+.work__material {
   position: absolute;
   z-index: 1;
-  inset-block: 0;
-  left: 0;
-  width: 100%;
-  translate: none;
+  inset: -120px 0;
+  overflow: hidden;
   pointer-events: none;
-  background: #080b10 url('/textures/generated/work-material-v2.webp') center / cover no-repeat;
-  filter: saturate(.92) contrast(1.04);
-  opacity: .98;
+}
+.work__layer {
+  position: absolute;
+  display: block;
+  inset: -42px -3vw;
+  background-position: center;
+  background-repeat: no-repeat;
+  backface-visibility: hidden;
+  pointer-events: none;
+  will-change: transform;
+}
+.work__layer--base {
+  z-index: 0;
+  background-color: #080b10;
+  background-image: url('/textures/layers/work-base-tall-v1.webp');
+  background-size: cover;
+  transform: translate3d(0, var(--work-base-y), 0) scale(1.018);
+  filter: saturate(.88) contrast(1.04);
+}
+.work__layer--rift,
+.work__layer--rift-echo {
+  z-index: 1;
+  background-image: url('/textures/layers/work-rift-wide-v1.webp');
+  background-size: 100% auto;
+  filter: saturate(.94) contrast(1.035) drop-shadow(0 14px 11px rgb(0 0 0 / 42%));
+}
+.work__layer--rift {
+  background-position: center top;
+  transform: translate3d(var(--work-rift-x), var(--work-rift-y), 0) scale(1.014);
+  mask-image: linear-gradient(to bottom, #000 0 54%, transparent 72%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 54%, transparent 72%);
+}
+.work__layer--rift-echo {
+  background-position: center bottom;
+  transform: translate3d(var(--work-rift-echo-x), var(--work-rift-echo-y), 0) scaleX(-1) scale(1.014);
+  mask-image: linear-gradient(to bottom, transparent 28%, #000 46% 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 28%, #000 46% 100%);
 }
 
-/* The wide canvas is a separately composed 9:16 plate, not a stretched
-   copy of the narrow artwork. At the real 1920 × ~3430 WORK geometry its
-   aspect ratio is effectively identical, so `cover` only trims a few pixels. */
+/* 1920px-class screens receive a separately composed 9:16 base. The rift
+   has the same native proportion, so `cover` crops a little but never
+   distorts it. One continuous fault is enough at this section geometry. */
 @media (min-width: 1537px) {
-  .work__rift {
-    background-image: url('/textures/generated/work-material-wide-v3.webp');
+  .work__layer--base {
+    background-image: url('/textures/layers/work-base-wide-v1.webp');
   }
+  .work__layer--rift {
+    background-position: center;
+    background-size: cover;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .work__layer--rift-echo { display: none; }
 }
 
 /* Small live layers keep the plate from reading like one flattened image.
@@ -107,11 +151,12 @@
 .work__scraps {
   position: absolute;
   z-index: 2;
-  inset: 0;
+  inset: -90px 0;
   width: 100%;
-  translate: none;
   overflow: hidden;
   pointer-events: none;
+  transform: translate3d(var(--work-detail-x), var(--work-detail-y), 0);
+  will-change: transform;
 }
 .work__scrap {
   position: absolute;
@@ -567,12 +612,14 @@
 
   .work.work--rift { padding: 28px 0 105px; }
   .work--rift > .shell { padding-inline: 24px; }
-  .work__rift {
-    inset-block: 0;
-    width: 100%;
-    background-size: cover;
-    opacity: 1;
+  /* Motion is disabled on phones; the original tall art-directed plate is
+     used statically because its native proportion fits the stacked layout. */
+  .work__material {
+    inset: 0;
+    background: #080b10 url('/textures/generated/work-material-v2.webp') center / cover no-repeat;
   }
+  .work__material .work__layer { display: none; }
+  .work__scraps { inset: 0; transform: none; will-change: auto; }
   .work__scrap--1 { right: -7%; width: 96px; }
   .work__scrap--2 { left: -14%; width: 128px; }
   .work__scrap--3 { right: -18%; width: 135px; }
@@ -636,5 +683,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .work__layer,
+  .work__scraps { will-change: auto; }
   .work--rift .wk__paper { transition: none; }
 }
