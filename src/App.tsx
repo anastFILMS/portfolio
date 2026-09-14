@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
@@ -113,8 +114,10 @@ const heroWord: Variants = {
 export default function App() {
   useLenis();
   const shouldReduceMotion = useReducedMotion();
+  const [isCompactViewport, setIsCompactViewport] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
   const [activeWork, setActiveWork] = useState<string | null>(null);
+  const shouldDisableMotion = Boolean(shouldReduceMotion || isCompactViewport);
 
   const heroRef = useRef<HTMLElement>(null);
   const featuredRef = useRef<HTMLButtonElement>(null);
@@ -122,6 +125,10 @@ export default function App() {
   const experienceRef = useRef<HTMLElement>(null);
   const aboutPhotoRef = useRef<HTMLElement>(null);
   const skillsPhotoRef = useRef<HTMLElement>(null);
+  const experienceScrollRef = useRef<number | null>(null);
+  const workTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
@@ -180,24 +187,76 @@ export default function App() {
   const skillsPhotoY = useTransform(skillsPhotoProgress, [0, 1], [-12, 12]);
 
   useEffect(() => {
+    const media = window.matchMedia('(max-width: 680px)');
+    const sync = () => setIsCompactViewport(media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
+
+  useEffect(() => {
     if (!activeWork) return;
+    const trigger = workTriggerRef.current;
+    const pageMain = document.querySelector('main');
+    const mainWasInert = pageMain?.hasAttribute('inert') ?? false;
+    const focusFrame = requestAnimationFrame(() => closeButtonRef.current?.focus());
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setActiveWork(null);
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setActiveWork(null);
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'),
+      );
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (event.shiftKey && (active === first || !dialog.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (active === last || !dialog.contains(active))) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     document.body.classList.add('is-locked');
+    pageMain?.setAttribute('inert', '');
     lenisControl.stop();
     document.addEventListener('keydown', onKeyDown);
     return () => {
+      cancelAnimationFrame(focusFrame);
       document.body.classList.remove('is-locked');
+      if (!mainWasInert) pageMain?.removeAttribute('inert');
       lenisControl.start();
       document.removeEventListener('keydown', onKeyDown);
+      requestAnimationFrame(() => trigger?.focus());
     };
   }, [activeWork]);
+
+  useLayoutEffect(() => {
+    const scrollPosition = experienceScrollRef.current;
+    if (scrollPosition === null) return;
+    window.scrollTo({ top: scrollPosition, left: window.scrollX, behavior: 'auto' });
+    experienceScrollRef.current = null;
+  }, [showAllEvents]);
 
   const visibleEvents = showAllEvents ? events : events.slice(0, 4);
 
   const moveHero = (event: ReactPointerEvent<HTMLElement>) => {
-    if (shouldReduceMotion || event.pointerType !== 'mouse') return;
+    if (shouldDisableMotion || event.pointerType !== 'mouse') return;
     const bounds = event.currentTarget.getBoundingClientRect();
     const horizontal = (event.clientX - bounds.left) / bounds.width - 0.5;
     const vertical = (event.clientY - bounds.top) / bounds.height - 0.5;
@@ -210,13 +269,23 @@ export default function App() {
     pointerY.set(0);
   };
 
+  const openWork = (title: string, trigger: HTMLButtonElement) => {
+    workTriggerRef.current = trigger;
+    setActiveWork(title);
+  };
+
+  const toggleEvents = () => {
+    experienceScrollRef.current = window.scrollY;
+    setShowAllEvents((value) => !value);
+  };
+
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion={shouldDisableMotion ? 'always' : 'user'}>
       <div className="editorial-page" id="top">
         <motion.div
           className="motion-progress"
           aria-hidden="true"
-          style={{ scaleX: shouldReduceMotion ? 0 : pageProgress }}
+          style={{ scaleX: shouldDisableMotion ? 0 : pageProgress }}
         />
 
         <a className="skip-link" href="#work">К работам</a>
@@ -232,13 +301,14 @@ export default function App() {
             <div className="hero-media" aria-hidden="true">
               <motion.div
                 className="hero-pointer-layer"
-                style={shouldReduceMotion ? undefined : { x: pointerSpringX, y: pointerSpringY }}
+                style={shouldDisableMotion ? undefined : { x: pointerSpringX, y: pointerSpringY }}
               >
                 <motion.img
                   src={asset('media/about/about-shooting-bubbles.webp')}
                   alt=""
                   fetchPriority="high"
-                  style={shouldReduceMotion ? undefined : { y: heroImageY, scale: heroImageScale }}
+                  decoding="async"
+                  style={shouldDisableMotion ? undefined : { y: heroImageY, scale: heroImageScale }}
                 />
               </motion.div>
               <span className="hero-media-shade" />
@@ -246,7 +316,7 @@ export default function App() {
 
             <motion.header
               className="site-header ed-shell"
-              initial={shouldReduceMotion ? false : 'hidden'}
+              initial={shouldDisableMotion ? false : 'hidden'}
               animate="visible"
               variants={heroItem}
             >
@@ -263,7 +333,7 @@ export default function App() {
 
             <motion.div
               className="hero-copy ed-shell"
-              initial={shouldReduceMotion ? false : 'hidden'}
+              initial={shouldDisableMotion ? false : 'hidden'}
               animate="visible"
               variants={heroSequence}
             >
@@ -285,7 +355,7 @@ export default function App() {
             <div className="ed-shell">
               <motion.div
                 className="section-heading"
-                initial={shouldReduceMotion ? false : 'hidden'}
+                initial={shouldDisableMotion ? false : 'hidden'}
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.35 }}
                 variants={revealUp}
@@ -298,18 +368,18 @@ export default function App() {
                 className="featured-work"
                 type="button"
                 ref={featuredRef}
-                onClick={() => setActiveWork('SHOWREEL 2026')}
+                onClick={(event) => openWork('SHOWREEL 2026', event.currentTarget)}
                 aria-label="Открыть Showreel 2026"
-                style={shouldReduceMotion ? undefined : { clipPath: featuredClip }}
+                style={shouldDisableMotion ? undefined : { clipPath: featuredClip }}
               >
                 <motion.span
                   className="featured-image-layer"
-                  style={shouldReduceMotion ? undefined : { y: featuredImageY }}
+                  style={shouldDisableMotion ? undefined : { y: featuredImageY }}
                 >
-                  <img src={asset('media/about/reserve-event-hall.webp')} alt="Камера на съёмке официального мероприятия" />
+                  <img src={asset('media/about/reserve-event-hall.webp')} alt="Камера на съёмке официального мероприятия" loading="lazy" decoding="async" />
                 </motion.span>
                 <span className="featured-overlay" />
-                <motion.span className="play-mark" aria-hidden="true" whileHover={{ scale: 1.08 }}>▶</motion.span>
+                <span className="play-mark" aria-hidden="true">▶</span>
                 <span className="featured-label">SHOWREEL&nbsp;&nbsp;2026</span>
                 <span className="featured-tags">EVENTS<br />INTERVIEWS<br />FASHION<br />REPORTAGE</span>
               </motion.button>
@@ -321,15 +391,15 @@ export default function App() {
                     type="button"
                     key={item.title}
                     custom={index}
-                    initial={shouldReduceMotion ? false : 'hidden'}
+                    initial={shouldDisableMotion ? false : 'hidden'}
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
                     variants={revealItem}
-                    onClick={() => setActiveWork(item.title)}
+                    onClick={(event) => openWork(item.title, event.currentTarget)}
                     aria-label={`Открыть подборку ${item.title}`}
                   >
                     <span className="work-photo">
-                      <img src={asset(item.image)} alt="" style={{ objectPosition: item.position }} />
+                      <img src={asset(item.image)} alt="" style={{ objectPosition: item.position }} loading="lazy" decoding="async" />
                       <span className="work-photo-shade" />
                     </span>
                     <span className="work-caption">
@@ -344,7 +414,7 @@ export default function App() {
               <motion.p
                 className="direction-line"
                 aria-label="Направления работы"
-                style={shouldReduceMotion ? undefined : { x: directionX }}
+                style={shouldDisableMotion ? undefined : { x: directionX }}
               >
                 INTERVIEW <span>/</span> FASHION <span>/</span> REPORTAGE <span>/</span> VERTICAL <span>/</span> MULTICAMERA <span>/</span> MOTION <span>/</span> EVENTS
               </motion.p>
@@ -353,26 +423,26 @@ export default function App() {
 
           <section className="ed-section experience" id="experience" aria-labelledby="experience-title" ref={experienceRef}>
             <div className="experience-echo" aria-hidden="true">
-              <motion.span style={shouldReduceMotion ? undefined : { x: experienceX1 }}>EXPERIENCE</motion.span>
-              <motion.span style={shouldReduceMotion ? undefined : { x: experienceX2 }}>EXPERIENCE</motion.span>
-              <motion.span style={shouldReduceMotion ? undefined : { x: experienceX3 }}>EXPERIENCE</motion.span>
+              <motion.span style={shouldDisableMotion ? undefined : { x: experienceX1 }}>EXPERIENCE</motion.span>
+              <motion.span style={shouldDisableMotion ? undefined : { x: experienceX2 }}>EXPERIENCE</motion.span>
+              <motion.span style={shouldDisableMotion ? undefined : { x: experienceX3 }}>EXPERIENCE</motion.span>
             </div>
             <div className="ed-shell experience-inner">
               <motion.h2
                 id="experience-title"
-                initial={shouldReduceMotion ? false : 'hidden'}
+                initial={shouldDisableMotion ? false : 'hidden'}
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.45 }}
                 variants={revealUp}
               >EXPERIENCE</motion.h2>
-              <motion.div className="event-table" aria-live="polite" layout>
+              <motion.div className="event-table" id="event-table" aria-live="polite" layout>
                 <AnimatePresence>
                   {visibleEvents.map((event, index) => (
                     <motion.div
                       className="event-row"
                       key={event}
                       custom={index % 4}
-                      initial={shouldReduceMotion ? false : 'hidden'}
+                      initial={shouldDisableMotion ? false : 'hidden'}
                       whileInView="visible"
                       exit={{ opacity: 0, y: -14, transition: { duration: 0.2 } }}
                       viewport={{ once: true, amount: 0.25 }}
@@ -390,7 +460,8 @@ export default function App() {
                   className="ed-button event-more"
                   type="button"
                   aria-expanded={showAllEvents}
-                  onClick={() => setShowAllEvents((value) => !value)}
+                  aria-controls="event-table"
+                  onClick={toggleEvents}
                   layout
                 >
                   {showAllEvents ? 'Скрыть' : 'Смотреть ещё'} <motion.span animate={{ rotate: showAllEvents ? 180 : 0 }}>↓</motion.span>
@@ -403,7 +474,7 @@ export default function App() {
             <div className="ed-shell">
               <motion.div
                 className="section-heading section-heading--about"
-                initial={shouldReduceMotion ? false : 'hidden'}
+                initial={shouldDisableMotion ? false : 'hidden'}
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.35 }}
                 variants={revealUp}
@@ -416,7 +487,7 @@ export default function App() {
                 <motion.div
                   className="about-note"
                   aria-hidden="true"
-                  initial={shouldReduceMotion ? false : { opacity: 0, rotate: -11, x: -18 }}
+                  initial={shouldDisableMotion ? false : { opacity: 0, rotate: -11, x: -18 }}
                   whileInView={{ opacity: 1, rotate: -7, x: 0 }}
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 0.42, ease: editorialEase }}
@@ -424,8 +495,8 @@ export default function App() {
                   живые<br />истории<br />важны
                   <motion.span
                     className="about-note-stroke"
-                    initial={shouldReduceMotion ? false : { scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
+                    initial={shouldDisableMotion ? false : { scaleX: 0, rotate: -7 }}
+                    whileInView={{ scaleX: 1, rotate: -7 }}
                     viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.5, delay: 0.18, ease: editorialEase }}
                   />
@@ -433,21 +504,21 @@ export default function App() {
                 <motion.figure
                   className="about-photo"
                   ref={aboutPhotoRef}
-                  initial={shouldReduceMotion ? false : { clipPath: 'inset(0% 100% 0% 0%)' }}
+                  initial={shouldDisableMotion ? false : { clipPath: 'inset(0% 100% 0% 0%)' }}
                   whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.68, ease: editorialEase }}
                 >
                   <motion.span
                     className="photo-parallax-layer"
-                    style={shouldReduceMotion ? undefined : { y: aboutPhotoY }}
+                    style={shouldDisableMotion ? undefined : { y: aboutPhotoY }}
                   >
-                    <img src={asset('media/about/about-speaking.webp')} alt="Анастасия Бричко на сцене с микрофоном" />
+                    <img src={asset('media/about/about-speaking.webp')} alt="Анастасия Бричко на сцене с микрофоном" loading="lazy" decoding="async" />
                   </motion.span>
                 </motion.figure>
                 <motion.div
                   className="about-copy"
-                  initial={shouldReduceMotion ? false : 'hidden'}
+                  initial={shouldDisableMotion ? false : 'hidden'}
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.22 }}
                   variants={heroSequence}
@@ -456,8 +527,8 @@ export default function App() {
                     Привет, я Анастасия —<br />видеограф и монтажёр<br />из{' '}
                     <span className="about-city">Москвы.<motion.i
                       aria-hidden="true"
-                      initial={shouldReduceMotion ? false : { scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
+                      initial={shouldDisableMotion ? false : { scaleX: 0, rotate: -2 }}
+                      whileInView={{ scaleX: 1, rotate: -2 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.48, delay: 0.24, ease: editorialEase }}
                     /></span>
@@ -466,7 +537,9 @@ export default function App() {
                     <p>Снимаю мероприятия, интервью и медиапроекты. В кадре ищу живые эмоции, детали и честную динамику.</p>
                     <p>Веду работу от съёмки до финального монтажа. Работаю с многокамерным, вертикальным контентом и motion-графикой.</p>
                   </motion.div>
-                  <motion.p className="signature" variants={heroItem}>Anastasia B.</motion.p>
+                  <motion.div className="signature-motion" variants={heroItem}>
+                    <p className="signature">Anastasia B.</p>
+                  </motion.div>
                 </motion.div>
               </div>
             </div>
@@ -476,7 +549,7 @@ export default function App() {
             <div className="ed-shell skills-layout">
               <motion.div
                 className="skills-title-block"
-                initial={shouldReduceMotion ? false : 'hidden'}
+                initial={shouldDisableMotion ? false : 'hidden'}
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.35 }}
                 variants={revealUp}
@@ -487,16 +560,16 @@ export default function App() {
               <motion.figure
                 className="skills-photo"
                 ref={skillsPhotoRef}
-                initial={shouldReduceMotion ? false : { clipPath: 'inset(100% 0% 0% 0%)' }}
+                initial={shouldDisableMotion ? false : { clipPath: 'inset(100% 0% 0% 0%)' }}
                 whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.62, ease: editorialEase }}
               >
                 <motion.span
                   className="photo-parallax-layer"
-                  style={shouldReduceMotion ? undefined : { y: skillsPhotoY }}
+                  style={shouldDisableMotion ? undefined : { y: skillsPhotoY }}
                 >
-                  <img src={asset('media/about/reserve-shooting-brick.webp')} alt="Съёмка с камерой" />
+                  <img src={asset('media/about/reserve-shooting-brick.webp')} alt="Съёмка с камерой" loading="lazy" decoding="async" />
                 </motion.span>
               </motion.figure>
               <div className="skills-list">
@@ -505,7 +578,7 @@ export default function App() {
                     className="skill-row"
                     key={name}
                     custom={index}
-                    initial={shouldReduceMotion ? false : 'hidden'}
+                    initial={shouldDisableMotion ? false : 'hidden'}
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.5 }}
                     variants={revealItem}
@@ -522,14 +595,14 @@ export default function App() {
             <motion.span
               className="contacts-reveal-curtain"
               aria-hidden="true"
-              initial={shouldReduceMotion ? false : { y: 0 }}
+              initial={shouldDisableMotion ? false : { y: 0 }}
               whileInView={{ y: '-101%' }}
               viewport={{ once: true, amount: 0.12 }}
               transition={{ duration: 0.72, ease: editorialEase }}
             />
             <motion.div
               className="ed-shell contacts-inner"
-              initial={shouldReduceMotion ? false : 'hidden'}
+              initial={shouldDisableMotion ? false : 'hidden'}
               whileInView="visible"
               viewport={{ once: true, amount: 0.18 }}
               variants={heroSequence}
@@ -565,19 +638,22 @@ export default function App() {
             >
               <motion.section
                 className="work-dialog"
+                ref={dialogRef}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="dialog-title"
+                aria-describedby="dialog-description"
+                tabIndex={-1}
                 initial={{ opacity: 0, y: 28, clipPath: 'inset(8% 0% 0% 0%)' }}
                 animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)' }}
                 exit={{ opacity: 0, y: 18, clipPath: 'inset(0% 0% 8% 0%)' }}
                 transition={{ duration: 0.34, ease: editorialEase }}
                 onMouseDown={(event) => event.stopPropagation()}
               >
-                <button className="dialog-close" type="button" onClick={() => setActiveWork(null)} aria-label="Закрыть">×</button>
+                <button ref={closeButtonRef} className="dialog-close" type="button" onClick={() => setActiveWork(null)} aria-label="Закрыть">×</button>
                 <p>ANASTFILMS / WORK</p>
                 <h2 id="dialog-title">{activeWork}</h2>
-                <p className="dialog-message">Шоурил скоро появится.</p>
+                <p className="dialog-message" id="dialog-description">Шоурил скоро появится.</p>
                 <button className="ed-button ed-button--solid" type="button" onClick={() => setActiveWork(null)}>Понятно</button>
               </motion.section>
             </motion.div>

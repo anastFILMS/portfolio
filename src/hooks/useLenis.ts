@@ -22,11 +22,13 @@ export const lenisControl = {
  */
 export function useLenis() {
   useEffect(() => {
-    // Уважаем системную настройку — и следим за её изменением, а не только
-    // за значением на момент загрузки.
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // На телефонах оставляем нативный скролл: он стабильнее и экономнее.
+    // Системную настройку reduced motion тоже отслеживаем в реальном времени.
+    const reducedMotionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const compactViewportMq = window.matchMedia('(max-width: 680px)');
 
     let raf = 0;
+    let hashFrame = 0;
     let lenis: Lenis | null = null;
 
     const start = () => {
@@ -54,9 +56,37 @@ export function useLenis() {
       instance = null;
     };
 
-    const sync = () => (mq.matches ? stop() : start());
+    const sync = () => (reducedMotionMq.matches || compactViewportMq.matches ? stop() : start());
     sync();
-    mq.addEventListener('change', sync);
+    reducedMotionMq.addEventListener('change', sync);
+    compactViewportMq.addEventListener('change', sync);
+
+    const getHashTarget = () => {
+      const hash = window.location.hash;
+      if (!hash) return null;
+      return hash === '#top' ? document.body : document.querySelector(hash);
+    };
+
+    const scrollToCurrentHash = () => {
+      const target = getHashTarget();
+      if (!target) return;
+      if (lenis) {
+        lenis.scrollTo(target as HTMLElement, { offset: -16, immediate: true });
+        return;
+      }
+      const top = target.getBoundingClientRect().top + window.scrollY - 16;
+      window.scrollTo({ top, behavior: 'auto' });
+    };
+
+    // При первой загрузке React создаёт секции позже, чем браузер пытается
+    // обработать #hash. Повторяем позиционирование уже после монтирования DOM.
+    hashFrame = requestAnimationFrame(scrollToCurrentHash);
+
+    const onHistoryChange = () => {
+      cancelAnimationFrame(hashFrame);
+      hashFrame = requestAnimationFrame(scrollToCurrentHash);
+    };
+    window.addEventListener('popstate', onHistoryChange);
 
     // Якорные ссылки в подвале должны ехать через Lenis, иначе прыгают
     // мгновенно. Прежний сдвиг −72 px компенсировал фиксированную шапку,
@@ -70,13 +100,17 @@ export function useLenis() {
       if (!target) return;
       if (!lenis) return; // reduced motion: пусть браузер прыгает сам
       e.preventDefault();
+      if (window.location.hash !== id) window.history.pushState(null, '', id);
       lenis.scrollTo(target as HTMLElement, { offset: -16, duration: 1.15 });
     };
     document.addEventListener('click', onClick);
 
     return () => {
       document.removeEventListener('click', onClick);
-      mq.removeEventListener('change', sync);
+      window.removeEventListener('popstate', onHistoryChange);
+      reducedMotionMq.removeEventListener('change', sync);
+      compactViewportMq.removeEventListener('change', sync);
+      cancelAnimationFrame(hashFrame);
       stop();
     };
   }, []);
