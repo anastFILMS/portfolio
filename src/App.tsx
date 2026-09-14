@@ -249,8 +249,10 @@ export default function App() {
   useLayoutEffect(() => {
     const scrollPosition = experienceScrollRef.current;
     if (scrollPosition === null) return;
-    window.scrollTo({ top: scrollPosition, left: window.scrollX, behavior: 'auto' });
+    lenisControl.jumpTo(scrollPosition);
+    const frame = requestAnimationFrame(() => lenisControl.jumpTo(scrollPosition));
     experienceScrollRef.current = null;
+    return () => cancelAnimationFrame(frame);
   }, [showAllEvents]);
 
   const visibleEvents = showAllEvents ? events : events.slice(0, 4);
