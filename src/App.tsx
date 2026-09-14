@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
@@ -125,8 +124,6 @@ export default function App() {
   const experienceRef = useRef<HTMLElement>(null);
   const aboutPhotoRef = useRef<HTMLElement>(null);
   const skillsPhotoRef = useRef<HTMLElement>(null);
-  const eventMoreRef = useRef<HTMLButtonElement | null>(null);
-  const restoreEventFocusRef = useRef(false);
   const workTriggerRef = useRef<HTMLButtonElement | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -247,14 +244,6 @@ export default function App() {
     };
   }, [activeWork]);
 
-  useLayoutEffect(() => {
-    if (!restoreEventFocusRef.current) return;
-    const eventButton = eventMoreRef.current;
-    restoreEventFocusRef.current = false;
-    const frame = requestAnimationFrame(() => eventButton?.focus({ preventScroll: true }));
-    return () => cancelAnimationFrame(frame);
-  }, [showAllEvents]);
-
   const visibleEvents = showAllEvents ? events : events.slice(0, 4);
 
   const moveHero = (event: ReactPointerEvent<HTMLElement>) => {
@@ -276,12 +265,7 @@ export default function App() {
     setActiveWork(title);
   };
 
-  const toggleEvents = (trigger: HTMLButtonElement) => {
-    eventMoreRef.current = trigger;
-    restoreEventFocusRef.current = true;
-    trigger.blur();
-    setShowAllEvents((value) => !value);
-  };
+  const toggleEvents = () => setShowAllEvents((value) => !value);
 
   return (
     <MotionConfig reducedMotion={shouldDisableMotion ? 'always' : 'user'}>
@@ -462,10 +446,10 @@ export default function App() {
                 <motion.button
                   className="ed-button event-more"
                   type="button"
-                  ref={eventMoreRef}
                   aria-expanded={showAllEvents}
                   aria-controls="event-table"
-                  onClick={(event) => toggleEvents(event.currentTarget)}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={toggleEvents}
                 >
                   {showAllEvents ? 'Скрыть' : 'Смотреть ещё'} <motion.span animate={{ rotate: showAllEvents ? 180 : 0 }}>↓</motion.span>
                 </motion.button>
