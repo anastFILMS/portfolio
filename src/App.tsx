@@ -125,8 +125,8 @@ export default function App() {
   const experienceRef = useRef<HTMLElement>(null);
   const aboutPhotoRef = useRef<HTMLElement>(null);
   const skillsPhotoRef = useRef<HTMLElement>(null);
-  const experienceScrollRef = useRef<number | null>(null);
   const eventMoreRef = useRef<HTMLButtonElement | null>(null);
+  const restoreEventFocusRef = useRef(false);
   const workTriggerRef = useRef<HTMLButtonElement | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -248,20 +248,11 @@ export default function App() {
   }, [activeWork]);
 
   useLayoutEffect(() => {
-    const scrollPosition = experienceScrollRef.current;
-    if (scrollPosition === null) return;
+    if (!restoreEventFocusRef.current) return;
     const eventButton = eventMoreRef.current;
-    lenisControl.jumpTo(scrollPosition);
-    const frame = requestAnimationFrame(() => lenisControl.jumpTo(scrollPosition));
-    const focusTimer = window.setTimeout(() => {
-      lenisControl.jumpTo(scrollPosition);
-      eventButton?.focus({ preventScroll: true });
-    }, 420);
-    experienceScrollRef.current = null;
-    return () => {
-      cancelAnimationFrame(frame);
-      window.clearTimeout(focusTimer);
-    };
+    restoreEventFocusRef.current = false;
+    const frame = requestAnimationFrame(() => eventButton?.focus({ preventScroll: true }));
+    return () => cancelAnimationFrame(frame);
   }, [showAllEvents]);
 
   const visibleEvents = showAllEvents ? events : events.slice(0, 4);
@@ -286,8 +277,8 @@ export default function App() {
   };
 
   const toggleEvents = (trigger: HTMLButtonElement) => {
-    experienceScrollRef.current = window.scrollY;
     eventMoreRef.current = trigger;
+    restoreEventFocusRef.current = true;
     trigger.blur();
     setShowAllEvents((value) => !value);
   };
@@ -448,7 +439,7 @@ export default function App() {
                 viewport={{ once: true, amount: 0.45 }}
                 variants={revealUp}
               >EXPERIENCE</motion.h2>
-              <motion.div className="event-table" id="event-table" aria-live="polite" layout>
+              <motion.div className="event-table" id="event-table" aria-live="polite">
                 <AnimatePresence>
                   {visibleEvents.map((event, index) => (
                     <motion.div
@@ -460,7 +451,6 @@ export default function App() {
                       exit={{ opacity: 0, y: -14, transition: { duration: 0.2 } }}
                       viewport={{ once: true, amount: 0.25 }}
                       variants={revealItem}
-                      layout="position"
                     >
                       <span className="event-number">{String(index + 1).padStart(2, '0')}</span>
                       <h3>{event}</h3>
@@ -476,7 +466,6 @@ export default function App() {
                   aria-expanded={showAllEvents}
                   aria-controls="event-table"
                   onClick={(event) => toggleEvents(event.currentTarget)}
-                  layout
                 >
                   {showAllEvents ? 'Скрыть' : 'Смотреть ещё'} <motion.span animate={{ rotate: showAllEvents ? 180 : 0 }}>↓</motion.span>
                 </motion.button>

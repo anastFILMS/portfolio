@@ -12,13 +12,6 @@ let instance: Lenis | null = null;
 export const lenisControl = {
   stop: () => instance?.stop(),
   start: () => instance?.start(),
-  jumpTo: (top: number) => {
-    if (instance) {
-      instance.scrollTo(top, { immediate: true, force: true });
-      return;
-    }
-    window.scrollTo({ top, behavior: 'auto' });
-  },
 };
 
 /**
