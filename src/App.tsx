@@ -126,6 +126,7 @@ export default function App() {
   const aboutPhotoRef = useRef<HTMLElement>(null);
   const skillsPhotoRef = useRef<HTMLElement>(null);
   const experienceScrollRef = useRef<number | null>(null);
+  const eventMoreRef = useRef<HTMLButtonElement | null>(null);
   const workTriggerRef = useRef<HTMLButtonElement | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -249,10 +250,18 @@ export default function App() {
   useLayoutEffect(() => {
     const scrollPosition = experienceScrollRef.current;
     if (scrollPosition === null) return;
+    const eventButton = eventMoreRef.current;
     lenisControl.jumpTo(scrollPosition);
     const frame = requestAnimationFrame(() => lenisControl.jumpTo(scrollPosition));
+    const focusTimer = window.setTimeout(() => {
+      lenisControl.jumpTo(scrollPosition);
+      eventButton?.focus({ preventScroll: true });
+    }, 420);
     experienceScrollRef.current = null;
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(focusTimer);
+    };
   }, [showAllEvents]);
 
   const visibleEvents = showAllEvents ? events : events.slice(0, 4);
@@ -276,8 +285,10 @@ export default function App() {
     setActiveWork(title);
   };
 
-  const toggleEvents = () => {
+  const toggleEvents = (trigger: HTMLButtonElement) => {
     experienceScrollRef.current = window.scrollY;
+    eventMoreRef.current = trigger;
+    trigger.blur();
     setShowAllEvents((value) => !value);
   };
 
@@ -461,9 +472,10 @@ export default function App() {
                 <motion.button
                   className="ed-button event-more"
                   type="button"
+                  ref={eventMoreRef}
                   aria-expanded={showAllEvents}
                   aria-controls="event-table"
-                  onClick={toggleEvents}
+                  onClick={(event) => toggleEvents(event.currentTarget)}
                   layout
                 >
                   {showAllEvents ? 'Скрыть' : 'Смотреть ещё'} <motion.span animate={{ rotate: showAllEvents ? 180 : 0 }}>↓</motion.span>
