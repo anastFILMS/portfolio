@@ -16,7 +16,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
-html { background: var(--black); scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+html { background: var(--black); scroll-behavior: auto; overflow-anchor: none; -webkit-text-size-adjust: 100%; }
 body {
   min-width: 320px;
   background: var(--black);

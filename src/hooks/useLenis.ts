@@ -29,6 +29,7 @@ export function useLenis() {
 
     let raf = 0;
     let hashFrame = 0;
+    let cancelled = false;
     let lenis: Lenis | null = null;
 
     const start = () => {
@@ -80,7 +81,13 @@ export function useLenis() {
 
     // При первой загрузке React создаёт секции позже, чем браузер пытается
     // обработать #hash. Повторяем позиционирование уже после монтирования DOM.
+    const initialHash = window.location.hash;
     hashFrame = requestAnimationFrame(scrollToCurrentHash);
+    void document.fonts?.ready.then(() => {
+      if (cancelled || window.location.hash !== initialHash) return;
+      cancelAnimationFrame(hashFrame);
+      hashFrame = requestAnimationFrame(scrollToCurrentHash);
+    });
 
     const onHistoryChange = () => {
       cancelAnimationFrame(hashFrame);
@@ -106,6 +113,7 @@ export function useLenis() {
     document.addEventListener('click', onClick);
 
     return () => {
+      cancelled = true;
       document.removeEventListener('click', onClick);
       window.removeEventListener('popstate', onHistoryChange);
       reducedMotionMq.removeEventListener('change', sync);
