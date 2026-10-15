@@ -292,7 +292,7 @@ export default function App() {
                 style={shouldDisableMotion ? undefined : { x: pointerSpringX, y: pointerSpringY }}
               >
                 <motion.img
-                  src={asset('media/about/about-shooting-bubbles.webp')}
+                  src={asset('media/about/hero-camera-portrait.webp')}
                   alt=""
                   fetchPriority="high"
                   decoding="async"
