@@ -103,9 +103,9 @@ const heroItem: Variants = {
 };
 
 const heroWord: Variants = {
-  hidden: { y: '112%' },
+  hidden: { opacity: 0, y: 24 },
   visible: {
-    y: '0%',
+    opacity: 1, y: 0,
     transition: { duration: 0.7, ease: editorialEase },
   },
 };
@@ -579,14 +579,6 @@ export default function App() {
           </section>
 
           <motion.footer className="ed-section contacts" id="contacts" aria-labelledby="contacts-title">
-            <motion.span
-              className="contacts-reveal-curtain"
-              aria-hidden="true"
-              initial={shouldDisableMotion ? false : { y: 0 }}
-              whileInView={{ y: '-101%' }}
-              viewport={{ once: true, amount: 0.12 }}
-              transition={{ duration: 0.72, ease: editorialEase }}
-            />
             <motion.div
               className="ed-shell contacts-inner"
               initial={shouldDisableMotion ? false : 'hidden'}
