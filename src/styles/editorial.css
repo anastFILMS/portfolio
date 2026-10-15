@@ -607,3 +607,7 @@ h1, h2, h3, .brand, .footer-brand, .work-caption b, .direction-line,
   .hero-word-mask--last { margin-top: -0.12em; }
   .experience-echo { right: 0; font-size: 12vw; }
 }
+
+@media (min-width: 1101px) {
+  .skills h2 { font-size: clamp(3rem, 5.7vw, 6rem); }
+}

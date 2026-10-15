@@ -492,7 +492,7 @@ export default function App() {
                   className="about-photo"
                   ref={aboutPhotoRef}
                   initial={shouldDisableMotion ? false : { clipPath: 'inset(0% 100% 0% 0%)' }}
-                  whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.68, ease: editorialEase }}
                 >
@@ -547,8 +547,8 @@ export default function App() {
               <motion.figure
                 className="skills-photo"
                 ref={skillsPhotoRef}
-                initial={shouldDisableMotion ? false : { clipPath: 'inset(100% 0% 0% 0%)' }}
-                whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+                initial={shouldDisableMotion ? false : { opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.62, ease: editorialEase }}
               >
