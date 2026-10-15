@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 
+// Отключаем восстановление прокрутки до монтирования React.
+if (typeof window !== 'undefined') window.history.scrollRestoration = 'manual';
+
 /**
  * Ссылка на живой экземпляр Lenis.
  *
@@ -22,6 +25,16 @@ export const lenisControl = {
  */
 export function useLenis() {
   useEffect(() => {
+    const isReload = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined)?.type === 'reload';
+    if (isReload) {
+      // Обновление страницы всегда открывает начало, даже если адрес содержит
+      // якорь из предыдущего перехода (например, #skills).
+      if (window.location.hash) {
+        window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+      }
+      window.scrollTo(0, 0);
+    }
+
     // На телефонах оставляем нативный скролл: он стабильнее и экономнее.
     // Системную настройку reduced motion тоже отслеживаем в реальном времени.
     const reducedMotionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -64,18 +77,18 @@ export function useLenis() {
 
     const getHashTarget = () => {
       const hash = window.location.hash;
-      if (!hash) return null;
-      return hash === '#top' ? document.body : document.querySelector(hash);
+      return !hash || hash === '#top' ? document.body : document.querySelector(hash);
     };
 
     const scrollToCurrentHash = () => {
       const target = getHashTarget();
       if (!target) return;
+      const offset = target === document.body ? 0 : -16;
       if (lenis) {
-        lenis.scrollTo(target as HTMLElement, { offset: -16, immediate: true });
+        lenis.scrollTo(target as HTMLElement, { offset, immediate: true });
         return;
       }
-      const top = target.getBoundingClientRect().top + window.scrollY - 16;
+      const top = target === document.body ? 0 : target.getBoundingClientRect().top + window.scrollY + offset;
       window.scrollTo({ top, behavior: 'auto' });
     };
 
