@@ -43,15 +43,16 @@ const workItems = [
 ];
 
 const events = [
-  'Московская неделя моды',
-  'Российский форум индустрии дизайна',
-  '105-летие РГУ им. А. Н. Косыгина',
-  '«Битва институтов»',
-  '«Таланты»',
-  '«Росфантастика»',
-  '«Погружение»',
-  'Выпускной Института дизайна',
-  '«Мисс и мистер»',
+  { title: 'Московская неделя моды' },
+  { title: 'Российский форум индустрии дизайна' },
+  { title: '105-летие РГУ им. А. Н. Косыгина' },
+  { title: 'Концерт Димы Билана' },
+  { title: '«Росфантастика»', detail: 'В музее «Атом»' },
+  { title: 'Посвящение в первокурсники' },
+  { title: 'Выпускной Института дизайна' },
+  { title: '«Погружение»' },
+  { title: '«Таланты»' },
+  { title: '«Битва институтов»' },
 ];
 
 const skills = [
@@ -428,7 +429,7 @@ export default function App() {
                   {visibleEvents.map((event, index) => (
                     <motion.div
                       className="event-row"
-                      key={event}
+                      key={event.title}
                       custom={index % 4}
                       initial={shouldDisableMotion ? false : 'hidden'}
                       whileInView="visible"
@@ -437,7 +438,10 @@ export default function App() {
                       variants={revealItem}
                     >
                       <span className="event-number">{String(index + 1).padStart(2, '0')}</span>
-                      <h3>{event}</h3>
+                      <div className="event-name">
+                        <h3>{event.title}</h3>
+                        {event.detail && <p>{event.detail}</p>}
+                      </div>
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -591,11 +595,11 @@ export default function App() {
                 <span className="contact-word-mask"><motion.span variants={heroWord}>LET'S</motion.span></span>{' '}
                 <span className="contact-word-mask"><motion.span variants={heroWord}>WORK</motion.span></span>
               </h2>
-              <motion.p className="contacts-note" variants={heroItem}>Контакты скоро появятся</motion.p>
-              <motion.div className="contact-links" aria-label="Контакты пока не опубликованы" variants={heroItem}>
-                <span>TELEGRAM</span>
-                <span>VK</span>
-                <span>EMAIL</span>
+              <motion.p className="contacts-note" variants={heroItem}>Напиши мне о проекте</motion.p>
+              <motion.div className="contact-links" aria-label="Способы связи" variants={heroItem}>
+                <a href="https://t.me/linkhll" target="_blank" rel="noopener noreferrer">TELEGRAM<span>@linkhll</span></a>
+                <a href="https://vk.ru/linkhll" target="_blank" rel="noopener noreferrer">VK<span>linkhll</span></a>
+                <a href="mailto:anaaasteish@mail.ru">EMAIL<span>anaaasteish@mail.ru</span></a>
               </motion.div>
               <motion.a className="footer-brand" href="#top" variants={heroItem}><span>anast</span><b>FILMS</b></motion.a>
               <motion.p className="copyright" variants={heroItem}>© 2026 ANASTASIA B.<br />ALL RIGHTS RESERVED</motion.p>

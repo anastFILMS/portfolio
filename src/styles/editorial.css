@@ -366,6 +366,7 @@ img { display: block; width: 100%; }
   line-height: 1.15;
   text-transform: uppercase;
 }
+.event-name p { margin-top: 0.45rem; color: var(--muted); font-family: var(--body); font-size: 0.8rem; line-height: 1.35; }
 .event-more { margin: 2.25rem auto 0; display: flex; }
 
 .about { padding: clamp(5rem, 9vw, 9rem) 0; }
@@ -474,8 +475,9 @@ img { display: block; width: 100%; }
 .contact-word-mask > span { display: inline-block; }
 .contacts-note { grid-column: 2; justify-self: center; margin-top: 2rem; font-family: var(--body); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; }
 .contact-links { grid-column: 2; display: flex; justify-content: center; gap: clamp(2rem, 5vw, 5rem); margin-top: 1.2rem; }
-.contact-links span { position: relative; padding-bottom: 0.3rem; font-family: var(--display); font-size: 1.2rem; letter-spacing: 0.06em; }
-.contact-links span::after {
+.contact-links a { position: relative; display: flex; flex-direction: column; gap: 0.4rem; padding-bottom: 0.45rem; color: inherit; font-family: var(--display); font-size: 1.2rem; letter-spacing: 0.06em; text-decoration: none; }
+.contact-links a span { font-family: var(--body); font-size: 0.78rem; font-weight: 300; letter-spacing: 0; text-transform: none; }
+.contact-links a::after {
   content: '';
   position: absolute;
   left: 0;
@@ -487,7 +489,7 @@ img { display: block; width: 100%; }
   transform-origin: 0 50%;
   transition: transform 320ms cubic-bezier(.22,1,.36,1);
 }
-.contact-links span:hover::after { transform: scaleX(1); }
+.contact-links a:hover::after, .contact-links a:focus-visible::after { transform: scaleX(1); }
 .footer-brand { align-self: end; }
 .footer-brand b { color: #090909; }
 .copyright { grid-column: 2; align-self: end; justify-self: end; text-align: right; font-family: var(--body); font-size: 0.68rem; line-height: 1.5; letter-spacing: 0.08em; }
@@ -584,7 +586,7 @@ img { display: block; width: 100%; }
 
 /* Heading metrics leave room for accents and never crop glyphs. */
 h1, h2, h3, .brand, .footer-brand, .work-caption b, .direction-line,
-.experience-echo, .skill-row strong, .contact-links span {
+.experience-echo, .skill-row strong, .contact-links a {
   font-family: var(--display);
   font-weight: 700;
   letter-spacing: -0.03em;
