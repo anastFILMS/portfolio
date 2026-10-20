@@ -42,6 +42,12 @@ const workItems = [
   },
 ];
 
+const clubReel = {
+  title: 'CLUB REEL',
+  video: 'media/reels/club-reel.mp4',
+  poster: 'media/reels/club-reel-poster.webp',
+};
+
 const events = [
   { title: 'Московская неделя моды' },
   { title: 'Российский форум индустрии дизайна' },
@@ -117,6 +123,8 @@ export default function App() {
   const [isCompactViewport, setIsCompactViewport] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
   const [activeWork, setActiveWork] = useState<string | null>(null);
+  const [videoError, setVideoError] = useState(false);
+  const isClubReel = activeWork === clubReel.title;
   const shouldDisableMotion = Boolean(shouldReduceMotion || isCompactViewport);
 
   const heroRef = useRef<HTMLElement>(null);
@@ -211,7 +219,7 @@ export default function App() {
       const dialog = dialogRef.current;
       if (!dialog) return;
       const focusable = Array.from(
-        dialog.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'),
+        dialog.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], video[controls], [tabindex]:not([tabindex="-1"])'),
       );
       if (focusable.length === 0) {
         event.preventDefault();
@@ -263,6 +271,7 @@ export default function App() {
 
   const openWork = (title: string, trigger: HTMLButtonElement) => {
     workTriggerRef.current = trigger;
+    setVideoError(false);
     setActiveWork(title);
   };
 
@@ -398,6 +407,31 @@ export default function App() {
                     </span>
                   </motion.button>
                 ))}
+              </div>
+
+              <div className="work-grid work-grid--reels">
+                <motion.button
+                  className="work-tile work-tile--reel"
+                  type="button"
+                  initial={shouldDisableMotion ? false : 'hidden'}
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.3 }}
+                  variants={revealItem}
+                  onClick={(event) => openWork(clubReel.title, event.currentTarget)}
+                  aria-label="Смотреть клубный Reels — вертикальное видео"
+                >
+                  <span className="work-photo">
+                    <img src={asset(clubReel.poster)} alt="Свет и танцующая публика в клубе" loading="lazy" decoding="async" width={720} height={720} />
+                    <span className="work-photo-shade" />
+                    <span className="play-mark" aria-hidden="true">▶</span>
+                    <span className="reel-format">9:16</span>
+                  </span>
+                  <span className="work-caption">
+                    <b>{clubReel.title}</b>
+                    <small>Клуб / энергия</small>
+                    <i>04</i>
+                  </span>
+                </motion.button>
               </div>
 
               <motion.p
@@ -620,7 +654,7 @@ export default function App() {
               onMouseDown={() => setActiveWork(null)}
             >
               <motion.section
-                className="work-dialog"
+                className={`work-dialog${isClubReel ? ' work-dialog--reel' : ''}`}
                 ref={dialogRef}
                 role="dialog"
                 aria-modal="true"
@@ -636,8 +670,29 @@ export default function App() {
                 <button ref={closeButtonRef} className="dialog-close" type="button" onClick={() => setActiveWork(null)} aria-label="Закрыть">×</button>
                 <p>ANASTFILMS / WORK</p>
                 <h2 id="dialog-title">{activeWork}</h2>
-                <p className="dialog-message" id="dialog-description">Шоурил скоро появится.</p>
-                <button className="ed-button ed-button--solid" type="button" onClick={() => setActiveWork(null)}>Понятно</button>
+                {isClubReel ? (
+                  <>
+                    <p className="reel-description" id="dialog-description">Клубный Reels / съёмка и монтаж</p>
+                    <video
+                      className="club-reel-player"
+                      src={asset(clubReel.video)}
+                      controls
+                      playsInline
+                      autoPlay
+                      preload="metadata"
+                      width={1080}
+                      height={1920}
+                      aria-label="Клубный Reels"
+                      onError={() => setVideoError(true)}
+                    />
+                    {videoError && <p className="reel-error" role="alert">Не удалось загрузить видео. <a href={asset(clubReel.video)} target="_blank" rel="noopener noreferrer">Открыть ролик отдельно →</a></p>}
+                  </>
+                ) : (
+                  <>
+                    <p className="dialog-message" id="dialog-description">Шоурил скоро появится.</p>
+                    <button className="ed-button ed-button--solid" type="button" onClick={() => setActiveWork(null)}>Понятно</button>
+                  </>
+                )}
               </motion.section>
             </motion.div>
           )}

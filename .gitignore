@@ -4,6 +4,9 @@ dist
 *.local
 *.tsbuildinfo
 
+# Web video assembled from retained source parts before each build.
+/public/media/reels/club-reel.mp4
+
 # Рабочий пакет ТЗ: макет, историческая переписка и исходные шрифты нужны
 # агенту при работе, но не сайту и не сборке.
 .handoff/
