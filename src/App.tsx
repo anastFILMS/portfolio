@@ -109,10 +109,8 @@ export default function App() {
   const shouldDisableMotion = Boolean(shouldReduceMotion || isCompactViewport);
 
   const heroRef = useRef<HTMLElement>(null);
-  const featuredRef = useRef<HTMLButtonElement>(null);
   const workRef = useRef<HTMLElement>(null);
   const experienceRef = useRef<HTMLElement>(null);
-  const aboutPhotoRef = useRef<HTMLElement>(null);
   const skillsPhotoRef = useRef<HTMLElement>(null);
   const workTriggerRef = useRef<HTMLButtonElement | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
@@ -137,12 +135,6 @@ export default function App() {
   const heroImageY = useTransform(heroProgress, [0, 1], [0, 38]);
   const heroImageScale = useTransform(heroProgress, [0, 1], [1.012, 1.045]);
 
-  const { scrollYProgress: featuredProgress } = useScroll({
-    target: featuredRef,
-    offset: ['start end', 'end start'],
-  });
-  const featuredImageY = useTransform(featuredProgress, [0, 1], [-12, 12]);
-
   const { scrollYProgress: workProgress } = useScroll({
     target: workRef,
     offset: ['start end', 'end start'],
@@ -156,12 +148,6 @@ export default function App() {
   const experienceX1 = useTransform(experienceProgress, [0, 1], [-44, 26]);
   const experienceX2 = useTransform(experienceProgress, [0, 1], [32, -32]);
   const experienceX3 = useTransform(experienceProgress, [0, 1], [-26, 18]);
-
-  const { scrollYProgress: aboutPhotoProgress } = useScroll({
-    target: aboutPhotoRef,
-    offset: ['start end', 'end start'],
-  });
-  const aboutPhotoY = useTransform(aboutPhotoProgress, [0, 1], [-12, 12]);
 
   const { scrollYProgress: skillsPhotoProgress } = useScroll({
     target: skillsPhotoRef,
@@ -334,29 +320,6 @@ export default function App() {
                 <p>Съёмка и монтаж историй о людях, событиях и движении.</p>
               </motion.div>
 
-              <motion.button
-                className="featured-work"
-                type="button"
-                ref={featuredRef}
-                onClick={(event) => openWork('SHOWREEL 2026', event.currentTarget)}
-                aria-label="Открыть Showreel 2026"
-                initial={shouldDisableMotion ? false : { opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ duration: 0.45, ease: editorialEase }}
-              >
-                <motion.span
-                  className="featured-image-layer"
-                  style={shouldDisableMotion ? undefined : { y: featuredImageY }}
-                >
-                  <img src={asset('media/about/reserve-event-hall.webp')} alt="Камера на съёмке официального мероприятия" loading="lazy" decoding="async" />
-                </motion.span>
-                <span className="featured-overlay" />
-                <span className="play-mark" aria-hidden="true">▶</span>
-                <span className="featured-label">SHOWREEL&nbsp;&nbsp;2026</span>
-                <span className="featured-tags">FASHION<br />PERFORMANCE<br />MOTION<br />REPORTAGE</span>
-              </motion.button>
-
               <div className="work-grid">
                 {workItems.map((item, index) => (
                   <motion.button
@@ -485,19 +448,13 @@ export default function App() {
                   />
                 </motion.div>
                 <motion.figure
-                  className="about-photo"
-                  ref={aboutPhotoRef}
-                  initial={shouldDisableMotion ? false : { clipPath: 'inset(0% 100% 0% 0%)' }}
-                  whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+                  className="about-photo about-photo--scrapbook"
+                  initial={shouldDisableMotion ? false : { opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.68, ease: editorialEase }}
                 >
-                  <motion.span
-                    className="photo-parallax-layer"
-                    style={shouldDisableMotion ? undefined : { y: aboutPhotoY }}
-                  >
-                    <img src={asset('media/about/about-speaking.webp')} alt="Анастасия Бричко на сцене с микрофоном" loading="lazy" decoding="async" />
-                  </motion.span>
+                  <img src={asset('media/about/about-scrapbook.webp')} alt="Анастасия Бричко — портрет с белым краем рваной бумаги" loading="lazy" decoding="async" />
                 </motion.figure>
                 <motion.div
                   className="about-copy"
@@ -613,7 +570,7 @@ export default function App() {
               onMouseDown={() => setActiveWork(null)}
             >
               <motion.section
-                className={`work-dialog${activeWork !== 'SHOWREEL 2026' ? ' work-dialog--gallery' : ''}`}
+                className="work-dialog work-dialog--gallery"
                 ref={dialogRef}
                 role="dialog"
                 aria-modal="true"
@@ -629,14 +586,7 @@ export default function App() {
                 <button ref={closeButtonRef} className="dialog-close" type="button" onClick={() => setActiveWork(null)} aria-label="Закрыть">×</button>
                 <p>ANASTFILMS / WORK</p>
                 <h2 id="dialog-title">{activeWork}</h2>
-                {activeWork !== 'SHOWREEL 2026' ? (
-                  <VideoGallery key={activeWork} category={activeWork} note={workItems.find(i => i.title === activeWork)?.note ?? ''} />
-                ) : (
-                  <>
-                    <p className="dialog-message" id="dialog-description">Общий шоурил готовится. Готовые работы уже доступны в шести подборках ниже.</p>
-                    <button className="ed-button ed-button--solid" type="button" onClick={() => setActiveWork(null)}>К подборкам ↓</button>
-                  </>
-                )}
+                <VideoGallery key={activeWork} category={activeWork} note={workItems.find(i => i.title === activeWork)?.note ?? ''} />
               </motion.section>
             </motion.div>
           )}

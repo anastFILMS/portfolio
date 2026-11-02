@@ -684,3 +684,7 @@ iframe.gallery-video { border: 0; }
 .work-tile:hover .work-photo img[src*="fashion.webp"] { transform: scale(1.19); }
 .gallery-stage, .gallery-poster { background: #292929; }
 .gallery-subtitle { font-family: var(--body); font-size: .85rem; margin-top: .4rem; color: #aaa8a4; }
+
+.about-photo--scrapbook { aspect-ratio: auto; background: transparent; overflow: visible; align-self: center; }
+.about-photo--scrapbook img { display: block; width: 100%; height: clamp(420px, 48vw, 680px); object-fit: contain; object-position: center bottom; filter: none; }
+@media (max-width: 680px) { .about-photo--scrapbook img { height: auto; max-height: 590px; } }

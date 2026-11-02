@@ -136,14 +136,6 @@
     "subtitle": ""
   },
   {
-    "id": "1x3j9I-vZ12anpp3JDcEw0IrjogjHea62",
-    "title": "как одеваются выпускники",
-    "category": "REELS",
-    "slug": "reels-01",
-    "posterTime": 8.587,
-    "subtitle": ""
-  },
-  {
     "id": "1AasPUZOLtAn2IxQ8Gx0FiPR7kr2b4cfm",
     "title": "Клуб",
     "category": "REELS",
@@ -157,6 +149,14 @@
     "category": "REELS",
     "slug": "reels-03",
     "posterTime": 4.298,
+    "subtitle": ""
+  },
+  {
+    "id": "1x3j9I-vZ12anpp3JDcEw0IrjogjHea62",
+    "title": "как одеваются выпускники",
+    "category": "REELS",
+    "slug": "reels-01",
+    "posterTime": 8.587,
     "subtitle": ""
   },
   {
