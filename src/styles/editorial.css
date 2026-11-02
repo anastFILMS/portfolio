@@ -688,3 +688,10 @@ iframe.gallery-video { border: 0; }
 .about-photo--scrapbook { aspect-ratio: auto; background: transparent; overflow: visible; align-self: center; }
 .about-photo--scrapbook img { display: block; width: 100%; height: clamp(420px, 48vw, 680px); object-fit: contain; object-position: center bottom; filter: none; }
 @media (max-width: 680px) { .about-photo--scrapbook img { height: auto; max-height: 590px; } }
+
+/* Feather the cutout into the page so its cropped bottom has no hard seam. */
+.about-photo--scrapbook img {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 78%, rgba(0,0,0,.85) 84%, rgba(0,0,0,.32) 94%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 78%, rgba(0,0,0,.85) 84%, rgba(0,0,0,.32) 94%, transparent 100%);
+}
+.work-caption { grid-template-columns: 1fr; }

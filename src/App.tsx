@@ -18,7 +18,6 @@ import {
 import { usePageScroll } from './hooks/usePageScroll';
 import { asset } from './lib/asset';
 import { VideoGallery } from './components/VideoGallery';
-import videos from './content/videos.json';
 
 const workItems = [
   { number: '01', title: 'FASHION', note: 'Стиль / движение', cover: 'fashion', fit: 'cover' },
@@ -341,7 +340,6 @@ export default function App() {
                     <span className="work-caption">
                       <b>{item.title}</b>
                       <small>{item.note}</small>
-                      <i>{String(videos.filter(v => v.category === item.title).length).padStart(2, '0')} ВИДЕО</i>
                     </span>
                   </motion.button>
                 ))}
