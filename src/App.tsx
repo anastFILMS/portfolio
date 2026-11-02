@@ -15,7 +15,7 @@ import {
   useTransform,
   type Variants,
 } from 'framer-motion';
-import { useLenis, lenisControl } from './hooks/useLenis';
+import { usePageScroll } from './hooks/usePageScroll';
 import { asset } from './lib/asset';
 import { VideoGallery } from './components/VideoGallery';
 import videos from './content/videos.json';
@@ -28,12 +28,6 @@ const workItems = [
   { number: '05', title: 'REELS', note: 'Ритм / переходы', slug: 'reels-02' },
   { number: '06', title: 'REPORTAGE', note: 'События / эмоции', slug: 'reportage-01' },
 ];
-
-const clubReel = {
-  title: 'CLUB REEL',
-  video: 'media/reels/club-reel.mp4',
-  poster: 'media/reels/club-reel-poster.webp',
-};
 
 const events = [
   { title: 'Московская неделя моды' },
@@ -106,13 +100,12 @@ const heroWord: Variants = {
 };
 
 export default function App() {
-  useLenis();
+  usePageScroll();
   const shouldReduceMotion = useReducedMotion();
   const [isCompactViewport, setIsCompactViewport] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
   const [activeWork, setActiveWork] = useState<string | null>(null);
 
-  const isClubReel = activeWork === clubReel.title;
   const shouldDisableMotion = Boolean(shouldReduceMotion || isCompactViewport);
 
   const heroRef = useRef<HTMLElement>(null);
@@ -148,11 +141,6 @@ export default function App() {
     target: featuredRef,
     offset: ['start end', 'end start'],
   });
-  const featuredClip = useTransform(
-    featuredProgress,
-    [0, 0.42],
-    ['inset(10% 0% 10% 0%)', 'inset(0% 0% 0% 0%)'],
-  );
   const featuredImageY = useTransform(featuredProgress, [0, 1], [-12, 12]);
 
   const { scrollYProgress: workProgress } = useScroll({
@@ -229,13 +217,11 @@ export default function App() {
 
     document.body.classList.add('is-locked');
     pageMain?.setAttribute('inert', '');
-    lenisControl.stop();
     document.addEventListener('keydown', onKeyDown);
     return () => {
       cancelAnimationFrame(focusFrame);
       document.body.classList.remove('is-locked');
       if (!mainWasInert) pageMain?.removeAttribute('inert');
-      lenisControl.start();
       document.removeEventListener('keydown', onKeyDown);
       requestAnimationFrame(() => trigger?.focus());
     };
@@ -354,7 +340,10 @@ export default function App() {
                 ref={featuredRef}
                 onClick={(event) => openWork('SHOWREEL 2026', event.currentTarget)}
                 aria-label="Открыть Showreel 2026"
-                style={shouldDisableMotion ? undefined : { clipPath: featuredClip }}
+                initial={shouldDisableMotion ? false : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.45, ease: editorialEase }}
               >
                 <motion.span
                   className="featured-image-layer"
@@ -396,31 +385,6 @@ export default function App() {
               </div>
 
               <p className="full-works"><a className="ed-button" href="https://drive.google.com/drive/folders/1hl57Gqj79NJ3D88tBdiQsRzizuuK_IUd?usp=sharing" target="_blank" rel="noopener noreferrer">Полные версии работ ↗</a></p>
-
-              <div className="work-grid work-grid--reels">
-                <motion.button
-                  className="work-tile work-tile--reel"
-                  type="button"
-                  initial={shouldDisableMotion ? false : 'hidden'}
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.3 }}
-                  variants={revealItem}
-                  onClick={(event) => openWork(clubReel.title, event.currentTarget)}
-                  aria-label="Смотреть клубный Reels — вертикальное видео"
-                >
-                  <span className="work-photo">
-                    <img src={asset(clubReel.poster)} alt="Свет и танцующая публика в клубе" loading="lazy" decoding="async" width={720} height={720} />
-                    <span className="work-photo-shade" />
-                    <span className="play-mark" aria-hidden="true">▶</span>
-                    <span className="reel-format">9:16</span>
-                  </span>
-                  <span className="work-caption">
-                    <b>{clubReel.title}</b>
-                    <small>Клуб / энергия</small>
-                    <i>↗</i>
-                  </span>
-                </motion.button>
-              </div>
 
               <motion.p
                 className="direction-line"
@@ -656,9 +620,9 @@ export default function App() {
                 aria-labelledby="dialog-title"
                 aria-describedby="dialog-description"
                 tabIndex={-1}
-                initial={{ opacity: 0, y: 28, clipPath: 'inset(8% 0% 0% 0%)' }}
-                animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)' }}
-                exit={{ opacity: 0, y: 18, clipPath: 'inset(0% 0% 8% 0%)' }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12 }}
                 transition={{ duration: 0.34, ease: editorialEase }}
                 onMouseDown={(event) => event.stopPropagation()}
               >
@@ -666,7 +630,7 @@ export default function App() {
                 <p>ANASTFILMS / WORK</p>
                 <h2 id="dialog-title">{activeWork}</h2>
                 {activeWork !== 'SHOWREEL 2026' ? (
-                  <VideoGallery key={activeWork} category={isClubReel ? 'REELS' : activeWork} initialSlug={isClubReel ? 'reels-02' : undefined} />
+                  <VideoGallery key={activeWork} category={activeWork} />
                 ) : (
                   <>
                     <p className="dialog-message" id="dialog-description">Общий шоурил готовится. Готовые работы уже доступны в шести подборках ниже.</p>
