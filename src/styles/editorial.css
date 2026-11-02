@@ -725,3 +725,9 @@ iframe.gallery-video { border: 0; }
   .back-to-top { grid-column: 2; grid-row: 5; justify-self: end; align-self: center; margin: 0; padding: .7rem .85rem; }
   .copyright { grid-column: 1 / -1; grid-row: 6; justify-self: end; align-self: start; margin-top: 1.25rem; }
 }
+
+.work-caption { grid-template-columns: minmax(0, 1fr) auto; }
+.work-play { grid-column: 2; grid-row: 1 / 3; width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid rgb(255 255 255 / 75%); background: #0e0e0f; color: #f1eee9; transition: background 180ms ease, color 180ms ease; }
+.work-play svg { width: 20px; height: 20px; margin-left: 2px; }
+.work-tile:hover .work-play, .work-tile:focus-visible .work-play { background: #f1eee9; color: #df2117; }
+@media (max-width: 680px) { .work-play { width: 36px; height: 36px; } }

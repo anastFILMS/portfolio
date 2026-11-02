@@ -101,7 +101,7 @@ const heroWord: Variants = {
 export default function App() {
   usePageScroll();
   const shouldReduceMotion = useReducedMotion();
-  const [isCompactViewport, setIsCompactViewport] = useState(false);
+  const [isCompactViewport, setIsCompactViewport] = useState(() => window.matchMedia('(max-width: 680px)').matches);
   const [showAllEvents, setShowAllEvents] = useState(false);
   const [activeWork, setActiveWork] = useState<string | null>(null);
 
@@ -325,21 +325,21 @@ export default function App() {
                     className="work-tile"
                     type="button"
                     key={item.title}
-                    custom={index}
-                    initial={shouldDisableMotion ? false : 'hidden'}
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.3 }}
-                    variants={revealItem}
+                    initial={shouldReduceMotion ? false : { opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true, amount: 0.12 }}
+                    transition={{ duration: 0.65, ease: editorialEase }}
                     onClick={(event) => openWork(item.title, event.currentTarget)}
                     aria-label={`Открыть подборку ${item.title}`}
                   >
                     <span className="work-photo">
-                      <img src={asset(`media/covers/${item.cover}.webp`)} data-fit={item.fit} alt="" loading="lazy" decoding="async" />
+                      <img src={asset(`media/covers/${item.cover}.webp`)} data-fit={item.fit} alt="" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
                       <span className="work-photo-shade" />
                     </span>
                     <span className="work-caption">
                       <b>{item.title}</b>
                       <small>{item.note}</small>
+                      <span className="work-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor" /></svg></span>
                     </span>
                   </motion.button>
                 ))}
@@ -447,10 +447,10 @@ export default function App() {
                 </motion.div>
                 <motion.figure
                   className="about-photo about-photo--scrapbook"
-                  initial={shouldDisableMotion ? false : { opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.68, ease: editorialEase }}
+                  initial={shouldReduceMotion ? false : { opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, amount: 0.12 }}
+                  transition={{ duration: 0.85, ease: editorialEase }}
                 >
                   <img src={asset('media/about/about-scrapbook.webp')} alt="Анастасия Бричко — портрет с белым краем рваной бумаги" loading="lazy" decoding="async" />
                 </motion.figure>
