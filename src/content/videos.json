@@ -1,0 +1,212 @@
+[
+  {
+    "id": "1iRuOnO0OtpHnOMjOqJBC6gbSCEfjX6zn",
+    "title": "Модный показ 2025",
+    "category": "FASHION",
+    "slug": "fashion-01"
+  },
+  {
+    "id": "13xfTvI4lKPSSZ-YyEKP_l4qmQTnZv7Wd",
+    "title": "Модный показ 2026-2",
+    "category": "FASHION",
+    "slug": "fashion-02"
+  },
+  {
+    "id": "1m0tDpZkpXpFmjJ-qcFbGzx5kMjznq9Zf",
+    "title": "Модный показ 2026",
+    "category": "FASHION",
+    "slug": "fashion-03"
+  },
+  {
+    "id": "1tOKcMgUWygos_XUfVTh-tj0RgJE28eBi",
+    "title": "intro",
+    "category": "MOTION",
+    "slug": "motion-01"
+  },
+  {
+    "id": "1faqC_lFZpJ0MMvCYODej_57ejiEK6dSH",
+    "title": "Анимация Лого-Заставка",
+    "category": "MOTION",
+    "slug": "motion-02"
+  },
+  {
+    "id": "1ioZacgbt1SBPun0jzCS4CiXnTtP6VO9S",
+    "title": "Анимация текста",
+    "category": "MOTION",
+    "slug": "motion-03"
+  },
+  {
+    "id": "1UAoI6vN1ka21EAUnjKInUD4h9enXv5sM",
+    "title": "Анимация текста2",
+    "category": "MOTION",
+    "slug": "motion-04"
+  },
+  {
+    "id": "1z-L9g0iJV8epyqgLewheAcCZ3y_gGAdm",
+    "title": "итоги недели",
+    "category": "MOTION",
+    "slug": "motion-05"
+  },
+  {
+    "id": "1MqfrcFvNnLM3C9IbaLviD9JcEpj190PZ",
+    "title": "Моушен ИСИ",
+    "category": "MOTION",
+    "slug": "motion-06"
+  },
+  {
+    "id": "14SamjDxfOh4DcG4uI29rSmKwJzSHc616",
+    "title": "обложка кубок",
+    "category": "MOTION",
+    "slug": "motion-07"
+  },
+  {
+    "id": "1hNpeU2ms32Lnl8G2ENnCftV6pMIk1rGa",
+    "title": "рубрика Мастерская",
+    "category": "MOTION",
+    "slug": "motion-08"
+  },
+  {
+    "id": "1-_4gtNlgC2jYW8qyY0a59WNiypvIHV2p",
+    "title": "Отчетный концерт хореографического ансамбля",
+    "category": "PERFORMANCE",
+    "slug": "performance-01"
+  },
+  {
+    "id": "13-Zd7KGTIeqb3Lxu-wxBEaokoH4WXOku",
+    "title": "Отчетный ролик 105-летие вуза",
+    "category": "PERFORMANCE",
+    "slug": "performance-02"
+  },
+  {
+    "id": "1wQhlqNlzzbow6cqKi2Pq7uOpDOTVA7vA",
+    "title": "Отчетный ролик танц конкурса",
+    "category": "PERFORMANCE",
+    "slug": "performance-03"
+  },
+  {
+    "id": "1-otZ-Bm4BTmXf9hfV6dcKB-1ceDUtbxw",
+    "title": "Промо-ролик Битвы Институтов 2026",
+    "category": "PROMO",
+    "slug": "promo-01"
+  },
+  {
+    "id": "1Z_GZNNxJIT48Het5qvATwV1EY1B2D9vM",
+    "title": "Промо-ролик Россисйкая идентичность",
+    "category": "PROMO",
+    "slug": "promo-02"
+  },
+  {
+    "id": "1M2m-FncxFVQ5CQ4gqFifOQ_eNOHdaTG3",
+    "title": "Реклама ДПО Курса",
+    "category": "PROMO",
+    "slug": "promo-03"
+  },
+  {
+    "id": "1x3j9I-vZ12anpp3JDcEw0IrjogjHea62",
+    "title": "как одеваются выпускники",
+    "category": "REELS",
+    "slug": "reels-01"
+  },
+  {
+    "id": "1AasPUZOLtAn2IxQ8Gx0FiPR7kr2b4cfm",
+    "title": "Клуб",
+    "category": "REELS",
+    "slug": "reels-02"
+  },
+  {
+    "id": "1MwxmlWj8mpi9JvLrU69-4oYhQu5acQ0l",
+    "title": "Команда медиа",
+    "category": "REELS",
+    "slug": "reels-03"
+  },
+  {
+    "id": "1beB6XDw_Wb410HAHlTLKreoQ6qAUhu38",
+    "title": "Мероприятие с Озвучкой на фоне",
+    "category": "REELS",
+    "slug": "reels-04"
+  },
+  {
+    "id": "1XcqlOWLD4OGwmg2bxNAzhNgJHMIF4TlU",
+    "title": "Росфантастика",
+    "category": "REELS",
+    "slug": "reels-05"
+  },
+  {
+    "id": "1ZeZNlZZXQFgLkOmSyL_cxd_y7tSwqftd",
+    "title": "Росфантастика2",
+    "category": "REELS",
+    "slug": "reels-06"
+  },
+  {
+    "id": "1pDTvg4q1n6MJAVDsbHy-kEfYj5bdEonL",
+    "title": "рубрика Стилечек",
+    "category": "REELS",
+    "slug": "reels-07"
+  },
+  {
+    "id": "1gQzvqvTfQ9LXQzPjsgMZc0VbdojRkVlH",
+    "title": "Смена предметов",
+    "category": "REELS",
+    "slug": "reels-08"
+  },
+  {
+    "id": "1sT7RQNWm7i9YVmEqrI2ERSqb4-uATZUn",
+    "title": "Студент года в Университете",
+    "category": "REELS",
+    "slug": "reels-09"
+  },
+  {
+    "id": "1vftyQ4N_hHHfNPBNoL0oSWhKjDkY9eHd",
+    "title": "Таланты Бэк",
+    "category": "REELS",
+    "slug": "reels-10"
+  },
+  {
+    "id": "1wnAiGKzfswv1hCGZnAhJZkAsSuJmO7NA",
+    "title": "Тренд с переходом",
+    "category": "REELS",
+    "slug": "reels-11"
+  },
+  {
+    "id": "1WIo0b0lMYLp7SYOTC09BdMrYpgCplVX4",
+    "title": "Тренд с реверсом",
+    "category": "REELS",
+    "slug": "reels-12"
+  },
+  {
+    "id": "1vNiWY7PFupXGP-SVFN_XRqfSCMviKj-S",
+    "title": "Тренд",
+    "category": "REELS",
+    "slug": "reels-13"
+  },
+  {
+    "id": "1yk_I1zD-L9E0wyfvKPYWupttoH1q4cwf",
+    "title": "ученый совет",
+    "category": "REELS",
+    "slug": "reels-14"
+  },
+  {
+    "id": "1yxQ2zeTBbj19gJkwTEHkg-9HN8pQOxrX",
+    "title": "Выпускной Института Дизайна",
+    "category": "REPORTAGE",
+    "slug": "reportage-01"
+  },
+  {
+    "id": "1Kb3nQ9SzdTFUFpfWiHGnQRo8VY_gh99w",
+    "title": "Репортаж МНМ",
+    "category": "REPORTAGE",
+    "slug": "reportage-02"
+  },
+  {
+    "id": "1qdhIL1VT9l3BXNx4XGZCR_Za4dfJtIGe",
+    "title": "Репортаж Форум матерей военнослужащих",
+    "category": "REPORTAGE",
+    "slug": "reportage-03"
+  },
+  {
+    "id": "1P5Ad5wfHs3TKlZDsd7U3ZX8WPRVksPWG",
+    "title": "Репортаж Хрустальная корона",
+    "category": "REPORTAGE",
+    "slug": "reportage-04"
+  }
+]

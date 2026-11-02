@@ -17,29 +17,16 @@ import {
 } from 'framer-motion';
 import { useLenis, lenisControl } from './hooks/useLenis';
 import { asset } from './lib/asset';
+import { VideoGallery } from './components/VideoGallery';
+import videos from './content/videos.json';
 
 const workItems = [
-  {
-    number: '01',
-    title: 'INTERVIEW',
-    note: 'Люди / диалог',
-    image: 'media/about/reserve-interview-studio.webp',
-    position: '50% 55%',
-  },
-  {
-    number: '02',
-    title: 'FASHION',
-    note: 'Стиль / движение',
-    image: 'media/projects/illustrative-lens.webp',
-    position: '52% 50%',
-  },
-  {
-    number: '03',
-    title: 'REPORTAGE',
-    note: 'События / эмоции',
-    image: 'media/about/about-shooting-bubbles.webp',
-    position: '58% 50%',
-  },
+  { number: '01', title: 'FASHION', note: 'Стиль / движение', slug: 'fashion-01' },
+  { number: '02', title: 'MOTION', note: 'Типографика / анимация', slug: 'motion-02' },
+  { number: '03', title: 'PERFORMANCE', note: 'Сцена / энергия', slug: 'performance-01' },
+  { number: '04', title: 'PROMO', note: 'Идея / впечатление', slug: 'promo-01' },
+  { number: '05', title: 'REELS', note: 'Ритм / переходы', slug: 'reels-02' },
+  { number: '06', title: 'REPORTAGE', note: 'События / эмоции', slug: 'reportage-01' },
 ];
 
 const clubReel = {
@@ -66,6 +53,7 @@ const skills = [
   ['EDITING', 'Монтаж'],
   ['MULTICAMERA', 'Синхронизация'],
   ['MOTION', 'Графика'],
+  ['SFX', 'Звуковые эффекты'],
   ['PRODUCTION', 'Организация'],
 ];
 
@@ -123,7 +111,7 @@ export default function App() {
   const [isCompactViewport, setIsCompactViewport] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
   const [activeWork, setActiveWork] = useState<string | null>(null);
-  const [videoError, setVideoError] = useState(false);
+
   const isClubReel = activeWork === clubReel.title;
   const shouldDisableMotion = Boolean(shouldReduceMotion || isCompactViewport);
 
@@ -219,7 +207,7 @@ export default function App() {
       const dialog = dialogRef.current;
       if (!dialog) return;
       const focusable = Array.from(
-        dialog.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], video[controls], [tabindex]:not([tabindex="-1"])'),
+        dialog.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], video[controls], iframe, [tabindex]:not([tabindex="-1"])'),
       );
       if (focusable.length === 0) {
         event.preventDefault();
@@ -253,7 +241,6 @@ export default function App() {
     };
   }, [activeWork]);
 
-  const visibleEvents = showAllEvents ? events : events.slice(0, 4);
 
   const moveHero = (event: ReactPointerEvent<HTMLElement>) => {
     if (shouldDisableMotion || event.pointerType !== 'mouse') return;
@@ -271,7 +258,6 @@ export default function App() {
 
   const openWork = (title: string, trigger: HTMLButtonElement) => {
     workTriggerRef.current = trigger;
-    setVideoError(false);
     setActiveWork(title);
   };
 
@@ -379,7 +365,7 @@ export default function App() {
                 <span className="featured-overlay" />
                 <span className="play-mark" aria-hidden="true">▶</span>
                 <span className="featured-label">SHOWREEL&nbsp;&nbsp;2026</span>
-                <span className="featured-tags">EVENTS<br />INTERVIEWS<br />FASHION<br />REPORTAGE</span>
+                <span className="featured-tags">FASHION<br />PERFORMANCE<br />MOTION<br />REPORTAGE</span>
               </motion.button>
 
               <div className="work-grid">
@@ -397,17 +383,19 @@ export default function App() {
                     aria-label={`Открыть подборку ${item.title}`}
                   >
                     <span className="work-photo">
-                      <img src={asset(item.image)} alt="" style={{ objectPosition: item.position }} loading="lazy" decoding="async" />
+                      <img src={asset(`media/videos/${item.slug}.webp`)} alt="" loading="lazy" decoding="async" />
                       <span className="work-photo-shade" />
                     </span>
                     <span className="work-caption">
                       <b>{item.title}</b>
                       <small>{item.note}</small>
-                      <i>{item.number}</i>
+                      <i>{String(videos.filter(v => v.category === item.title).length).padStart(2, '0')} ВИДЕО</i>
                     </span>
                   </motion.button>
                 ))}
               </div>
+
+              <p className="full-works"><a className="ed-button" href="https://drive.google.com/drive/folders/1hl57Gqj79NJ3D88tBdiQsRzizuuK_IUd?usp=sharing" target="_blank" rel="noopener noreferrer">Полные версии работ ↗</a></p>
 
               <div className="work-grid work-grid--reels">
                 <motion.button
@@ -429,7 +417,7 @@ export default function App() {
                   <span className="work-caption">
                     <b>{clubReel.title}</b>
                     <small>Клуб / энергия</small>
-                    <i>04</i>
+                    <i>↗</i>
                   </span>
                 </motion.button>
               </div>
@@ -439,7 +427,7 @@ export default function App() {
                 aria-label="Направления работы"
                 style={shouldDisableMotion ? undefined : { x: directionX }}
               >
-                INTERVIEW <span>/</span> FASHION <span>/</span> REPORTAGE <span>/</span> VERTICAL <span>/</span> MULTICAMERA <span>/</span> MOTION <span>/</span> EVENTS
+                FASHION <span>/</span> MOTION <span>/</span> PERFORMANCE <span>/</span> PROMO <span>/</span> REELS <span>/</span> REPORTAGE
               </motion.p>
             </div>
           </section>
@@ -458,28 +446,34 @@ export default function App() {
                 viewport={{ once: true, amount: 0.45 }}
                 variants={revealUp}
               >EXPERIENCE</motion.h2>
-              <motion.div className="event-table" id="event-table" aria-live="polite">
-                <AnimatePresence>
-                  {visibleEvents.map((event, index) => (
-                    <motion.div
-                      className="event-row"
-                      key={event.title}
-                      custom={index % 4}
-                      initial={shouldDisableMotion ? false : 'hidden'}
-                      whileInView="visible"
-                      exit={{ opacity: 0, y: -14, transition: { duration: 0.2 } }}
-                      viewport={{ once: true, amount: 0.25 }}
-                      variants={revealItem}
-                    >
+              <div className="event-tables" id="event-table">
+                <div className="event-table">
+                  {events.slice(0, 4).map((event, index) => (
+                    <div className="event-row" key={event.title}>
                       <span className="event-number">{String(index + 1).padStart(2, '0')}</span>
-                      <div className="event-name">
-                        <h3>{event.title}</h3>
-                        {event.detail && <p>{event.detail}</p>}
-                      </div>
-                    </motion.div>
+                      <div className="event-name"><h3>{event.title}</h3>{event.detail && <p>{event.detail}</p>}</div>
+                    </div>
                   ))}
+                </div>
+                <AnimatePresence initial={false}>
+                  {showAllEvents && <motion.div className="event-extra" key="extra-events"
+                    initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }}
+                    transition={{ duration: shouldDisableMotion ? 0 : 0.5, ease: editorialEase }}>
+                    <motion.div className="event-table"
+                      initial={{ opacity: 0, y: shouldDisableMotion ? 0 : 10, filter: shouldDisableMotion ? 'none' : 'blur(7px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, y: 0, filter: shouldDisableMotion ? 'none' : 'blur(5px)' }}
+                      transition={{ duration: shouldDisableMotion ? 0 : 0.4, ease: editorialEase }}>
+                      {events.slice(4).map((event, index) => (
+                        <div className="event-row" key={event.title}>
+                          <span className="event-number">{String(index + 5).padStart(2, '0')}</span>
+                          <div className="event-name"><h3>{event.title}</h3>{event.detail && <p>{event.detail}</p>}</div>
+                        </div>
+                      ))}
+                    </motion.div>
+                  </motion.div>}
                 </AnimatePresence>
-              </motion.div>
+              </div>
               {events.length > 4 && (
                 <motion.button
                   className="ed-button event-more"
@@ -530,7 +524,7 @@ export default function App() {
                   className="about-photo"
                   ref={aboutPhotoRef}
                   initial={shouldDisableMotion ? false : { clipPath: 'inset(0% 100% 0% 0%)' }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.68, ease: editorialEase }}
                 >
@@ -636,6 +630,7 @@ export default function App() {
                 <a href="mailto:anaaasteish@mail.ru">EMAIL<span>anaaasteish@mail.ru</span></a>
               </motion.div>
               <motion.a className="footer-brand" href="#top" variants={heroItem}><span>anast</span><b>FILMS</b></motion.a>
+              <motion.a className="back-to-top ed-button" href="#top" variants={heroItem}>НАВЕРХ ↑</motion.a>
               <motion.p className="copyright" variants={heroItem}>© 2026 ANASTASIA B.<br />ALL RIGHTS RESERVED</motion.p>
             </motion.div>
           </motion.footer>
@@ -654,7 +649,7 @@ export default function App() {
               onMouseDown={() => setActiveWork(null)}
             >
               <motion.section
-                className={`work-dialog${isClubReel ? ' work-dialog--reel' : ''}`}
+                className={`work-dialog${activeWork !== 'SHOWREEL 2026' ? ' work-dialog--gallery' : ''}`}
                 ref={dialogRef}
                 role="dialog"
                 aria-modal="true"
@@ -670,27 +665,12 @@ export default function App() {
                 <button ref={closeButtonRef} className="dialog-close" type="button" onClick={() => setActiveWork(null)} aria-label="Закрыть">×</button>
                 <p>ANASTFILMS / WORK</p>
                 <h2 id="dialog-title">{activeWork}</h2>
-                {isClubReel ? (
-                  <>
-                    <p className="reel-description" id="dialog-description">Клубный Reels / съёмка и монтаж</p>
-                    <video
-                      className="club-reel-player"
-                      src={asset(clubReel.video)}
-                      controls
-                      playsInline
-                      autoPlay
-                      preload="metadata"
-                      width={1080}
-                      height={1920}
-                      aria-label="Клубный Reels"
-                      onError={() => setVideoError(true)}
-                    />
-                    {videoError && <p className="reel-error" role="alert">Не удалось загрузить видео. <a href={asset(clubReel.video)} target="_blank" rel="noopener noreferrer">Открыть ролик отдельно →</a></p>}
-                  </>
+                {activeWork !== 'SHOWREEL 2026' ? (
+                  <VideoGallery key={activeWork} category={isClubReel ? 'REELS' : activeWork} initialSlug={isClubReel ? 'reels-02' : undefined} />
                 ) : (
                   <>
-                    <p className="dialog-message" id="dialog-description">Шоурил скоро появится.</p>
-                    <button className="ed-button ed-button--solid" type="button" onClick={() => setActiveWork(null)}>Понятно</button>
+                    <p className="dialog-message" id="dialog-description">Общий шоурил готовится. Готовые работы уже доступны в шести подборках ниже.</p>
+                    <button className="ed-button ed-button--solid" type="button" onClick={() => setActiveWork(null)}>К подборкам ↓</button>
                   </>
                 )}
               </motion.section>
