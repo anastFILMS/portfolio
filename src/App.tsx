@@ -21,12 +21,12 @@ import { VideoGallery } from './components/VideoGallery';
 import videos from './content/videos.json';
 
 const workItems = [
-  { number: '01', title: 'FASHION', note: 'Стиль / движение', slug: 'fashion-01' },
-  { number: '02', title: 'MOTION', note: 'Типографика / анимация', slug: 'motion-02' },
-  { number: '03', title: 'PERFORMANCE', note: 'Сцена / энергия', slug: 'performance-01' },
-  { number: '04', title: 'PROMO', note: 'Идея / впечатление', slug: 'promo-01' },
-  { number: '05', title: 'REELS', note: 'Ритм / переходы', slug: 'reels-02' },
-  { number: '06', title: 'REPORTAGE', note: 'События / эмоции', slug: 'reportage-01' },
+  { number: '01', title: 'FASHION', note: 'Стиль / движение', cover: 'fashion', fit: 'cover' },
+  { number: '02', title: 'MOTION', note: 'Типографика / анимация', cover: 'motion', fit: 'contain' },
+  { number: '03', title: 'PERFORMANCE', note: 'Сцена / энергия', cover: 'performance', fit: 'cover' },
+  { number: '04', title: 'PROMO', note: 'Идея / впечатление', cover: 'promo', fit: 'cover' },
+  { number: '05', title: 'REELS', note: 'Ритм / переходы', cover: 'reels', fit: 'contain' },
+  { number: '06', title: 'REPORTAGE', note: 'События / эмоции', cover: 'reportage', fit: 'cover' },
 ];
 
 const events = [
@@ -372,7 +372,7 @@ export default function App() {
                     aria-label={`Открыть подборку ${item.title}`}
                   >
                     <span className="work-photo">
-                      <img src={asset(`media/videos/${item.slug}.webp`)} alt="" loading="lazy" decoding="async" />
+                      <img src={asset(`media/covers/${item.cover}.webp`)} data-fit={item.fit} alt="" loading="lazy" decoding="async" />
                       <span className="work-photo-shade" />
                     </span>
                     <span className="work-caption">
