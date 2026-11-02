@@ -670,3 +670,17 @@ iframe.gallery-video { border: 0; }
 .gallery-poster:hover .gallery-play, .gallery-poster:focus-visible .gallery-play { background: var(--red); }
 .gallery-thumb img { object-fit: contain; }
 .gallery-thumb { background: #050505; }
+* { scrollbar-width: thin; scrollbar-color: #df2117 #151516; }
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: #151516; }
+*::-webkit-scrollbar-thumb { background: #df2117; border: 2px solid #151516; border-radius: 8px; }
+*::-webkit-scrollbar-thumb:hover { background: #f32a1e; }
+*::-webkit-scrollbar-corner { background: #151516; }
+.full-works { display: flex; justify-content: center; margin-top: 2rem; }
+.work-photo img { object-fit: cover; }
+.work-photo img[src*="motion.webp"] { object-position: 50% 22%; }
+.work-photo img[src*="reels.webp"] { object-position: 50% 42%; }
+.work-photo img[src*="fashion.webp"] { transform: scale(1.18); }
+.work-tile:hover .work-photo img[src*="fashion.webp"] { transform: scale(1.19); }
+.gallery-stage, .gallery-poster { background: #292929; }
+.gallery-subtitle { font-family: var(--body); font-size: .85rem; margin-top: .4rem; color: #aaa8a4; }

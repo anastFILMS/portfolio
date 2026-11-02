@@ -35,6 +35,17 @@ jobs:
 
       - run: npm ci
 
+      - uses: actions/cache@v4
+        with:
+          path: public/media/hd
+          key: portfolio-hd-1080-v1
+
+      - name: Prepare Full HD videos
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          node scripts/prepare-hd.mjs
+
       - name: Сборка
         run: npm run build
 

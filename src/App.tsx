@@ -22,10 +22,10 @@ import videos from './content/videos.json';
 
 const workItems = [
   { number: '01', title: 'FASHION', note: 'Стиль / движение', cover: 'fashion', fit: 'cover' },
-  { number: '02', title: 'MOTION', note: 'Типографика / анимация', cover: 'motion', fit: 'contain' },
+  { number: '02', title: 'MOTION', note: 'Типографика / анимация', cover: 'motion', fit: 'cover' },
   { number: '03', title: 'PERFORMANCE', note: 'Сцена / энергия', cover: 'performance', fit: 'cover' },
   { number: '04', title: 'PROMO', note: 'Идея / впечатление', cover: 'promo', fit: 'cover' },
-  { number: '05', title: 'REELS', note: 'Ритм / переходы', cover: 'reels', fit: 'contain' },
+  { number: '05', title: 'REELS', note: 'Ритм / переходы', cover: 'reels', fit: 'cover' },
   { number: '06', title: 'REPORTAGE', note: 'События / эмоции', cover: 'reportage', fit: 'cover' },
 ];
 
@@ -630,7 +630,7 @@ export default function App() {
                 <p>ANASTFILMS / WORK</p>
                 <h2 id="dialog-title">{activeWork}</h2>
                 {activeWork !== 'SHOWREEL 2026' ? (
-                  <VideoGallery key={activeWork} category={activeWork} />
+                  <VideoGallery key={activeWork} category={activeWork} note={workItems.find(i => i.title === activeWork)?.note ?? ''} />
                 ) : (
                   <>
                     <p className="dialog-message" id="dialog-description">Общий шоурил готовится. Готовые работы уже доступны в шести подборках ниже.</p>

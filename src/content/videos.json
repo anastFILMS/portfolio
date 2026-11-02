@@ -1,247 +1,274 @@
 [
   {
     "id": "1iRuOnO0OtpHnOMjOqJBC6gbSCEfjX6zn",
-    "title": "Модный показ 2025",
+    "title": "Московская неделя моды 2025",
     "category": "FASHION",
     "slug": "fashion-01",
-    "posterTime": 23.464
+    "posterTime": 23.464,
+    "subtitle": "ВДНХ"
   },
   {
     "id": "13xfTvI4lKPSSZ-YyEKP_l4qmQTnZv7Wd",
-    "title": "Модный показ 2026-2",
+    "title": "Модный показ в рамках выставки «Традиции и инновации»",
     "category": "FASHION",
     "slug": "fashion-02",
-    "posterTime": 2.352
+    "posterTime": 2.352,
+    "subtitle": "Галерея Зураба Церетели, зал «Яблоко»"
   },
   {
     "id": "1m0tDpZkpXpFmjJ-qcFbGzx5kMjznq9Zf",
-    "title": "Модный показ 2026",
+    "title": "Московская неделя моды 2026",
     "category": "FASHION",
     "slug": "fashion-03",
-    "posterTime": 42.484
+    "posterTime": 42.484,
+    "subtitle": "МАНЕЖ"
   },
   {
     "id": "1tOKcMgUWygos_XUfVTh-tj0RgJE28eBi",
-    "title": "intro",
+    "title": "Интро для трендового ролика",
     "category": "MOTION",
     "slug": "motion-01",
-    "posterTime": 5.474
+    "posterTime": 5.474,
+    "subtitle": ""
   },
   {
     "id": "1faqC_lFZpJ0MMvCYODej_57ejiEK6dSH",
-    "title": "Анимация Лого-Заставка",
+    "title": "Анимация лого для заставки",
     "category": "MOTION",
     "slug": "motion-02",
-    "posterTime": 2.662
+    "posterTime": 2.662,
+    "subtitle": ""
   },
   {
     "id": "1ioZacgbt1SBPun0jzCS4CiXnTtP6VO9S",
-    "title": "Анимация текста",
+    "title": "Анимация текста SMM",
     "category": "MOTION",
     "slug": "motion-03",
-    "posterTime": 4.806
+    "posterTime": 4.806,
+    "subtitle": ""
   },
   {
     "id": "1UAoI6vN1ka21EAUnjKInUD4h9enXv5sM",
-    "title": "Анимация текста2",
+    "title": "Анимация текста SMM",
     "category": "MOTION",
     "slug": "motion-04",
-    "posterTime": 11.838
+    "posterTime": 11.838,
+    "subtitle": ""
   },
   {
     "id": "1z-L9g0iJV8epyqgLewheAcCZ3y_gGAdm",
-    "title": "итоги недели",
+    "title": "Анимация текста",
     "category": "MOTION",
     "slug": "motion-05",
-    "posterTime": 31.489
+    "posterTime": 31.489,
+    "subtitle": ""
   },
   {
     "id": "1MqfrcFvNnLM3C9IbaLviD9JcEpj190PZ",
-    "title": "Моушен ИСИ",
+    "title": "Графика для промо-ролика",
     "category": "MOTION",
     "slug": "motion-06",
-    "posterTime": 28.172
+    "posterTime": 28.172,
+    "subtitle": ""
   },
   {
     "id": "14SamjDxfOh4DcG4uI29rSmKwJzSHc616",
-    "title": "обложка кубок",
+    "title": "Анимация лого для заставки",
     "category": "MOTION",
     "slug": "motion-07",
-    "posterTime": 10.614
+    "posterTime": 10.614,
+    "subtitle": ""
   },
   {
     "id": "1hNpeU2ms32Lnl8G2ENnCftV6pMIk1rGa",
-    "title": "рубрика Мастерская",
+    "title": "Заставка для рубрики",
     "category": "MOTION",
     "slug": "motion-08",
-    "posterTime": 18.961
+    "posterTime": 18.961,
+    "subtitle": ""
   },
   {
-    "id": "1-_4gtNlgC2jYW8qyY0a59WNiypvIHV2p",
-    "title": "Отчетный концерт хореографического ансамбля",
+    "id": "1wQhlqNlzzbow6cqKi2Pq7uOpDOTVA7vA",
+    "title": "Битва институтов 2025",
     "category": "PERFORMANCE",
-    "slug": "performance-01",
-    "posterTime": 7.684
+    "slug": "performance-03",
+    "posterTime": 10.395,
+    "subtitle": ""
   },
   {
     "id": "13-Zd7KGTIeqb3Lxu-wxBEaokoH4WXOku",
     "title": "Отчетный ролик 105-летие вуза",
     "category": "PERFORMANCE",
     "slug": "performance-02",
-    "posterTime": 31.636
+    "posterTime": 31.636,
+    "subtitle": ""
   },
   {
-    "id": "1wQhlqNlzzbow6cqKi2Pq7uOpDOTVA7vA",
-    "title": "Отчетный ролик танц конкурса",
+    "id": "1-_4gtNlgC2jYW8qyY0a59WNiypvIHV2p",
+    "title": "Отчетный концерт хореографического ансамбля",
     "category": "PERFORMANCE",
-    "slug": "performance-03",
-    "posterTime": 10.395
+    "slug": "performance-01",
+    "posterTime": 7.684,
+    "subtitle": ""
   },
   {
     "id": "1-otZ-Bm4BTmXf9hfV6dcKB-1ceDUtbxw",
-    "title": "Промо-ролик Битвы Институтов 2026",
+    "title": "Промо-ролик «Битвы Институтов 2026»",
     "category": "PROMO",
     "slug": "promo-01",
-    "posterTime": 138.928
-  },
-  {
-    "id": "1Z_GZNNxJIT48Het5qvATwV1EY1B2D9vM",
-    "title": "Промо-ролик Россисйкая идентичность",
-    "category": "PROMO",
-    "slug": "promo-02",
-    "posterTime": 7.3
+    "posterTime": 110,
+    "subtitle": ""
   },
   {
     "id": "1M2m-FncxFVQ5CQ4gqFifOQ_eNOHdaTG3",
     "title": "Реклама ДПО Курса",
     "category": "PROMO",
     "slug": "promo-03",
-    "posterTime": 41.218
+    "posterTime": 66.4,
+    "subtitle": ""
+  },
+  {
+    "id": "1Z_GZNNxJIT48Het5qvATwV1EY1B2D9vM",
+    "title": "Промо-ролик «Российская идентичность»",
+    "category": "PROMO",
+    "slug": "promo-02",
+    "posterTime": 7.3,
+    "subtitle": ""
   },
   {
     "id": "1x3j9I-vZ12anpp3JDcEw0IrjogjHea62",
     "title": "как одеваются выпускники",
     "category": "REELS",
     "slug": "reels-01",
-    "posterTime": 8.587
+    "posterTime": 8.587,
+    "subtitle": ""
   },
   {
     "id": "1AasPUZOLtAn2IxQ8Gx0FiPR7kr2b4cfm",
     "title": "Клуб",
     "category": "REELS",
     "slug": "reels-02",
-    "posterTime": 32.24
+    "posterTime": 32.24,
+    "subtitle": ""
   },
   {
     "id": "1MwxmlWj8mpi9JvLrU69-4oYhQu5acQ0l",
     "title": "Команда медиа",
     "category": "REELS",
     "slug": "reels-03",
-    "posterTime": 4.298
+    "posterTime": 4.298,
+    "subtitle": ""
   },
   {
     "id": "1beB6XDw_Wb410HAHlTLKreoQ6qAUhu38",
     "title": "Мероприятие с Озвучкой на фоне",
     "category": "REELS",
     "slug": "reels-04",
-    "posterTime": 23.537
+    "posterTime": 23.537,
+    "subtitle": ""
   },
   {
     "id": "1XcqlOWLD4OGwmg2bxNAzhNgJHMIF4TlU",
-    "title": "Росфантастика",
+    "title": "Отчетный ролик с фестиваля «Росфантастика»",
     "category": "REELS",
     "slug": "reels-05",
-    "posterTime": 3.07
+    "posterTime": 3.07,
+    "subtitle": "ВДНХ / музей «Атом»"
   },
   {
     "id": "1ZeZNlZZXQFgLkOmSyL_cxd_y7tSwqftd",
-    "title": "Росфантастика2",
+    "title": "Отчетный ролик с фестиваля «Росфантастика»",
     "category": "REELS",
     "slug": "reels-06",
-    "posterTime": 30.895
+    "posterTime": 41.35,
+    "subtitle": "ВДНХ / музей «Атом»"
   },
   {
     "id": "1pDTvg4q1n6MJAVDsbHy-kEfYj5bdEonL",
     "title": "рубрика Стилечек",
     "category": "REELS",
     "slug": "reels-07",
-    "posterTime": 27.67
+    "posterTime": 27.67,
+    "subtitle": ""
   },
   {
     "id": "1gQzvqvTfQ9LXQzPjsgMZc0VbdojRkVlH",
     "title": "Смена предметов",
     "category": "REELS",
     "slug": "reels-08",
-    "posterTime": 3.562
+    "posterTime": 3.562,
+    "subtitle": ""
   },
   {
     "id": "1sT7RQNWm7i9YVmEqrI2ERSqb4-uATZUn",
     "title": "Студент года в Университете",
     "category": "REELS",
     "slug": "reels-09",
-    "posterTime": 6.248
+    "posterTime": 6.248,
+    "subtitle": ""
   },
   {
     "id": "1vftyQ4N_hHHfNPBNoL0oSWhKjDkY9eHd",
-    "title": "Таланты Бэк",
+    "title": "«Таланты» Бэкстейдж",
     "category": "REELS",
     "slug": "reels-10",
-    "posterTime": 1.648
+    "posterTime": 1.648,
+    "subtitle": ""
   },
   {
     "id": "1wnAiGKzfswv1hCGZnAhJZkAsSuJmO7NA",
     "title": "Тренд с переходом",
     "category": "REELS",
     "slug": "reels-11",
-    "posterTime": 4.406
+    "posterTime": 4.406,
+    "subtitle": ""
   },
   {
     "id": "1WIo0b0lMYLp7SYOTC09BdMrYpgCplVX4",
     "title": "Тренд с реверсом",
     "category": "REELS",
     "slug": "reels-12",
-    "posterTime": 4.246
-  },
-  {
-    "id": "1vNiWY7PFupXGP-SVFN_XRqfSCMviKj-S",
-    "title": "Тренд",
-    "category": "REELS",
-    "slug": "reels-13",
-    "posterTime": 4.536
+    "posterTime": 4.246,
+    "subtitle": ""
   },
   {
     "id": "1yk_I1zD-L9E0wyfvKPYWupttoH1q4cwf",
     "title": "ученый совет",
     "category": "REELS",
     "slug": "reels-14",
-    "posterTime": 29.296
+    "posterTime": 34.26,
+    "subtitle": ""
   },
   {
     "id": "1yxQ2zeTBbj19gJkwTEHkg-9HN8pQOxrX",
     "title": "Выпускной Института Дизайна",
     "category": "REPORTAGE",
     "slug": "reportage-01",
-    "posterTime": 11.926
+    "posterTime": 11.926,
+    "subtitle": ""
   },
   {
     "id": "1Kb3nQ9SzdTFUFpfWiHGnQRo8VY_gh99w",
-    "title": "Репортаж МНМ",
+    "title": "«Московская неделя моды»: репортаж",
     "category": "REPORTAGE",
     "slug": "reportage-02",
-    "posterTime": 139.922
+    "posterTime": 16.08,
+    "subtitle": ""
   },
   {
     "id": "1qdhIL1VT9l3BXNx4XGZCR_Za4dfJtIGe",
-    "title": "Репортаж Форум матерей военнослужащих",
+    "title": "«Форум матерей военнослужащих»: репортаж",
     "category": "REPORTAGE",
     "slug": "reportage-03",
-    "posterTime": 18.522
+    "posterTime": 10.97,
+    "subtitle": ""
   },
   {
     "id": "1P5Ad5wfHs3TKlZDsd7U3ZX8WPRVksPWG",
-    "title": "Репортаж Хрустальная корона",
+    "title": "«Хрустальная корона»: репортаж",
     "category": "REPORTAGE",
     "slug": "reportage-04",
-    "posterTime": 32.477
+    "posterTime": 24.27,
+    "subtitle": ""
   }
 ]
