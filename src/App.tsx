@@ -235,7 +235,7 @@ export default function App() {
   const toggleEvents = () => setShowAllEvents((value) => !value);
 
   return (
-    <MotionConfig reducedMotion={shouldDisableMotion ? 'always' : 'user'}>
+    <MotionConfig reducedMotion="user">
       <div className="editorial-page" id="top">
         <motion.div
           className="motion-progress"
@@ -271,7 +271,7 @@ export default function App() {
 
             <motion.header
               className="site-header ed-shell"
-              initial={shouldDisableMotion ? false : 'hidden'}
+              initial={shouldReduceMotion ? false : 'hidden'}
               animate="visible"
               variants={heroItem}
             >
@@ -288,7 +288,7 @@ export default function App() {
 
             <motion.div
               className="hero-copy ed-shell"
-              initial={shouldDisableMotion ? false : 'hidden'}
+              initial={shouldReduceMotion ? false : 'hidden'}
               animate="visible"
               variants={heroSequence}
             >
@@ -310,7 +310,7 @@ export default function App() {
             <div className="ed-shell">
               <motion.div
                 className="section-heading"
-                initial={shouldDisableMotion ? false : 'hidden'}
+                initial={shouldReduceMotion ? false : 'hidden'}
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.35 }}
                 variants={revealUp}
@@ -325,8 +325,8 @@ export default function App() {
                     className="work-tile"
                     type="button"
                     key={item.title}
-                    initial={shouldReduceMotion ? false : { opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
+                    initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.12 }}
                     transition={{ duration: 0.65, ease: editorialEase }}
                     onClick={(event) => openWork(item.title, event.currentTarget)}
@@ -339,7 +339,7 @@ export default function App() {
                     <span className="work-caption">
                       <b>{item.title}</b>
                       <small>{item.note}</small>
-                      <span className="work-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor" /></svg></span>
+                      <span className="work-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l9 6-9 6z" fill="currentColor" /></svg></span>
                     </span>
                   </motion.button>
                 ))}
@@ -366,7 +366,7 @@ export default function App() {
             <div className="ed-shell experience-inner">
               <motion.h2
                 id="experience-title"
-                initial={shouldDisableMotion ? false : 'hidden'}
+                initial={shouldReduceMotion ? false : 'hidden'}
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.45 }}
                 variants={revealUp}
@@ -383,12 +383,12 @@ export default function App() {
                 <AnimatePresence initial={false}>
                   {showAllEvents && <motion.div className="event-extra" key="extra-events"
                     initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }}
-                    transition={{ duration: shouldDisableMotion ? 0 : 0.5, ease: editorialEase }}>
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.5, ease: editorialEase }}>
                     <motion.div className="event-table"
-                      initial={{ opacity: 0, y: shouldDisableMotion ? 0 : 10, filter: shouldDisableMotion ? 'none' : 'blur(7px)' }}
+                      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10, filter: shouldReduceMotion ? 'none' : 'blur(7px)' }}
                       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      exit={{ opacity: 0, y: 0, filter: shouldDisableMotion ? 'none' : 'blur(5px)' }}
-                      transition={{ duration: shouldDisableMotion ? 0 : 0.4, ease: editorialEase }}>
+                      exit={{ opacity: 0, y: 0, filter: shouldReduceMotion ? 'none' : 'blur(5px)' }}
+                      transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: editorialEase }}>
                       {events.slice(4).map((event, index) => (
                         <div className="event-row" key={event.title}>
                           <span className="event-number">{String(index + 5).padStart(2, '0')}</span>
@@ -418,7 +418,7 @@ export default function App() {
             <div className="ed-shell">
               <motion.div
                 className="section-heading section-heading--about"
-                initial={shouldDisableMotion ? false : 'hidden'}
+                initial={shouldReduceMotion ? false : 'hidden'}
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.35 }}
                 variants={revealUp}
@@ -431,7 +431,7 @@ export default function App() {
                 <motion.div
                   className="about-note"
                   aria-hidden="true"
-                  initial={shouldDisableMotion ? false : { opacity: 0, rotate: -11, x: -18 }}
+                  initial={shouldReduceMotion ? false : { opacity: 0, rotate: -11, x: -18 }}
                   whileInView={{ opacity: 1, rotate: -7, x: 0 }}
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 0.42, ease: editorialEase }}
@@ -439,7 +439,7 @@ export default function App() {
                   живые<br />истории<br />важны
                   <motion.span
                     className="about-note-stroke"
-                    initial={shouldDisableMotion ? false : { scaleX: 0, rotate: -7 }}
+                    initial={shouldReduceMotion ? false : { scaleX: 0, rotate: -7 }}
                     whileInView={{ scaleX: 1, rotate: -7 }}
                     viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.5, delay: 0.18, ease: editorialEase }}
@@ -456,7 +456,7 @@ export default function App() {
                 </motion.figure>
                 <motion.div
                   className="about-copy"
-                  initial={shouldDisableMotion ? false : 'hidden'}
+                  initial={shouldReduceMotion ? false : 'hidden'}
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.22 }}
                   variants={heroSequence}
@@ -465,7 +465,7 @@ export default function App() {
                     Привет, я Анастасия —<br />видеограф и монтажёр<br />из{' '}
                     <span className="about-city">Москвы.<motion.i
                       aria-hidden="true"
-                      initial={shouldDisableMotion ? false : { scaleX: 0, rotate: -2 }}
+                      initial={shouldReduceMotion ? false : { scaleX: 0, rotate: -2 }}
                       whileInView={{ scaleX: 1, rotate: -2 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.48, delay: 0.24, ease: editorialEase }}
@@ -487,7 +487,7 @@ export default function App() {
             <div className="ed-shell skills-layout">
               <motion.div
                 className="skills-title-block"
-                initial={shouldDisableMotion ? false : 'hidden'}
+                initial={shouldReduceMotion ? false : 'hidden'}
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.35 }}
                 variants={revealUp}
@@ -498,7 +498,7 @@ export default function App() {
               <motion.figure
                 className="skills-photo"
                 ref={skillsPhotoRef}
-                initial={shouldDisableMotion ? false : { opacity: 0, y: 24 }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.62, ease: editorialEase }}
@@ -516,7 +516,7 @@ export default function App() {
                     className="skill-row"
                     key={name}
                     custom={index}
-                    initial={shouldDisableMotion ? false : 'hidden'}
+                    initial={shouldReduceMotion ? false : 'hidden'}
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.5 }}
                     variants={revealItem}
@@ -532,7 +532,7 @@ export default function App() {
           <motion.footer className="ed-section contacts" id="contacts" aria-labelledby="contacts-title">
             <motion.div
               className="ed-shell contacts-inner"
-              initial={shouldDisableMotion ? false : 'hidden'}
+              initial={shouldReduceMotion ? false : 'hidden'}
               whileInView="visible"
               viewport={{ once: true, amount: 0.18 }}
               variants={heroSequence}
